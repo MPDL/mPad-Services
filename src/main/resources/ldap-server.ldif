@@ -1,0 +1,17 @@
+dn: dc=mpadmanager,dc=de
+objectClass: top
+objectClass: domain
+
+dn: ou=people,dc=mpadmanager,dc=de
+objectclass: top
+objectclass: organizationalUnit
+ou: people
+
+dn: uid=110,ou=people,dc=mpadmanager,dc=de
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: didi
+sn: zhaiyongchao
+uid: didi
