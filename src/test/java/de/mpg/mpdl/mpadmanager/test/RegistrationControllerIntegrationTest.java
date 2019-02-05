@@ -90,18 +90,16 @@ public class RegistrationControllerIntegrationTest {
     public void testRegistrationValidation() throws Exception {
 
         final MultiValueMap<String, String> param = new LinkedMultiValueMap<>();
-        param.add("firstName", "");
-        param.add("lastName", "");
-        param.add("email", "");
-        param.add("password", "");
-        param.add("matchingPassword", "");
-        param.add("organization", "");
-        param.add("department", "");
-
+        param.add("firstName", "paipai");
+        param.add("lastName", "bear");
+        param.add("email", "y.li@mpdl.mpg.de");
+        param.add("password", "111111");
+        param.add("matchingPassword", "111111");
+        param.add("organization", "MPDL");
+        param.add("department", "digital labs");
+        
 
         ResultActions resultActions = this.mockMvc.perform(post("/user/registration").params(param));
-        resultActions.andExpect(status().is(400));
-        resultActions.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andExpect(jsonPath("$.error", is("InvaliduserDto")))
-                .andExpect(jsonPath("$.message", containsString("{\"field\":\"lastName\",\"defaultMessage\":\"Length must be greater than 1\"}")));
+        resultActions.andExpect(status().is(200));
     }
 }
