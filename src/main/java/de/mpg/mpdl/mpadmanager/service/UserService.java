@@ -1,6 +1,5 @@
 package de.mpg.mpdl.mpadmanager.service;
 
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 import de.mpg.mpdl.mpadmanager.dto.UserDTO;
 import de.mpg.mpdl.mpadmanager.model.User;
 import de.mpg.mpdl.mpadmanager.model.VerificationToken;
-import de.mpg.mpdl.mpadmanager.repository.RoleRepository;
 import de.mpg.mpdl.mpadmanager.repository.UserRepository;
 import de.mpg.mpdl.mpadmanager.repository.VerificationTokenRepository;
 import de.mpg.mpdl.mpadmanager.web.error.UserAlreadyExistException;
@@ -34,9 +32,6 @@ public class UserService implements IUserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-    
-    @Autowired
-    private RoleRepository roleRepository;
     
     @Autowired
     private SessionRegistry sessionRegistry;
@@ -62,7 +57,6 @@ public class UserService implements IUserService {
         user.setPassword(passwordEncoder.encode(accountDto.getPassword()));
         user.setOrganization(accountDto.getOrganization());
         user.setDepartment(accountDto.getDepartment());
-        user.setRoles(Arrays.asList(roleRepository.findByName("ROLE_USER")));
         return repository.save(user);
     }
 

@@ -12,6 +12,10 @@ objectclass: top
 objectclass: person
 objectclass: organizationalPerson
 objectclass: inetOrgPerson
-cn: didi
-sn: zhaiyongchao
 uid: didi
+firstName: didi
+lastName: zhaiyongchao
+email: didi@gmail.com
+password: password
+organization: mpdl
+department: digitallab
