@@ -17,9 +17,8 @@ public class VerificationToken {
     
     private boolean expiredOnce;
 
-    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name = "user_id", foreignKey = @ForeignKey(name = "FK_VERIFY_USER"))
-    private User user;
+    @Column(name = "user_email")
+    private String userEmail;
 
     private Date expiryDate;
 
@@ -34,11 +33,11 @@ public class VerificationToken {
         this.expiryDate = calculateExpiryDate(EXPIRATION);
     }
 
-    public VerificationToken(final String token, final User user) {
+    public VerificationToken(final String token, final String userEmail) {
         super();
 
         this.token = token;
-        this.user = user;
+        this.userEmail = userEmail;
         this.expiryDate = calculateExpiryDate(EXPIRATION);
         this.expiredOnce = false;
     }
@@ -55,15 +54,15 @@ public class VerificationToken {
         this.token = token;
     }
 
-    public User getUser() {
-        return user;
-    }
+	public String getUserEmail() {
+		return userEmail;
+	}
 
-    public void setUser(final User user) {
-        this.user = user;
-    }
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
+	}
 
-    public Date getExpiryDate() {
+	public Date getExpiryDate() {
         return expiryDate;
     }
 
@@ -100,7 +99,7 @@ public class VerificationToken {
         int result = 1;
         result = prime * result + ((expiryDate == null) ? 0 : expiryDate.hashCode());
         result = prime * result + ((token == null) ? 0 : token.hashCode());
-        result = prime * result + ((user == null) ? 0 : user.hashCode());
+        result = prime * result + ((userEmail == null) ? 0 : userEmail.hashCode());
         return result;
     }
 
@@ -130,11 +129,11 @@ public class VerificationToken {
         } else if (!token.equals(other.token)) {
             return false;
         }
-        if (user == null) {
-            if (other.user != null) {
+        if (userEmail == null) {
+            if (other.userEmail != null) {
                 return false;
             }
-        } else if (!user.equals(other.user)) {
+        } else if (!userEmail.equals(other.userEmail)) {
             return false;
         }
         return true;

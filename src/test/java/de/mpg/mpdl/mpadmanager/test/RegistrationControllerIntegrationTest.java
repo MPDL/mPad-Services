@@ -66,7 +66,7 @@ public class RegistrationControllerIntegrationTest {
 
         entityManager.persist(user);
         token = UUID.randomUUID().toString();
-        VerificationToken verificationToken = new VerificationToken(token, user);
+        VerificationToken verificationToken = new VerificationToken(token, user.getEmail());
         verificationToken.setExpiryDate(Date.from(Instant.now().plus(2, ChronoUnit.DAYS)));
 
         entityManager.persist(verificationToken);

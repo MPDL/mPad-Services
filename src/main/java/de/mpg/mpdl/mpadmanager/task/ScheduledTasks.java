@@ -51,7 +51,8 @@ public class ScheduledTasks {
         log.info("token count: " + tokens.size());
 
         for(VerificationToken token: tokens) {
-        	User user = token.getUser();
+            String userEmail = token.getUserEmail();
+            User user = userService.findUserByEmail(userEmail);
         	if (!user.isEnabled()) {
         		if (token.isExpiredOnce()) {
 	        		mailSender.send(constructVerificationTokenExpiredEmail(user));

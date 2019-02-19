@@ -64,7 +64,8 @@ public class UserService implements IUserService {
     public User getUser(final String verificationToken) {
         final VerificationToken token = tokenRepository.findByToken(verificationToken);
         if (token != null) {
-            return token.getUser();
+            String email = token.getUserEmail();
+            return repository.findByEmail(email);
         }
         return null;
     }
@@ -81,7 +82,7 @@ public class UserService implements IUserService {
 
     @Override
     public void deleteUser(final User user) {
-        final VerificationToken verificationToken = tokenRepository.findByUser(user);
+        final VerificationToken verificationToken = tokenRepository.findByUserEmail(user.getEmail());
 
         if (verificationToken != null) {
             tokenRepository.delete(verificationToken);
@@ -91,8 +92,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void createVerificationTokenForUser(final User user, final String token) {
-        final VerificationToken myToken = new VerificationToken(token, user);
+    public void createVerificationTokenForUser(final String email, final String token) {
+        final VerificationToken myToken = new VerificationToken(token, email);
         tokenRepository.save(myToken);
     }
 
@@ -122,7 +123,7 @@ public class UserService implements IUserService {
             return TOKEN_INVALID;
         }
 
-        final User user = verificationToken.getUser();
+        final User user = repository.findByEmail(verificationToken.getUserEmail());
         final Calendar cal = Calendar.getInstance();
         if ((verificationToken.getExpiryDate()
             .getTime()
