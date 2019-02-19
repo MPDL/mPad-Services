@@ -1,131 +1,85 @@
 package de.mpg.mpdl.mpadmanager.model;
 
-import java.util.Collection;
+import org.springframework.ldap.odm.annotations.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.naming.Name;
 
-import org.jboss.aerogear.security.otp.api.Base32;
+@Entry(base = "ou=people,dc=mpadmanager,dc=de", objectClasses = "inetOrgPerson")
+public final class User {
 
-
-@Entity
-@Table(name = "user_account")
-public class User {
-	
-	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(unique = true, nullable = false)
-	private Long id;
-	
-    @Column(nullable = false)
+    @Id
+    private Name id;
+    @Attribute(name = "firstName")
 	private String firstName;
     
-    @Column(nullable = false)
+    @Attribute(name = "lastName")
 	private String lastName;
     
-    @Column(nullable = false)
+    @DnAttribute(value = "email", index = 3)
 	private String email;
     
-    @Column(length = 60)
+    @Attribute(name = "password")
     private String password;
     
-    @Column(nullable = false)
+    @Attribute(name = "organization")
 	private String organization;
     
-    @Column()
+    @Attribute(name = "department")
 	private String department;
     
+    @Attribute(name = "enabled")
     private boolean enabled;
+    
+    @Attribute(name = "secret")
     private String secret;
     
-//    @ManyToMany(fetch = FetchType.EAGER)
-//    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-//    private Collection<Role> roles;
-
-	public User() {
-		super();
-        this.secret = Base32.random();
-        this.enabled = false;
-	}
-	
-	public Long getId() {
+	public Name getId() {
 		return id;
 	}
-
-	public void setId(Long id) {
+	public void setId(Name id) {
 		this.id = id;
 	}
-
 	public String getFirstName() {
 		return firstName;
 	}
-
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
-
 	public String getLastName() {
 		return lastName;
 	}
-
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-
 	public String getEmail() {
 		return email;
 	}
-
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
-	public String getOrganization() {
-		return organization;
-	}
-
-	public void setOrganization(String organization) {
-		this.organization = organization;
-	}
-
-	public String getDepartment() {
-		return department;
-	}
-
-	public void setDepartment(String department) {
-		this.department = department;
-	}
-
-	public boolean isEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	public String getSecret() {
-		return secret;
-	}
-
-	public void setSecret(String secret) {
-		this.secret = secret;
-	}
-
 	public String getPassword() {
 		return password;
 	}
-
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public String getOrganization() {
+		return organization;
+	}
+	public void setOrganization(String organization) {
+		this.organization = organization;
+	}
+	public String getDepartment() {
+		return department;
+	}
+	public void setDepartment(String department) {
+		this.department = department;
+	}
+	public boolean isEnabled() {
+		return enabled;
+	}
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 	
     @Override
@@ -153,5 +107,5 @@ public class User {
         }
         return true;
     }
-		
+	
 }

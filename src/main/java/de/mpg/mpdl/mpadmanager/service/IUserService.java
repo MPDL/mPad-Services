@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import javax.naming.Name;
+
 import de.mpg.mpdl.mpadmanager.dto.UserDTO;
 import de.mpg.mpdl.mpadmanager.model.User;
 import de.mpg.mpdl.mpadmanager.model.VerificationToken;
@@ -29,8 +31,6 @@ public interface IUserService {
     User findUserByEmail(String email);
     
     List<User> findAllUsers();
-
-    Optional<User> getUserByID(long id);
 
     String validateVerificationToken(String token);
 

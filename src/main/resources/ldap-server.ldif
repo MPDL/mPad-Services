@@ -7,15 +7,26 @@ objectclass: top
 objectclass: organizationalUnit
 ou: people
 
-dn: uid=110,ou=people,dc=mpadmanager,dc=de
+dn: email=didi@gmail.com,ou=people,dc=mpadmanager,dc=de
 objectclass: top
 objectclass: person
 objectclass: organizationalPerson
 objectclass: inetOrgPerson
-uid: didi
 firstName: didi
 lastName: zhaiyongchao
-email: didi@gmail.com
 password: password
 organization: mpdl
 department: digitallab
+enabled: true
+
+dn: email=sb@gmail.com,ou=people,dc=mpadmanager,dc=de
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+firstName: da
+lastName: sb
+password: password
+organization: mpdl
+department: digitallab
+enabled: false

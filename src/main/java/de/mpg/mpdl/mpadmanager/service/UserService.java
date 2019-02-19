@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import javax.naming.Name;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,11 +110,6 @@ public class UserService implements IUserService {
     @Override
     public User findUserByEmail(final String email) {
         return repository.findByEmail(email);
-    }
-
-    @Override
-    public Optional<User> getUserByID(final long id) {
-        return repository.findById(id);
     }
 
     @Override

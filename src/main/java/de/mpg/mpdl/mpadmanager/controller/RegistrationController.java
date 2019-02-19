@@ -113,12 +113,6 @@ public class RegistrationController {
 	        return constructEmail("Resend Registration Token", message + " \r\n" + confirmationUrl, user);
 	    }
 
-	    private SimpleMailMessage constructResetTokenEmail(final String contextPath, final Locale locale, final String token, final User user) {
-	        final String url = contextPath + "/user/changePassword?id=" + user.getId() + "&token=" + token;
-	        final String message = messages.getMessage("message.resetPassword", null, locale);
-	        return constructEmail("Reset Password", message + " \r\n" + url, user);
-	    }
-
 	    private SimpleMailMessage constructEmail(String subject, String body, User user) {
 	        final SimpleMailMessage email = new SimpleMailMessage();
 	        email.setSubject(subject);
