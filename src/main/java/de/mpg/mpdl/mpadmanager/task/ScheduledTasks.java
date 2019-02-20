@@ -41,7 +41,7 @@ public class ScheduledTasks {
 	
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
 	
-	@Scheduled(fixedRate = 10000) 
+	@Scheduled(fixedRate = 10000)
 	public void reportCurrentTime() {
 		Date now = new Date();
         log.info("The time is now {}", dateFormat.format(now));
@@ -56,7 +56,8 @@ public class ScheduledTasks {
         	if (!user.isEnabled()) {
         		if (token.isExpiredOnce()) {
 	        		mailSender.send(constructVerificationTokenExpiredEmail(user));
-	        		userService.deleteUser(user); // token deleted with user
+	                userService.deleteUser(user); // delete user in LDAP server
+	                userService.deleteVerificationToken(token.getToken());
         		} else { // resent token
         	        final VerificationToken newToken = userService.generateNewVerificationToken(token.getToken());
         	        mailSender.send(constructResendVerificationTokenEmail("http://localhost:8080", newToken, user));

@@ -166,4 +166,12 @@ public class UserService implements IUserService {
     	List<VerificationToken> tokens = tokenRepository.findExpiredTokens(now);
     	return tokens;
     }
+
+	@Override
+	public void deleteVerificationToken(String token) {
+		VerificationToken verificationToken = tokenRepository.findByToken(token);
+        if (verificationToken != null) {
+            tokenRepository.delete(verificationToken);
+        }
+	}
 }

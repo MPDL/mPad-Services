@@ -38,5 +38,7 @@ public interface IUserService {
     
     List<VerificationToken> findExpiredTokens(Date now);
 
+    void deleteVerificationToken(String token);
+
 }
 

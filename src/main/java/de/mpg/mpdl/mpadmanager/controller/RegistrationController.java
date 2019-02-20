@@ -85,6 +85,7 @@ public class RegistrationController {
 	            final User user = userService.getUser(token);
 	            authWithoutPassword(user);
 	            model.addAttribute("message", messages.getMessage("message.accountVerified", null, locale));
+	            userService.deleteVerificationToken(token);
 	            return "redirect:/successActivate.html";
 	        }
 
