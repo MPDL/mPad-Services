@@ -51,7 +51,7 @@ public class MyUserDetailsService implements UserDetailsService{
             Stream<String> privileges = Stream.of("READ_PRIVILEGE", "CHANGE_PASSWORD_PRIVILEGE");
             List<GrantedAuthority> authorities = privileges.map(p -> new SimpleGrantedAuthority(p)).collect(Collectors.toList());
 
-            return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), user.isEnabled(), true, true, true, authorities);
+            return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), user.getEnabled().equalsIgnoreCase("true"), true, true, true, authorities);
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }

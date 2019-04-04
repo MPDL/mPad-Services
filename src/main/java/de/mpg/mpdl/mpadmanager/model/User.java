@@ -4,7 +4,7 @@ import org.springframework.ldap.odm.annotations.*;
 
 import javax.naming.Name;
 
-@Entry(base = "ou=people,dc=mpadmanager,dc=de", objectClasses = "inetOrgPerson")
+@Entry(base = "ou=mpaduser,dc=mpadmanager,dc=de", objectClasses = "MpadUser")
 public final class User {
 
     @Id
@@ -14,9 +14,9 @@ public final class User {
     
     @Attribute(name = "lastName")
 	private String lastName;
-    
-    @DnAttribute(value = "email", index = 3)
-	private String email;
+        
+    @DnAttribute(value = "cn")
+	private String cn;
     
     @Attribute(name = "password")
     private String password;
@@ -28,7 +28,7 @@ public final class User {
 	private String department;
     
     @Attribute(name = "enabled")
-    private boolean enabled;
+    private String enabled;
     
     @Attribute(name = "secret")
     private String secret;
@@ -52,10 +52,10 @@ public final class User {
 		this.lastName = lastName;
 	}
 	public String getEmail() {
-		return email;
+		return cn;
 	}
 	public void setEmail(String email) {
-		this.email = email;
+		this.cn = email;
 	}
 	public String getPassword() {
 		return password;
@@ -75,18 +75,18 @@ public final class User {
 	public void setDepartment(String department) {
 		this.department = department;
 	}
-	public boolean isEnabled() {
-		return enabled;
-	}
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
-	
+    public String getEnabled() {
+        return enabled;
+    }
+    public void setEnabled(String enabled) {
+        this.enabled = enabled;
+    }
+    
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = (prime * result) + ((email == null) ? 0 : email.hashCode());
+        result = (prime * result) + ((cn == null) ? 0 : cn.hashCode());
         return result;
     }
 	
@@ -102,7 +102,7 @@ public final class User {
             return false;
         }
         final User user = (User) obj;
-        if (!email.equals(user.email)) {
+        if (!cn.equals(user.cn)) {
             return false;
         }
         return true;

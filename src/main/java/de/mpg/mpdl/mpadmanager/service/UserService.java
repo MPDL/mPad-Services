@@ -128,8 +128,8 @@ public class UserService implements IUserService {
             tokenRepository.delete(verificationToken);
             return TOKEN_EXPIRED;
         }
-
-        user.setEnabled(true);
+//TODO: set enable
+//        user.setEnabled(true);
         // tokenRepository.delete(verificationToken);
         repository.save(user);
         return TOKEN_VALID;

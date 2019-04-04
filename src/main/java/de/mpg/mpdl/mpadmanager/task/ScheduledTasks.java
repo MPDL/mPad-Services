@@ -52,8 +52,8 @@ public class ScheduledTasks {
 
         for(VerificationToken token: tokens) {
             String userEmail = token.getUserEmail();
-            User user = userService.findUserByEmail(userEmail);
-        	if (!user.isEnabled()) {
+            User user = userService. findUserByEmail(userEmail);
+        	if (!user.getEnabled().equalsIgnoreCase("true")) {
         		if (token.isExpiredOnce()) {
 	        		mailSender.send(constructVerificationTokenExpiredEmail(user));
 	                userService.deleteUser(user); // delete user in LDAP server

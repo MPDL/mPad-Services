@@ -48,7 +48,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 			user.setEmail(email);
 			user.setOrganization(organization);
 			user.setDepartment(department);
-			user.setEnabled(true);
+			user.setEnabled("true");
 		}
 		user = userRepository.save(user);
 		return user;
