@@ -2,13 +2,11 @@ package de.mpg.mpdl.mpadmanager.repository;
 
 import java.util.List;
 
-import javax.naming.Name;
-
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import de.mpg.mpdl.mpadmanager.model.User;
 
-public interface UserRepository extends CrudRepository<User, Name> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByEmail(String email);
 

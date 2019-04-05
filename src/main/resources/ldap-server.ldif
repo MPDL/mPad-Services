@@ -2,16 +2,14 @@ dn: dc=mpadmanager,dc=de
 objectClass: top
 objectClass: domain
 
-dn: ou=people,dc=mpadmanager,dc=de
+dn: ou=mpaduser,dc=mpadmanager,dc=de
 objectclass: top
 objectclass: organizationalUnit
-ou: people
+ou: mpaduser
 
-dn: email=didi@gmail.com,ou=people,dc=mpadmanager,dc=de
+dn: email=didi@gmail.com,ou=mpaduser,dc=mpadmanager,dc=de
 objectclass: top
-objectclass: person
-objectclass: organizationalPerson
-objectclass: inetOrgPerson
+objectclass: MpadUser
 firstName: didi
 lastName: zhaiyongchao
 password: password
@@ -19,11 +17,9 @@ organization: mpdl
 department: digitallab
 enabled: true
 
-dn: email=sb@gmail.com,ou=people,dc=mpadmanager,dc=de
+dn: email=sb@gmail.com,ou=mpaduser,dc=mpadmanager,dc=de
 objectclass: top
-objectclass: person
-objectclass: organizationalPerson
-objectclass: inetOrgPerson
+objectclass: MpadUser
 firstName: da
 lastName: sb
 password: password

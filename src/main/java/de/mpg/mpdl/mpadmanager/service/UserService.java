@@ -16,8 +16,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import de.mpg.mpdl.mpadmanager.dto.UserDTO;
+import de.mpg.mpdl.mpadmanager.model.LdapUser;
 import de.mpg.mpdl.mpadmanager.model.User;
 import de.mpg.mpdl.mpadmanager.model.VerificationToken;
+import de.mpg.mpdl.mpadmanager.repository.LdapUserRepository;
 import de.mpg.mpdl.mpadmanager.repository.UserRepository;
 import de.mpg.mpdl.mpadmanager.repository.VerificationTokenRepository;
 import de.mpg.mpdl.mpadmanager.web.error.UserAlreadyExistException;
@@ -26,10 +28,13 @@ import de.mpg.mpdl.mpadmanager.web.error.UserAlreadyExistException;
 @Transactional
 public class UserService implements IUserService {
     @Autowired
-    private UserRepository repository;
+    private UserRepository userRepository;
 
     @Autowired
     private VerificationTokenRepository tokenRepository;
+    
+    @Autowired
+    private LdapUserRepository ldapUserRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -58,7 +63,7 @@ public class UserService implements IUserService {
         user.setPassword(passwordEncoder.encode(accountDto.getPassword()));
         user.setOrganization(accountDto.getOrganization());
         user.setDepartment(accountDto.getDepartment());
-        return repository.save(user);
+        return userRepository.save(user);
     }
 
     @Override
@@ -66,7 +71,7 @@ public class UserService implements IUserService {
         final VerificationToken token = tokenRepository.findByToken(verificationToken);
         if (token != null) {
             String email = token.getUserEmail();
-            return repository.findByEmail(email);
+            return userRepository.findByEmail(email);
         }
         return null;
     }
@@ -78,7 +83,7 @@ public class UserService implements IUserService {
 
     @Override
     public void saveRegisteredUser(final User user) {
-        repository.save(user);
+        userRepository.save(user);
     }
 
     @Override
@@ -89,7 +94,7 @@ public class UserService implements IUserService {
             tokenRepository.delete(verificationToken);
         }
         
-        repository.delete(user);
+        userRepository.delete(user);
     }
 
     @Override
@@ -109,7 +114,7 @@ public class UserService implements IUserService {
 
     @Override
     public User findUserByEmail(final String email) {
-        return repository.findByEmail(email);
+        return userRepository.findByEmail(email);
     }
 
     @Override
@@ -119,7 +124,7 @@ public class UserService implements IUserService {
             return TOKEN_INVALID;
         }
 
-        final User user = repository.findByEmail(verificationToken.getUserEmail());
+        final User user = userRepository.findByEmail(verificationToken.getUserEmail());
         final Calendar cal = Calendar.getInstance();
         if ((verificationToken.getExpiryDate()
             .getTime()
@@ -128,15 +133,23 @@ public class UserService implements IUserService {
             tokenRepository.delete(verificationToken);
             return TOKEN_EXPIRED;
         }
-//TODO: set enable
-//        user.setEnabled(true);
-        // tokenRepository.delete(verificationToken);
-        repository.save(user);
+        user.setEnabled(true);
+        tokenRepository.delete(verificationToken);
+        userRepository.save(user);
+        
+        LdapUser ldapUser = new LdapUser();
+        ldapUser.setMuid(user.getEmail());
+        ldapUser.setFirstName(user.getFirstName());
+        ldapUser.setLastName(user.getLastName());
+        ldapUser.setPassword(user.getPassword());
+        ldapUser.setOrganization(user.getOrganization());
+        ldapUser.setDepartment(user.getDepartment());
+        ldapUserRepository.save(ldapUser);
         return TOKEN_VALID;
     }
 
     private boolean emailExist(final String email) {
-        return repository.findByEmail(email) != null;
+        return userRepository.findByEmail(email) != null;
     }
 
     @Override
@@ -158,7 +171,7 @@ public class UserService implements IUserService {
 
 	@Override
 	public List<User> findAllUsers() {
-		return repository.findAll();
+		return userRepository.findAll();
 	}
 	
     @Override

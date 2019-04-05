@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import de.mpg.mpdl.mpadmanager.model.LdapUser;
 import de.mpg.mpdl.mpadmanager.model.User;
+import de.mpg.mpdl.mpadmanager.repository.LdapUserRepository;
 import de.mpg.mpdl.mpadmanager.repository.UserRepository;
 
 @RunWith(SpringRunner.class)
@@ -15,6 +17,9 @@ public class ApplicationTests {
 
 	@Autowired
 	private UserRepository userRepository;
+	
+    @Autowired
+    private LdapUserRepository ldapUserRepository;
 
 	@Test
 	public void findAll() {
@@ -52,5 +57,27 @@ public class ApplicationTests {
 			System.out.println(e);
 		}
 	}
+	
+   @Test
+    public void LdapSave() throws Exception {
+
+        try {
+            LdapUser ldapUser = new LdapUser();
+            ldapUser.setMuid("paipaibear90@gmail.com");
+            ldapUser.setFirstName("ying");
+            ldapUser.setLastName("li");
+            ldapUser.setPassword("pass");
+            ldapUser.setOrganization("mpdl");
+            ldapUser.setDepartment("digital lab");
+            ldapUserRepository.save(ldapUser);
+//            ldapUserRepository.findAll().forEach(p -> {
+//                System.out.println(p);
+//            });
+            
+//            System.out.println(ldapUserRepository.findByCn("paipaibear90@gmail.com").getPassword());
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
 
 }
