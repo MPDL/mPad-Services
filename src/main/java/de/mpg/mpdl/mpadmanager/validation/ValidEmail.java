@@ -19,7 +19,7 @@ import javax.validation.Payload;
 @Documented
 public @interface ValidEmail {
 
-    String message() default "Invalid Email";
+    String message() default "Invalid email, no orgnization found";
 
     Class<?>[] groups() default {};
 

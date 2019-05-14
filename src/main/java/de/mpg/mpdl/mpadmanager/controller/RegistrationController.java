@@ -27,6 +27,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -65,8 +66,12 @@ public class RegistrationController {
 	        super();
 	    }
 
+	    @GetMapping("/")
+	    public String indexPage() {
+	        return "redirect:/registration.html";
+	    }
+	    
 	    // Registration
-
 	    @RequestMapping(value = "/user/registration", method = RequestMethod.POST)
 	    @ResponseBody
 	    public GenericResponse registerUserAccount(@Valid final UserDTO accountDto, final HttpServletRequest request) {

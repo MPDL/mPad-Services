@@ -41,7 +41,7 @@ public class ScheduledTasks {
 	
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
 	
-	@Scheduled(fixedRate = 10000)
+	@Scheduled(fixedRate = 100000)
 	public void reportCurrentTime() {
 		Date now = new Date();
         log.info("The time is now {}", dateFormat.format(now));
@@ -60,7 +60,8 @@ public class ScheduledTasks {
 	                userService.deleteVerificationToken(token.getToken());
         		} else { // resent token
         	        final VerificationToken newToken = userService.generateNewVerificationToken(token.getToken());
-        	        mailSender.send(constructResendVerificationTokenEmail("http://localhost:8080", newToken, user));
+        	        mailSender.send(constructResendVerificationTokenEmail("http://vm116.mpdl.mpg.de", newToken, user));
+                    //mailSender.send(constructResendVerificationTokenEmail("http://localhost:8080", newToken, user));
         		}
         	}
         }

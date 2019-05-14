@@ -15,12 +15,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-import de.mpg.mpdl.mpadmanager.repository.UserRepository;
 import de.mpg.mpdl.mpadmanager.security.CustomAuthenticationProvider;
 
 @Configuration
@@ -31,19 +28,9 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
-    @Autowired
-    private AuthenticationSuccessHandler myAuthenticationSuccessHandler;
-
-    @Autowired
-    private AuthenticationFailureHandler authenticationFailureHandler;
-
-    @Autowired
-    private UserRepository userRepository;
-
     public SecSecurityConfig() {
         super();
     }
-
     
     @Bean
     @Override
@@ -65,41 +52,18 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(final HttpSecurity http) throws Exception {
         // @formatter:off
         http
-//            .csrf().disable()
             .authorizeRequests()
-                .antMatchers("/login*","/login*", "/logout*", "/signin/**", "/signup/**", "/customLogin",
+                .antMatchers("/**", "/login*","/login*", "/logout*", "/signin/**", "/signup/**", "/customLogin",
                         "/user/registration*", "/registrationConfirm*", "/expiredAccount*", "/registration*",
                         "/badUser*", "/user/resendRegistrationToken*" ,"/forgetPassword*", "/user/resetPassword*",
-                        "/user/changePassword*", "/emailError*", "/resources/**","/old/user/registration*","/successRegister*","/successActivate*", "/userList*", "/qrcode*").permitAll()
+                        "/user/changePassword*", "/emailError*", "/resources/**","/old/user/registration*","/successRegister*","/successActivate*", "/qrcode*").permitAll()
                 .antMatchers("/invalidSession*").anonymous()
                 .antMatchers("/user/updatePassword*","/user/savePassword*","/updatePassword*").hasAuthority("CHANGE_PASSWORD_PRIVILEGE")
                 .antMatchers( "/favicon.ico").permitAll()
                 .anyRequest().hasAuthority("READ_PRIVILEGE")
                 .and()   
-//            .formLogin()
-//                .loginPage("/login")
-//                .defaultSuccessUrl("/homepage.html")
-//                .failureUrl("/login?error=true")
-//                .successHandler(myAuthenticationSuccessHandler)
-//                .failureHandler(authenticationFailureHandler)
-//                .authenticationDetailsSource(authenticationDetailsSource)
-                  
-//                .permitAll()
-//                .and()
-            .sessionManagement()
+                .sessionManagement()
             	.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//                .invalidSessionUrl("/invalidSession.html")
-//                .maximumSessions(1).sessionRegistry(sessionRegistry()).and()
-//                .sessionFixation().none();
-//            .and()
-//            .logout()
-//                .logoutSuccessHandler(myLogoutSuccessHandler)
-//                .invalidateHttpSession(false)
-//                .logoutSuccessUrl("/logout.html?logSucc=true")
-//                .deleteCookies("JSESSIONID")
-//                .permitAll();
-//             .and()
-//                .rememberMe().rememberMeServices(rememberMeServices()).key("theKey");
     // @formatter:on
     }
 
@@ -115,7 +79,7 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder(11);
+        return new LdapShaPasswordEncoder();
     }
 
     @Bean

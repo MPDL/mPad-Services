@@ -41,7 +41,7 @@ color:#000;
                 <div class="form-group row">
                 	<label class="col-sm-2"></label>
                     <label class="col-sm-2" th:text="#{label.user.email}">email</label>
-                    <span class="col-sm-6"><input type="email" class="form-control" name="email" value="" required="required"/></span>                    
+                    <span class="col-sm-6"><input id="email" type="email" class="form-control" name="email" value="" required="required"/></span>                    
                     <span id="emailError" class="alert alert-danger col-sm-2" style="display:none"></span>
                     
                 </div>
@@ -60,8 +60,7 @@ color:#000;
                 <div class="form-group row">
                 	<label class="col-sm-2"></label>
                     <label class="col-sm-2" th:text="#{label.user.organization}">organization</label>
-                    <span class="col-sm-6"><input type="form-control" class="form-control" name="organization" value="" required="required"/></span>                    
-                    <span id="organizationError" class="alert alert-danger col-sm-2" style="display:none"></span>
+                    <span class="col-sm-6"><input id="organization" type="form-control" class="form-control" name="organization" value="" required="required" readonly/></span>                    
                     
                 </div>
                 <div class="form-group row">
@@ -82,7 +81,7 @@ color:#000;
                 <div class="form-group row">
                     <label class="col-sm-2"></label>
                 	<div class="checkbox col-sm-5">
-  						<label><input type="checkbox" value="">I accept the terms of Service</label>
+  						<label><input type="checkbox" id="termCheckbox" value="">I accept the terms of Service</label>
 					</div>
                 </div>
 
@@ -101,18 +100,163 @@ color:#000;
 <script th:inline="javascript">
 var serverContext = [[@{/}]];
 
+var departments = {
+		"biblhertz.it":"Bibliotheca Hertziana - Max-Planck-Institutfür Kunstgeschichte",
+		"dkrz.de":"Deutsches Klimarechenzentrum",
+		"esi-frankfurt.de":"Ernst Strüngmann Institute (ESI) forNeuroscience in Cooperation with Max-Planck-Society",
+		"caesar.de":"Forschungszentrum caesar (center ofadvanced european studies and research)",
+		"tuebingen.mpg.de":"Friedrich-Miescher-Laboratorium fürbiologische Arbeitsgruppen in der Max-Planck-Gesellschaft",
+		"fhi-berlin.mpg.de":"Fritz-Haber-Institut der Max-Planck-Gesellschaft",
+		"gv.mpg.de":"Generalverwaltung",
+		"gwdg.de":"GWD Göttingen",
+		"hll.mpg.de":"Halbleiterlabor der Max-Planck-Gesellschaft",
+		"hda-hd.de":"Haus der Astronomie",
+		"khi.fi.it":"Kunsthistorisches Institut in Florenz - Max-Planck-Institut",
+		"mpcdf.mpg.de":"Max Planck Computing and Data Facility",
+		"rzg.mpg.de":"Max Planck Computing and Data Facility",
+		"mpdl.mpg.de":"Max Planck Digital Library",
+		"maxplanckflorida.org":"Max Planck Florida Institute for Neuroscience",
+		"mpfi.org":"Max Planck Florida Institute for Neuroscience",
+		"mpfpr.de":"Max Planck Foundation for InternationalPeace and the Rule of Law",
+		"gen.mpg.de":"Max-Planck-Forschungsstelle für Neurogenetik",
+		"mpi.lu":"Max Planck Institute Luxembourg forInternational, European and RegulatoryProcedural Law",
+		"mpia.de":"Max-Planck-Institut für Astronomie",
+		"mpia-hd.de":"Max-Planck-Institut für Astronomie",
+		"mpa-garching.mpg.de":"Max-Planck-Institut für Astrophysik",
+		"mpil.de":"Max-Planck-Institut für ausländischesöffentliches Recht und Völkerrecht",
+		"mpipriv.de":"Max-Planck-Institut für ausländisches undinternationales Privatrecht",
+		"mpicc.de":"Max-Planck-Institut für ausländisches undinternationales Strafrecht",
+		"mpib-berlin.mpg.de":"Max-Planck-Institut für Bildungsforschung",
+		"biochem.mpg.de":"Max-Planck-Institut für Biochemie",
+		"bgc-jena.mpg.de":"Max-Planck-Institut für Biogeochemie",
+		"age.mpg.de":"Max-Planck-Institut für Biologie des Alterns",
+		"tuebingen.mpg.de":"Max-Planck-Institut für biologischeKybernetik",
+		"mpibp-frankfurt.mpg.de":"Max-Planck-Institut für Biophysik",
+		"biophys.mpg.de":"Max-Planck-Institut für Biophysik",
+		"mpibpc.mpg.de":"Max-Planck-Institut für biophysikalischeChemie",
+		"mpic.de":"Max-Planck-Institut für Chemie",
+		"cec.mpg.de":"Max-Planck-Institut für chemischeEnergiekonversion",
+		"ice.mpg.de":"Max-Planck-Institut für chemische Ökologie",
+		"cpfs.mpg.de":"Max-Planck-Institut für Chemische Physikfester Stoffe",
+		"demogr.mpg.de":"Max-Planck-Institut für demografischeForschung",
+		"mpl.mpg.de":"Max-Planck-Institut für die Physik des Lichts",
+		"mpi-magdeburg.mpg.de":"Max-Planck-Institut für Dynamik komplexertechnischer Systeme",
+		"ds.mpg.de":"Max-Planck-Institut für Dynamik undSelbstorganisation",
+		"mpie.de":"Max-Planck-Institut für Eisenforschung GmbH",
+		"aesthetics.mpg.de":"Max-Planck-Institut für empirische Ästhetik",
+		"tuebingen.mpg.de":"Max-Planck-Institut für Entwicklungsbiologie",
+		"eth.mpg.de":"Max-Planck-Institut für ethnologische Forschung",
+		"mpier.uni-frankfurt.de":"Max-Planck-Institut für europäischeRechtsgeschichte",
+		"rg.mpg.de":"Max-Planck-Institut für europäischeRechtsgeschichte",
+		"eva.mpg.de":"Max-Planck-Institut für evolutionäreAnthropologie",
+		"evolbio.mpg.de":"Max-Planck-Institut für Evolutionsbiologie",
+		"em.mpg.de":"Max-Planck-Institut für experimentelle Medizin",
+		"mpe.mpg.de":"Max-Planck-Institut für extraterrestrische Physik",
+		"fkf.mpg.de":"Max-Planck-Institut für Festkörperforschung",
+		"mpifg.de":"Max-Planck-Institut für Gesellschaftsforschung",
+		"aei.mpg.de":"Max-Planck-Institut für Gravitationsphysik",
+		"!!aei.mpg.de":"Max-Planck-Institut für Gravitationsphysik, Teilinstitut Hannover",
+		"kerckhoff.mpg.de":"Max-Planck-Institut für Herz- undLungenforschung",
+		"mpi-bn.mpg.de":"Max-Planck-Institut für Herz- undLungenforschung",
+		"mpih-frankfurt.mpg.de":"Max-Planck-Institut für Hirnforschung",
+		"brain.mpg.de":"Max-Planck-Institut für Hirnforschung",
+		"immunbio.mpg.de":"Max-Planck-Institut für Immunbiologie",
+		"ie-freiburg.mpg.de":"Max-Planck-Institut für Immunbiologie und Epigenetik",
+		"mpiib-berlin.mpg.de":"Max-Planck-Institut für Infektionsbiologie",
+		"mpi-inf.mpg.de":"Max-Planck-Institut für Informatik",
+		"mpi-klsb.mpg.de":"Max-Planck-Institut für Informatik",
+		"ip.mpg.de":"Max-Planck-Institut für Innovation undWettbewerb",
+		"is.mpg.de":"Max-Planck-Institut für Intelligente Systeme,Standort Stuttgart",
+		"tuebingen.mpg.de":"Max-Planck-Institut für Intelligente Systeme,Standort Tübingen",
+		"mpi-hd.mpg.de":"Max-Planck-Institut für Kernphysik",
+		"cbs.mpg.de":"Max-Planck-Institut für Kognitions- und Neurowissenschaften",
+		"kofo.mpg.de":"Max-Planck-Institut für Kohlenforschung",
+		"mpikg-golm.mpg.de":"Max-Planck-Institut für Kolloid- und Grenzflächenforschung",
+		"mpikg.mpg.de":"Max-Planck-Institut für Kolloid- und Grenzflächenforschung",
+		"mpil-ploen.mpg.de":"Max-Planck-Institut für Limnologie",
+		"mpi-bremen.de":"Max-Planck-Institut für marine Mikrobiologie",
+		"mpim-bonn.mpg.de":"Max-Planck-Institut für Mathematik",
+		"mis.mpg.de":"Max-Planck-Institut für Mathematik in den Naturwissenschaften",
+		"mpimf-heidelberg.mpg.de":"Max-Planck-Institut für medizinische Forschung",
+		"shh.mpg.de":"Max-Planck-Institut für Menschheitsgeschichte",
+		"zmaw.de":"Max-Planck-Institut für Meteorologie",
+		"mpimet.mpg.de":"Max-Planck-Institut für Meteorologie",
+		"mpi-halle.mpg.de":"Max-Planck-Institut für Mikrostrukturphysik",
+		"mpi-halle.de":"Max-Planck-Institut für Mikrostrukturphysik",
+		"mpi-muenster.mpg.de":"Max-Planck-Institut für molekulare Biomedizin",
+		"molgen.mpg.de":"Max-Planck-Institut für molekulare Genetik",
+		"mpimp-golm.mpg.de":"Max-Planck-Institut für molekulare Pflanzenphysiologie",
+		"cgc.mpg.de":"Max-Planck-Institut für molekulare Physiologie",
+		"mpi-dortmund.mpg.de":"Max-Planck-Institut für molekulare Physiologie",
+		"mpi-cbg.de":"Max-Planck-Institut für molekulare Zellbiologie und Genetik",
+		"neuro.mpg.de":"Max-Planck-Institut für Neurobiologie",
+		"nf.mpg.de":"Max-Planck-Institut für neurologische Forschung",
+		"econ.mpg.de":"Max-Planck-Institut für Ökonomik",
+		"orn.mpg.de":"Max-Planck-Institut für Ornithologie",
+		"!!orn.mpg.de":"Max-Planck-Institut für Ornithologie, Teilinstitut Radolfzell",
+		"mpipz.mpg.de":"Max-Planck-Institut für Pflanzenzüchtungsforschung",
+		"mpiz-koeln.mpg.de":"Max-Planck-Institut für Pflanzenzüchtungsforschung",
+		"mppmu.mpg.de":"Max-Planck-Institut für Physik",
+		"mpp.mpg.de":"Max-Planck-Institut für Physik",
+		"pks.mpg.de":"Max-Planck-Institut für Physik komplexer Systeme",
+		"mpipks-dresden.mpg.de":"Max-Planck-Institut für Physik komplexer Systeme",
+		"ipp.mpg.de":"Max-Planck-Institut für Plasmaphysik",
+		"!!ipp.mpg.de":"Max-Planck-Institut für Plasmaphysik, Teilinstitut Greifswald",
+		"mpip-mainz.mpg.de":"Max-Planck-Institut für Polymerforschung",
+		"mpipsykl.mpg.de":"Max-Planck-Institut für Psychiatrie",
+		"psych.mpg.de":"Max-Planck-Institut für Psychiatrie",
+		"mpi.nl":"Max-Planck-Institut für Psycholinguistik",
+		"mpq.mpg.de":"Max-Planck-Institut für Quantenoptik",
+		"mpifr.de":"Max-Planck-Institut für Radioastronomie",
+		"mpifr-bonn.mpg.de":"Max-Planck-Institut für Radioastronomie",
+		"mpi-sws.or":"Max-Planck-Institut für Softwaresysteme, Standort Kaiserslautern",
+		"mpi-klsb.mpg.de":"Max-Planck-Institut für Softwaresysteme, Standort Kaiserslautern",
+		"!!mpi-klsb.mpg.de":"Max-Planck-Institut für Softwaresysteme, Standort Saarbrücken",
+		"mps.mpg.de":"Max-Planck-Institut für Sonnensystemforschung",
+		"mpisoc.mpg.de":"Max-Planck-Institut für Sozialrecht und Sozialpolitik",
+		"tax.mpg.de":"Max-Planck-Institut für Steuerrecht und Öffentliche Finanzen",
+		"sf.mpg.de":"Max-Planck-Institut für Stoffwechselforschung",
+		"mpsd.mpg.de":"Max-Planck-Institut für Struktur und Dynamik der Materie",
+		"mpi-marburg.mpg.de":"Max-Planck-Institut für terrestrische Mikrobiologie",
+		"mpiwg-berlin.mpg.de":"Max-Planck-Institut für Wissenschaftsgeschichte",
+		"mmg.mpg.de":"Max-Planck-Institut zur Erforschung multireligiöser und multiethnischer Gesellschaften",
+		"coll.mpg.de":"Max-Planck-Institut zur Erforschung von Gemeinschaftsgütern",
+		"mpi-muelheim.mpg.de":"Mülheimer Institute",
+		"mpis.mpg.de":"Stuttgarter Institute",
+}
+
+
 $(document).ready(function () {
 	$('form').submit(function(event) {
 		register(event);
 	});
 	
-	$(":password").keyup(function(){
+	$("#matchPassword").focusout(function(){
 		if($("#password").val() != $("#matchPassword").val()){
 	        $("#globalError").show().html(/*[[#{PasswordMatches.user}]]*/);
 	    }else{
 	    	$("#globalError").html("").hide();
 	    }
 	});
+	
+   $("#matchPassword").focus(function(){
+	   $("#globalError").html("").hide();
+    });
+   
+   $("#email").focus(function(){
+       $("#emailError").html("").hide();
+       $("#globalError").html("").hide();
+   });
+   
+   $("#email").focusout(function(){
+       var email = $("#email").val();
+       var department_id = email.substring(email.indexOf('@')+1);
+       if (departments[department_id]) {
+         $("#organization").val(departments[department_id]);
+       } else {
+    	   $("#globalError").show().html(/*[[#{EmailMatches.org}]]*/);
+       }
+   });
 	
 	options = {
 		    common: {minChar:8},
@@ -130,11 +274,19 @@ $(document).ready(function () {
 		    		}
 		    	}
 		};
-	 $('#password').pwstrength(options);
+	
+	//$('#password').pwstrength(options);
+	
 });
 
 function register(event){
 	event.preventDefault();
+	var accepted = $("input:checked").length
+	if (!accepted) {
+		$("#globalError").show().html(/*[[#{Checked.terms}]]*/);
+		 return;
+	};
+	
     $(".alert").html("").hide();
     $(".error-list").html("");
     if($("#password").val() != $("#matchPassword").val()){

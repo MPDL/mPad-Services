@@ -3,14 +3,13 @@ package de.mpg.mpdl.mpadmanager.service;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import javax.naming.Name;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ldap.NameAlreadyBoundException;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +18,7 @@ import de.mpg.mpdl.mpadmanager.dto.UserDTO;
 import de.mpg.mpdl.mpadmanager.model.LdapUser;
 import de.mpg.mpdl.mpadmanager.model.User;
 import de.mpg.mpdl.mpadmanager.model.VerificationToken;
+import de.mpg.mpdl.mpadmanager.repository.LdapGroupRepository;
 import de.mpg.mpdl.mpadmanager.repository.LdapUserRepository;
 import de.mpg.mpdl.mpadmanager.repository.UserRepository;
 import de.mpg.mpdl.mpadmanager.repository.VerificationTokenRepository;
@@ -29,6 +29,9 @@ import de.mpg.mpdl.mpadmanager.web.error.UserAlreadyExistException;
 public class UserService implements IUserService {
     @Autowired
     private UserRepository userRepository;
+    
+    @Autowired
+    private LdapGroupRepository ldapGroupRepository;
 
     @Autowired
     private VerificationTokenRepository tokenRepository;
@@ -45,6 +48,7 @@ public class UserService implements IUserService {
     public static final String TOKEN_INVALID = "invalidToken";
     public static final String TOKEN_EXPIRED = "expired";
     public static final String TOKEN_VALID = "valid";
+    public static final String TOKEN_EXIST = "userExist";
 
     public static String APP_NAME = "SpringRegistration";
 
@@ -137,14 +141,16 @@ public class UserService implements IUserService {
         tokenRepository.delete(verificationToken);
         userRepository.save(user);
         
-        LdapUser ldapUser = new LdapUser();
-        ldapUser.setMuid(user.getEmail());
-        ldapUser.setFirstName(user.getFirstName());
-        ldapUser.setLastName(user.getLastName());
-        ldapUser.setPassword(user.getPassword());
-        ldapUser.setOrganization(user.getOrganization());
-        ldapUser.setDepartment(user.getDepartment());
-        ldapUserRepository.save(ldapUser);
+        try {
+            LdapUser ldapUser = new LdapUser(user.getFirstName(), user.getLastName(), user.getPassword(), user.getOrganization(), user.getEmail(), "0049-89-38602", "asesome", user.getDepartment());
+            ldapUserRepository.create(ldapUser);
+        } catch (Exception e) {
+            if (e instanceof NameAlreadyBoundException) return TOKEN_EXIST;
+            else {
+                System.out.print(e);
+                return TOKEN_INVALID;
+            }
+        }
         return TOKEN_VALID;
     }
 
@@ -166,7 +172,6 @@ public class UserService implements IUserService {
                 }
             })
             .collect(Collectors.toList());
-
     }
 
 	@Override

@@ -6,60 +6,106 @@ import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.DnAttribute;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
+import org.springframework.ldap.odm.annotations.Transient;
+import org.springframework.ldap.support.LdapNameBuilder;
 
-@Entry(base = "ou=mpaduser,dc=mpadmanager,dc=de", objectClasses = "MpadUser")
+@Entry(objectClasses = {"top", "inetOrgPerson"})
 public class LdapUser {
-  
+      
     @Id
-    private Name id;
-    @DnAttribute(value = "muid", index = 3 )
-    private String muid;
+    private Name dn;
     
-    @Attribute(name = "firstName")
-    private String firstName;
+    @DnAttribute(value = "uid")
+    private String uid;
     
-    @Attribute(name = "lastName")
-    private String lastName;
+    @Attribute(name="cn")
+    private String fullName;
     
-    @Attribute(name = "password")
+    @Attribute(name = "givenName")
+    private String givenName;
+    
+    @Attribute(name = "sn")
+    private String sn;
+    
+    @Attribute(name = "userPassword")
     private String password;
     
-    @Attribute(name = "organization")
-    private String organization;
+    @Attribute(name = "mail")
+    private String email;
     
-    @Attribute(name = "department")
-    private String department;
+    @Transient
+    @DnAttribute(value = "ou")
+    private String ou;
     
-    public Name getId() {
-        return id;
+    @Attribute(name = "telephoneNumber")
+    private String telephoneNumber;
+    
+    @Attribute(name = "description")
+    private String description;
+    
+    @Attribute(name = "departmentNumber")
+    private String departmentNumber;
+
+    public LdapUser() {
     }
 
-    public void setId(Name id) {
-        this.id = id;
+    public LdapUser(String givenName, String sn, String password, String ou, String email,
+            String telephoneNumber, String description, String departmentNumber) {
+        Name dn = LdapNameBuilder.newInstance()
+                .add("ou", "mpg")
+                .add("ou", ou)
+                .add("uid", email)
+                .build();
+        this.dn = dn;
+        this.fullName = givenName + " " +sn;
+        this.givenName = givenName;
+        this.sn = sn;
+        this.password = password;
+        this.email = email;
+        this.ou = ou;
+        this.telephoneNumber = telephoneNumber;
+        this.description = description;
+        this.departmentNumber = departmentNumber;
+    }
+    
+    public Name getDn() {
+        return dn;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public void setDn(Name dn) {
+        this.dn = dn;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public String getUid() {
+        return uid;
     }
 
-    public String getLastName() {
-        return lastName;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public String getFullName() {
+        return fullName;
     }
 
-    public String getMuid() {
-        return muid;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
-    public void setMuid(String muid) {
-        this.muid = muid;
+    public String getGivenName() {
+        return givenName;
+    }
+
+    public void setGivenName(String givenName) {
+        this.givenName = givenName;
+    }
+
+    public String getSn() {
+        return sn;
+    }
+
+    public void setSn(String sn) {
+        this.sn = sn;
     }
 
     public String getPassword() {
@@ -70,21 +116,57 @@ public class LdapUser {
         this.password = password;
     }
 
-    public String getOrganization() {
-        return organization;
+    public String getEmail() {
+        return email;
     }
 
-    public void setOrganization(String organization) {
-        this.organization = organization;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getDepartment() {
-        return department;
+    public String getOu() {
+        return ou;
     }
 
-    public void setDepartment(String department) {
-        this.department = department;
+    public void setOu(String ou) {
+        this.ou = ou;
     }
- 
-    
+
+    public String getTelephoneNumber() {
+        return telephoneNumber;
+    }
+
+    public void setTelephoneNumber(String telephoneNumber) {
+        this.telephoneNumber = telephoneNumber;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDepartmentNumber() {
+        return departmentNumber;
+    }
+
+    public void setDepartmentNumber(String departmentNumber) {
+        this.departmentNumber = departmentNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "LdapUser{" +
+                "dn=" + dn +
+                ", uid='" + uid + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", lastName='" + sn + '\'' +
+                ", email='" + email + '\'' +
+                ", telephoneNumber='" + telephoneNumber + '\'' +
+                ", departmentNumber='" + departmentNumber + '\'' +
+                ", ou='" + ou + '\'' +
+                '}';
+    }
 }
