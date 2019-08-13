@@ -1,0 +1,186 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  padding: 0;
+  background: url('../img/mountain.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.wrap {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  position: relative;
+}
+
+/** top header **/
+
+.top-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background: #012846;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.branding {
+  color: white;
+}
+
+.top-left-logo {
+  width: 40px;
+  height: 40px;
+  margin-left: 90px;
+  margin-right: 0.8rem;
+}
+
+.menu-icon {
+  color: white;
+  margin-right: 95px;
+}
+
+.custom-select {
+  margin-right: 168px;
+  width: 120px;
+  background: #012846;
+}
+
+.custom-select select {
+  color: #ffffff;
+  background: #012846;
+  border: 0;
+}
+
+.custom-select select:focus{
+  outline:none;
+}
+
+option {
+  background: #012846;
+}
+
+.title {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  top: 25%;
+  left: 0px;
+  right: 0px;
+  /* animation: titlemove 2s; */
+  /* -webkit-animation: titlemove 2s; */
+}
+
+.title-box {
+  display: flex;
+  flex-direction: row;
+  border:#0396A8 solid 2px;
+  height: 86px;
+}
+
+.logo-green {
+  width: 82px;
+  height: 82px;
+}
+
+.title-box > h1 {
+  font-family: Serif;
+  font-weight: 700;
+  font-size: 60px;
+  margin: 0.8rem !important;
+  color: #007291;
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes titlemove {
+  from {top: 0%;}
+  to {top: 25%;}
+}
+
+/* Standard syntax */
+@keyframes titlemove {
+  from {top: 0%;}
+  to {top: 25%;}
+}
+
+.root-container {
+  height: 100%;
+}
+
+.language-flag {
+  width: 36px;
+  height: 27px;
+}
+
+.hero {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.slogan {
+  margin-top: 20rem;
+  color: #fff;
+  font-weight: 400;
+}
+
+.register-btn {
+  margin-top: 5rem;
+  border: 2px solid #fff;
+  border-radius: 10px;
+  padding: 0.8rem;
+  color: #fff;
+  font-weight: 400;
+  -webkit-appearance: none;
+}
+
+#language-select {
+  width: 80px;
+}
+
+
+#language-select option{
+  background: #012846;
+}
+
+
+.select2-container {
+  background-color: #012846 !important;
+}
+
+.select2-selection {
+  background-color: #012846 !important;
+  border: none;
+  outline:0px;
+}
+
+.select2-selection--single {
+  border: none !important;
+}
+
+.select2-selection__rendered {
+  color: #fff !important;
+}

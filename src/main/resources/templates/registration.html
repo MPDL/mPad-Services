@@ -2,102 +2,221 @@
 <html>
 <head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
+
 <style>
 .password-verdict{
 color:#000;
 }
 </style>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script th:src="@{/resources/pwstrength.js}"></script>
+<link rel="stylesheet" type="text/css" th:href="@{/css/floating-labels.css}"/>
+<link rel="stylesheet" type="text/css" th:href="@{/css/registration.css}"/>
+<link rel="stylesheet" type="text/css" th:href="@{/css/footer.css}"/>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
+
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII"/>
 <title th:text="#{label.form.title}">form</title>
 </head>
+
 <body>
-    <div class="container">
-        <div >
-            <h1 class="text-center" th:text="#{label.form.title}">form</h1>
-            <br/>
+    <div class="preload">
+			<div class="top-banner">
+			    <img class="logo-white" th:src="@{/img/logo_white.png}"/>
+					<h1 class="title-label" th:text="#{label.form.title}">form</h1>
+			</div>
 
-            <form action="/" method="POST" enctype="utf8" >
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                <div class="form-group row" >
-	                <label class="col-sm-2"></label>
-	                <p class="col-sm-8" th:text="#{label.form.description}">form</p>
-                </div>
-            	<br/>
-                <div class="form-group row" >
-                    <label class="col-sm-2"></label>
-                    <label class="col-sm-2" th:text="#{label.user.firstName}">first</label>
-                    <span class="col-sm-6"><input class="form-control" name="firstName" value="" required="required"/></span>
-                    <span id="firstNameError" class="alert alert-danger col-sm-2" style="display:none"></span>                    
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-2"></label>
-                    <label class="col-sm-2" th:text="#{label.user.lastName}">last</label>
-                    <span class="col-sm-6"><input class="form-control" name="lastName" value="" required="required"/></span>
-                    <span id="lastNameError" class="alert alert-danger col-sm-2" style="display:none"></span>
-                    
-                </div>
-                <div class="form-group row">
-                	<label class="col-sm-2"></label>
-                    <label class="col-sm-2" th:text="#{label.user.email}">email</label>
-                    <span class="col-sm-6"><input id="email" type="email" class="form-control" name="email" value="" required="required"/></span>                    
-                    <span id="emailError" class="alert alert-danger col-sm-2" style="display:none"></span>
-                    
-                </div>
-                <div class="form-group row">
-                	<label class="col-sm-2"></label>
-                    <label class="col-sm-2" th:text="#{label.user.password}">password</label>
-                    <span class="col-sm-6"><input id="password" class="form-control" name="password" value="" type="password" required="required"/></span>
-                    <span id="passwordError" class="alert alert-danger col-sm-2" style="display:none"></span>
-                </div>
-                <div class="form-group row">
-                	<label class="col-sm-2"></label>
-                    <label class="col-sm-2" th:text="#{label.user.confirmPass}">confirm</label>
-                    <span class="col-sm-6"><input id="matchPassword" class="form-control" name="matchingPassword" value="" type="password" required="required"/></span>
-                    <span id="globalError" class="alert alert-danger col-sm-2" style="display:none"></span>
-                </div>
-                <div class="form-group row">
-                	<label class="col-sm-2"></label>
-                    <label class="col-sm-2" th:text="#{label.user.organization}">organization</label>
-                    <span class="col-sm-6"><input id="organization" type="form-control" class="form-control" name="organization" value="" required="required" readonly/></span>                    
-                    
-                </div>
-                <div class="form-group row">
-                	<label class="col-sm-2"></label>
-                    <label class="col-sm-2" th:text="#{label.user.department}">department</label>
-                    <span class="col-sm-6"><input type="form-control" class="form-control" name="department" value=""/></span>                    
-                    <span id="departmentError" class="alert alert-danger col-sm-2" style="display:none"></span>
-                    
-                </div>
-                
-                <br/>
-                <div class="form-group row">
-                    <label class="col-sm-2"></label>
-                	<label class="h2 col-sm-8">
-  						MPG/MPDL Terms of Service
-					</label>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-2"></label>
-                	<div class="checkbox col-sm-5">
-  						<label><input type="checkbox" id="termCheckbox" value="">I accept the terms of Service</label>
+			<div class="content">	
+					<div>
+							<form action="/" method="POST" enctype="utf8" >
+							<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+									<div class="info-box" id="basic-info-box" >
+											<div class="form-group row">
+												<p id="form-title" class="col-sm-8" th:text="#{label.form.register}">form</p>
+											</div>
+
+											<div class="row-container row">
+												<div class="form-label-group short-label">
+													<input type="text" id="firstName" class="form-control input-lg" placeholder="#{label.user.firstName}" name="firstName" value="" required>
+													<label for="firstName" th:text="#{label.user.firstName}">first</label>
+												</div>
+
+												<div class="form-label-group short-label">
+													<input type="text" id="lastName" class="form-control input-lg" placeholder="#{label.user.lastName}" name="lastName" value="" required>
+													<label for="lastName" th:text="#{label.user.lastName}">Last</label>
+												</div>
+											</div>
+
+											<div class="row">
+												<span id="userNameError" class="form-alert" style="display:none"></span>
+											</div>
+
+											<div class="row-container row ">
+												<div class="form-label-group long-label" >
+													<input type="text" id="email" class="form-control input-lg" placeholder="#{label.user.email}" name="email" value="" required>
+													<label for="email" th:text="#{label.user.email}">email</label>
+												</div>													
+											</div>
+
+											<div class="row">
+												<span id="emailError" class="form-alert" style="display:none"></span>
+											</div>
+
+											<div class="row-container row ">
+												<div class="form-label-group long-label" >
+													<input type="text" id="telephone" class="form-control input-lg" placeholder="#{label.user.telephone}" name="telephone" value="" required>
+													<label for="telephone" th:text="#{label.user.telephone}">telephone</label>
+												</div>													
+											</div>
+
+											<div class="row">
+												<span id="telephoneError" class="form-alert" style="display:none"></span>
+											</div>
+
+											<div class="row-container row">
+												<div class="form-label-group short-label">
+													<input type="password" id="password" class="form-control input-lg" placeholder="#{label.user.password}" name="password" value="" required>
+													<label for="password" th:text="#{label.user.password}">password</label>
+												</div>
+
+												<div class="form-label-group short-label">
+													<input type="password" id="matchPassword" class="form-control input-lg" placeholder="#{label.user.confirmPass}" name="matchingPassword" value="" required>
+													<label for="matchPassword" th:text="#{label.user.confirmPass}">Last</label>
+												</div>
+											</div>
+
+											<div class="row">
+												<span id="passwordHint" class="hint-password" th:text="#{error.password.rule}"></span>
+											</div>
+
+											<div class="row">
+												<span id="passwordError" class="form-alert" style="display:none"></span>
+											</div>
+											
+											<div class="row-container row ">
+												<div class="form-label-group long-label">
+													<input type="text" id="organization" class="form-control input-lg" placeholder="#{label.user.organization}" name="organization" value="" required readonly>
+													<label for="organization" th:text="#{label.user.organization}">organization</label>
+												</div>													
+											</div>
+
+											<div class="row">
+												<span id="organizationError" class="form-alert" style="display:none">1</span>
+											</div>
+
+											<div class="row-container row ">
+												<div class="form-label-group long-label">
+													<input type="text" id="department" class="form-control input-lg" placeholder="#{label.user.department}" name="department" value="">
+													<label for="department" th:text="#{label.user.department}">department</label>
+												</div>
+												<button id="sign-up-continue" type="button" class="btn btn-primary" th:text="#{label.form.continue}">continue</button>
+											</div>
+									</div>
+
+
+									<div class="info-box" id="research-info-box" style="display: none;">
+										<div class="form-group row">
+											<p id="form-title" class="col-sm-12" th:text="#{label.form.research}"></p>
+										</div>
+
+										<div class="form-group row">
+											<p id="shipping-desc" class="col-sm-8" th:text="#{label.form.research.desc}"></p>
+										</div>
+
+										<div class="row-container row ">
+											<div class="form-label-group long-label">
+												<input type="text" id="research-field" class="form-control input-lg" placeholder="#{label.form.research.field}" name="researchField" value="" autocomplete="rutjfkde">
+												<label for="research-field" th:text="#{label.form.research.field}"></label>
+											</div>													
+										</div>
+
+										<div class="row-container row ">
+											<div class="form-label-group long-label">
+												<input type="text" id="research-method" class="form-control input-lg" placeholder="#{label.form.research.method}" name="researchMethod" value="" autocomplete="rutjfkde">
+												<label for="research-method" th:text="#{label.form.research.method}"></label>
+											</div>													
+										</div>
+
+										<div class="row-container row coordinate-row">
+											<select multiple id="research-coordinate-team" name="coordinateTeams">
+													<option value="Github">Github</option>
+													<option value="Markdown">Markdown</option>
+													<option value="Slack">Slack</option>
+													<option value="KEEPER">KEEPER</option>
+													<option value="Mattermost">Mattermost</option>
+													<option value="WhatsApp">WhatsApp</option>
+													<option value="Trello">Trello</option>
+											</select>
+										</div>
+
+										<div class="row-container row" style="margin-top: 10px;" >
+											<button id="continue-to-address" type="button" class="btn btn-primary" th:text="#{label.form.continue}">continue</button>
+										</div>
+
+									</div>
+
+									<div class="info-box" id="address-info-box" style="display: none;">
+										<div class="form-group row">
+											<p id="form-title" class="col-sm-8" th:text="#{label.form.shipping}"></p>
+										</div>
+
+										<div class="row-container row ">
+											<div class="form-label-group long-label">
+												<input type="text" id="address" class="form-control input-lg" placeholder="#{label.user.address}" name="address" value="" autocomplete="rutjfkde">
+												<label for="address" th:text="#{label.user.address}">address</label>
+											</div>													
+										</div>
+
+										<div class="row-container row">
+											<div class="form-label-group short-label">
+												<input type="text" id="city" class="form-control input-lg" placeholder="#{label.user.city}" name="city" value="" autocomplete="rutjfkde">
+												<label for="city" th:text="#{label.user.city}">city</label>
+											</div>
+
+											<div class="form-label-group short-label">
+												<input type="text" id="country" class="form-control input-lg" placeholder="#{label.user.country}" name="country" value="" autocomplete="rutjfkde">
+												<label for="country" th:text="#{label.user.country}">country</label>
+											</div>
+
+											<div class="form-label-group short-label">
+												<input type="text" id="zip" class="form-control input-lg" placeholder="#{label.user.zipcode}" name="zip" value="" autocomplete="rutjfkde">
+												<label for="zip" th:text="#{label.user.zipcode}"></label>
+											</div>
+										</div>
+
+										<div id="accept-and-sign-up">
+											<div id="mpad-checkboxes">
+												<div class="checkbox">
+													<label><input type="checkbox" id="mattermostCheckbox" name="mattermost" value="true">I require a Mattermost account.</label>
+												</div>
+												<div class="checkbox">
+													<label><input type="checkbox" id="termCheckbox" value="">I accept the <a href="https://www.mpdl.mpg.de/terms-of-service-de.html" target="_blank"><u>Terms of Service</u><a/></label>
+												</div>
+											</div>
+											<button id='btn-mpad-register' type="submit" class="btn btn-primary" th:text="#{label.form.register}">submit</button>
+										</div>
+
+										<div class="form-group row">
+											<span id="termsError" class="form-alert" style="display:none"></span>
+										</div>	
+									</div>
+
+							</form>
+							<br/> 
 					</div>
-                </div>
-
-                
-                <br/>
-                <div class="form-group row">
-                    <label class="col-sm-2"></label>
-                	<button type="submit" class="" th:text="#{label.form.register}">submit</button>
-                </div>	
-            </form>
-            <br/> 
-           <!--  <a th:href="@{/login}" th:text="#{label.form.loginLink}">login</a> -->
-        </div>
-    </div>
+			</div>
+		</div>
 
 <script th:inline="javascript">
+
+$("#research-coordinate-team").select2({
+	placeholder: /*[[#{label.form.research.coordinate}]]*/,
+	tags: true,
+	dropdownAutoWidth: true
+});
+
 var serverContext = [[@{/}]];
 
 var departments = {
@@ -227,102 +346,134 @@ var departments = {
 
 
 $(document).ready(function () {
+	$('.info').children().first().hide()  //fix: strange styling link element 
+
+	$('#sign-up-continue').click(function(event) {
+		continue_register(event);
+	});
+
+	$('#continue-to-address').click(function(event) {
+		$('#research-info-box').hide();
+		$('#address-info-box').show();
+	});
+
 	$('form').submit(function(event) {
 		register(event);
 	});
-	
-	$("#matchPassword").focusout(function(){
-		if($("#password").val() != $("#matchPassword").val()){
-	        $("#globalError").show().html(/*[[#{PasswordMatches.user}]]*/);
-	    }else{
-	    	$("#globalError").html("").hide();
-	    }
+
+	$("#firstName").focus(function(){
+		$("#userNameError").html("").hide();
+	});
+
+	$("#lastName").focus(function(){
+		$("#userNameError").html("").hide();
+	});
+
+	$("#email").focus(function(){
+			$("#emailError").html("").hide();
+			$("#organizationError").html("").hide();
 	});
 	
-   $("#matchPassword").focus(function(){
-	   $("#globalError").html("").hide();
-    });
-   
-   $("#email").focus(function(){
-       $("#emailError").html("").hide();
-       $("#globalError").html("").hide();
-   });
-   
-   $("#email").focusout(function(){
-       var email = $("#email").val();
-       var department_id = email.substring(email.indexOf('@')+1);
-       if (departments[department_id]) {
-         $("#organization").val(departments[department_id]);
-       } else {
-    	   $("#globalError").show().html(/*[[#{EmailMatches.org}]]*/);
-       }
-   });
+	$("#email").focusout(function(){
+			var email = $("#email").val();
+			var department_id = email.substring(email.indexOf('@')+1);
+			if (email.trim().indexOf('@') === 0) {
+				$("#emailError").show().html("Invalid email");
+			}
+			if (departments[department_id]) {
+				$("#organization").val(departments[department_id]);
+			} else {
+				$("#organizationError").show().html(/*[[#{EmailMatches.org}]]*/);
+				$("#organization").val('');
+			}
+	});
+
+	$("#telephone").focus(function(){
+		$("#telephoneError").html("").hide();
+	});
 	
-	options = {
-		    common: {minChar:8},
-		    ui: {
-		    	showVerdictsInsideProgressBar:true,
-		    	showErrors:true,
-		    	errorMessages:{
-		    		  wordLength: /*[[#{error.wordLength}]]*/,
-		    		  wordNotEmail: /*[[#{error.wordNotEmail}]]*/,
-		    		  wordSequences: /*[[#{error.wordSequences}]]*/,
-		    		  wordLowercase: /*[[#{error.wordLowercase}]]*/,
-		    		  wordUppercase: /*[[#{error.wordUppercase}]]*/,
-		    	          wordOneNumber: /*[[#{error.wordOneNumber}]]*/,
-		    		  wordOneSpecialChar: /*[[#{error.wordOneSpecialChar}]]*/
-		    		}
-		    	}
-		};
-	
-	//$('#password').pwstrength(options);
-	
+	$("#matchPassword").focus(function(){
+		$("#passwordError").html("").hide();
+	});
+
+	$("#password").focus(function(){
+		$("#passwordError").html("").hide();
+	});
 });
+
+function continue_register(event) {
+		if ($('#firstName').val().length <= 0) {
+			$('#userNameError').show().html("Please fill in your first name");
+		}	else if ($('#lastName').val().length <= 0) {
+			$('#userNameError').show().html("Please fill in your last name");
+		} else if ($('#email').val().length <= 0){
+			$('#emailError').show().html("Please fill in your email");
+		}else if ($('#telephone').val().length <= 0){
+			$('#telephoneError').show().html("Please fill in your telephone");
+		}	else if ($('#organization').val().length <= 0) {
+			$("#organizationError").show().html(/*[[#{EmailMatches.org}]]*/);
+		} else if ($('#password').val().length <= 0 || $('#matchPassword').val().length <= 0) {
+			$("#passwordError").show().html("Please fill in your password");
+			$("#passwordHint").hide();
+		} else if ($('#password').val() !== $('#matchPassword').val()) {
+			$("#passwordError").show().html(/*[[#{PasswordMatches.user}]]*/);
+			$("#passwordHint").hide();
+		} else if ($('#password').val().length < 6) {
+			$("#passwordError").show().html(/*[[#{error.password.rule}]]*/);
+			$("#passwordHint").hide();
+		} else {
+			$('#basic-info-box').hide();
+			$('#research-info-box').show();
+		}
+}
 
 function register(event){
 	event.preventDefault();
 	var accepted = $("input:checked").length
 	if (!accepted) {
-		$("#globalError").show().html(/*[[#{Checked.terms}]]*/);
+		$("#termsError").show().html(/*[[#{Checked.terms}]]*/);
 		 return;
 	};
 	
-    $(".alert").html("").hide();
-    $(".error-list").html("");
-    if($("#password").val() != $("#matchPassword").val()){
-    	$("#globalError").show().html(/*[[#{PasswordMatches.user}]]*/);
-    	return;
-    }
-    var formData= $('form').serialize();
-    $.post(serverContext + "user/registration",formData ,function(data){
-        if(data.message == "success"){
-            window.location.href = serverContext + "successRegister.html";
-        }
-        
-    })
-    .fail(function(data) {
-        if(data.responseJSON.error.indexOf("MailError") > -1)
-        {
-            window.location.href = serverContext + "emailError.html";
-        }
-        else if(data.responseJSON.error == "UserAlreadyExist"){
-            $("#emailError").show().html(data.responseJSON.message);
-        }
-        else if(data.responseJSON.error.indexOf("InternalError") > -1){
-            window.location.href = serverContext + "login?message=" + data.responseJSON.message;
-        }
-        else{
-        	var errors = $.parseJSON(data.responseJSON.message);
-            $.each( errors, function( index,item ){
-            	if (item.field){
-            		$("#"+item.field+"Error").show().append(item.defaultMessage+"<br/>");
-            	}
-            	else {
-            		$("#globalError").show().append(item.defaultMessage+"<br/>");
-            	}
-               
-            });
-        }
+	$(".alert").html("").hide();
+	$(".error-list").html("");
+	if($("#password").val() != $("#matchPassword").val()){
+		$("#passwordError").show().html(/*[[#{PasswordMatches.user}]]*/);
+		$("#passwordHint").hide();
+		return;
+	}
+			
+	var formData= $('form').serialize();
+	$.post(serverContext + "user/registration",formData ,function(data){
+			if(data.message == "success"){
+					window.location.href = serverContext + "successRegister.html";
+			}
+			
+	})
+	.fail(function(data) {
+			if(data.responseJSON.error.indexOf("MailError") > -1)
+			{
+					window.location.href = serverContext + "emailError.html";
+			}
+			else if(data.responseJSON.error == "UserAlreadyExist"){
+					$("#termsError").show().html(data.responseJSON.message);
+			}
+			else if(data.responseJSON.error.indexOf("InternalError") > -1){
+					window.location.href = serverContext + "login?message=" + data.responseJSON.message;
+			}
+			else{
+				var errors = $.parseJSON(data.responseJSON.message);
+					$.each( errors, function( index,item ){
+						console.log(item.defaultMessage);
+						if (item.field){
+							//$("#"+item.field+"Error").show().append(item.defaultMessage+"<br/>");
+							$("#termsError").show().append(item.defaultMessage+"<br/>");
+						}
+						else {
+							$("#termsError").show().append(item.defaultMessage+"<br/>");
+						}
+					});
+			}
     });
 }
 

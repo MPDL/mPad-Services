@@ -1,0 +1,81 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: #f5f5f5;
+}
+
+.preload {
+  width: 100%;
+}
+
+/* content */
+#form-title {
+  font-weight: 500;
+  font-size: 28px;
+  margin-bottom: 0px;
+}
+
+.content {
+  margin-left: 25%;
+  margin-right: 25%;
+  margin-top: 40px;
+}
+
+.info-box {
+  width: 100%;
+  border: 2px solid #BBBBBB;
+  border-radius: 8px 8px 8px 8px;
+  padding: 20px; 
+}
+
+.form-alert{
+  margin-left: 23px;
+  color: #EE1D1D;
+}
+
+.hint-password{
+  margin-left: 23px;
+  color: #000;
+}
+
+#sign-up-continue {
+  margin-left: 60px;
+}
+
+
+.coordinate-row {
+  display: flex;
+  margin-top: 5px; 
+  padding-left: 5px; 
+  padding-right: 5px;
+}
+
+.select2-container {
+  flex: 1;
+}
+.select2-search__field {
+  width: 350px !important;
+}
+
+/* step3 */
+#shipping-desc {
+  color: #BBBBBB;
+}
+
+#accept-and-sign-up {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-left: 10px;
+  margin-right:20px;
+}
+
+#btn-mpad-register {
+  padding-bottom: 10px; 
+}

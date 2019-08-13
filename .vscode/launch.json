@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-MpadmanagerApplication<mpadmanager>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "mainClass": "de.mpg.mpdl.mpadmanager.MpadmanagerApplication",
+      "projectName": "mpadmanager",
+      "args": ""
+    }
+  ]
+}

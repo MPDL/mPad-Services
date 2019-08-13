@@ -2,9 +2,6 @@ package de.mpg.mpdl.mpadmanager.service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-
-import javax.naming.Name;
 
 import de.mpg.mpdl.mpadmanager.dto.UserDTO;
 import de.mpg.mpdl.mpadmanager.model.User;

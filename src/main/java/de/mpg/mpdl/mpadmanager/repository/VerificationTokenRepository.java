@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
-import de.mpg.mpdl.mpadmanager.model.User;
 import de.mpg.mpdl.mpadmanager.model.VerificationToken;
 
 public interface VerificationTokenRepository extends JpaRepository<VerificationToken, Long> {

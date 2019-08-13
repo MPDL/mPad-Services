@@ -1,0 +1,67 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
+<title th:text="#{label.pages.home.title}">Title</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<link rel="stylesheet" type="text/css" th:href="@{/css/home.css}"/>
+<link rel="stylesheet" type="text/css" th:href="@{/css/footer.css}"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
+
+</head>
+<body class="preload">
+<div class="wrap" id="wrap">
+  
+  <header class="top-header">
+    <div class="branding"><img class="top-left-logo" th:src="@{/img/logo_white.png}"/>Max Planck Digital Library</div>
+
+    <div class="custom-select">
+      <select id="language-select" name="states">
+        <option value="en">English</option>
+        <option value="de">Deutsch</option>
+      </select>
+    </div>
+
+  </header>
+  
+  <div class="title animated slideInDown">
+    <div class="title-box">
+      <img class="logo-green" th:src="@{/img/minerva_green.png}"/>
+      <h1 class="display-1" th:text="#{label.form.title}"></h1>
+    </div>
+  </div>
+  
+  <div class="root-container">
+    <div class="hero">
+        <div class="main">
+            <h2 class="slogan">Landing page, the gate to your own mPad.(slogan place holder)</h2>
+            <a th:href="@{/registration.html}" style="text-decoration: none;"><h2 class="register-btn animated bounce delay-1s" th:text="#{label.form.register}">Sign up</h2></a>
+        </div>
+        <div class='footer'>
+          <div class="info">
+              <a href="https://www.mpdl.mpg.de/terms-of-service-de.html" target="_blank"><u>Privacy Policy</u><a/>
+              <div class="contact">
+                  <p><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Email</p>
+                  <p><span class="glyphicon glyphicon-earphone" aria-hidden="true"></span> Tel.:123456</p>
+              </div>
+          </div>
+        </div>
+    </div>
+  </div>
+  
+</div>
+</body>
+
+<script th:inline="javascript">
+$(document).ready(function() {
+    $('#language-select').select2({
+    minimumResultsForSearch: -1
+    });
+});
+</script>
+
+</html>

@@ -2,12 +2,36 @@
 
 <head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" th:href="@{/css/footer.css}"/>
+<link rel="stylesheet" type="text/css" th:href="@{/css/registerStatus.css}"/>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII"/>
 <title th:text="#{label.pages.home.title}">home</title>
 </head>
 <body>
-<div class="container">
-    <h1 class="alert alert-success" th:text="#{message.actSucc}">success</h1>
+
+<div class="top-banner">
+    <img class="logo-white" th:src="@{/img/logo_white.png}"/>
+    <h1 class="title-label" th:text="#{label.form.title}">form</h1>
+</div>
+
+<div class="content">
+	<div class="info-box" id="basic-info-box">
+        <div class="status-bar">
+            <img class="status-icon" th:src="@{/img/smile-regular.svg}"/>
+        </div>
+        <h3>You have successfully finished your registration.</h3>
+        <h3>Your tablet is on the way.</h3>
+    </div>
+</div>
+
+<div class='footer'>
+    <div class="info">
+        <a href="https://www.mpdl.mpg.de/terms-of-service-de.html" target="_blank"><u>Privacy Policy</u><a/>
+        <div class="contact">
+            <p><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Email</p>
+            <p><span class="glyphicon glyphicon-earphone" aria-hidden="true"></span> Tel.:123456</p>
+        </div>
+    </div>
 </div>
 </body>
 </html>

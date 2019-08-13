@@ -48,11 +48,12 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addViewController("/badUser.html");
         registry.addViewController("/emailError.html");
         registry.addViewController("/home.html");
-//        registry.addViewController("/invalidSession.html");
+        registry.addViewController("/invalidSession.html");
         registry.addViewController("/console.html");
         registry.addViewController("/admin.html");
         registry.addViewController("/successRegister.html");
         registry.addViewController("/successActivate.html");
+        registry.addViewController("/ldapError.html");
         registry.addViewController("/forgetPassword.html");
         registry.addViewController("/updatePassword.html");
         registry.addViewController("/changePassword.html");
@@ -66,7 +67,17 @@ public class MvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(final ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/resources/**").addResourceLocations("/", "/resources/");
+        //registry.addResourceHandler("/resources/**").addResourceLocations("/", "/resources/");
+        registry.addResourceHandler(
+            //"/webjars/**",
+            "/img/**",
+            "/css/**",
+            "/js/**")
+            .addResourceLocations(
+                    //"classpath:/META-INF/resources/webjars/",
+                    "classpath:/static/img/",
+                    "classpath:/static/css/",
+                    "classpath:/static/js/");
     }
 
     @Override
@@ -105,5 +116,4 @@ public class MvcConfig implements WebMvcConfigurer {
         validator.setValidationMessageSource(messageSource);
         return validator;
     }
-    
 }

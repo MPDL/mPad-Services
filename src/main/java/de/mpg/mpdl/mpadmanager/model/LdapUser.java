@@ -1,5 +1,8 @@
 package de.mpg.mpdl.mpadmanager.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.naming.Name;
 
 import org.springframework.ldap.odm.annotations.Attribute;
@@ -44,13 +47,19 @@ public class LdapUser {
     private String description;
     
     @Attribute(name = "departmentNumber")
-    private String departmentNumber;
+    private List<String> departmentNumber = new ArrayList<String>(1);
+    
+    @Attribute(name = "postalCode")
+    private List<String> zip = new ArrayList<String>(1);
+    
+    @Attribute(name = "postalAddress")
+    private List<String> address = new ArrayList<String>(1);
 
     public LdapUser() {
     }
 
     public LdapUser(String givenName, String sn, String password, String ou, String email,
-            String telephoneNumber, String description, String departmentNumber) {
+            String telephoneNumber, String description, String departmentNumberStr, String zipStr, String addressStr) {
         Name dn = LdapNameBuilder.newInstance()
                 .add("ou", "mpg")
                 .add("ou", ou)
@@ -65,7 +74,9 @@ public class LdapUser {
         this.ou = ou;
         this.telephoneNumber = telephoneNumber;
         this.description = description;
-        this.departmentNumber = departmentNumber;
+        setDepartmentNumber(departmentNumberStr);
+        setZip(zipStr);
+        setAddress(addressStr);
     }
     
     public Name getDn() {
@@ -149,11 +160,49 @@ public class LdapUser {
     }
 
     public String getDepartmentNumber() {
-        return departmentNumber;
+        if (departmentNumber.size() > 0) {
+            return departmentNumber.get(0);
+        }
+        return null;
     }
 
-    public void setDepartmentNumber(String departmentNumber) {
-        this.departmentNumber = departmentNumber;
+    public void setDepartmentNumber(String value) {
+        departmentNumber.clear();
+        value = ( value == null ) ? "" : value.trim();
+        if (!"".equals(value)) {
+            departmentNumber.add(value);
+        }
+    }
+    
+    
+    public String getZip() {
+        if (zip.size() > 0) {
+            return zip.get(0);
+        }
+        return null;
+    }
+
+    public void setZip(String value) {
+        zip.clear();
+        value = ( value == null ) ? "" : value.trim();
+        if (!"".equals(value)) {
+            zip.add(value);
+        }
+    }
+
+    public String getAddress() {
+        if (address.size() > 0) {
+            return address.get(0);
+        }
+        return null;
+    }
+
+    public void setAddress(String value) {
+        address.clear();
+        value = ( value == null ) ? "" : value.trim();
+        if (!"".equals(value)) {
+            address.add(value);
+        }
     }
 
     @Override

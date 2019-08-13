@@ -68,7 +68,7 @@ public class RegistrationController {
 
 	    @GetMapping("/")
 	    public String indexPage() {
-	        return "redirect:/registration.html";
+	        return "redirect:/home.html";
 	    }
 	    
 	    // Registration

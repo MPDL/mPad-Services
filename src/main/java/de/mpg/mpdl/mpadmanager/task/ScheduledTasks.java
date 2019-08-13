@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
 import de.mpg.mpdl.mpadmanager.model.User;
 import de.mpg.mpdl.mpadmanager.model.VerificationToken;
 import de.mpg.mpdl.mpadmanager.service.IUserService;
-import de.mpg.mpdl.mpadmanager.web.util.GenericResponse;
 
 
 @Component
@@ -41,7 +40,7 @@ public class ScheduledTasks {
 	
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
 	
-	@Scheduled(fixedRate = 100000)
+	@Scheduled(fixedRate = 60000)
 	public void reportCurrentTime() {
 		Date now = new Date();
         log.info("The time is now {}", dateFormat.format(now));
@@ -55,13 +54,12 @@ public class ScheduledTasks {
             User user = userService. findUserByEmail(userEmail);
         	if (!user.isEnabled()) {
         		if (token.isExpiredOnce()) {
-	        		mailSender.send(constructVerificationTokenExpiredEmail(user));
 	                userService.deleteUser(user); // delete user in LDAP server
 	                userService.deleteVerificationToken(token.getToken());
         		} else { // resent token
-        	        final VerificationToken newToken = userService.generateNewVerificationToken(token.getToken());
-        	        mailSender.send(constructResendVerificationTokenEmail("http://vm116.mpdl.mpg.de", newToken, user));
-                    //mailSender.send(constructResendVerificationTokenEmail("http://localhost:8080", newToken, user));
+                    final VerificationToken newToken = userService.generateNewVerificationToken(token.getToken());
+                    String host = messages.getMessage("message.appurl", null, new Locale("en"));
+        	        mailSender.send(constructResendVerificationTokenEmail(host, newToken, user));
         		}
         	}
         }
@@ -69,19 +67,15 @@ public class ScheduledTasks {
 	
     private SimpleMailMessage constructResendVerificationTokenEmail(final String contextPath,final VerificationToken newToken, final User user) {
         final String confirmationUrl = contextPath + "/registrationConfirm.html?token=" + newToken.getToken();
-        final String message = messages.getMessage("message.resendToken", null, new Locale("en"));
-        return constructEmail("Resend Registration Token", message + " \r\n" + confirmationUrl, user);
-    }
-	
-    private SimpleMailMessage constructVerificationTokenExpiredEmail(final User user) {
-        return constructEmail("Registration Token expired", "Your verification token is expired, please try to register again", user);
-    }
-	
-    private SimpleMailMessage constructEmail(String subject, String body, User user) {
+
+        final String subject = "Resend Registration Token";
+        final String recipientAddress = user.getEmail();
+        final String message_1 = messages.getMessage("message.dear", null, new Locale("en")) + user.getFirstName() + ",\r\n\n" + messages.getMessage("message.expired_1", null, new Locale("en"));
+        final String message_2 = messages.getMessage("message.expired_2", null, new Locale("en"));
         final SimpleMailMessage email = new SimpleMailMessage();
+        email.setTo(recipientAddress);
         email.setSubject(subject);
-        email.setText(body);
-        email.setTo(user.getEmail());
+        email.setText(message_1+ " \r\n" + confirmationUrl + " \r\n\n" + message_2);
         email.setFrom(env.getProperty("support.email"));
         return email;
     }

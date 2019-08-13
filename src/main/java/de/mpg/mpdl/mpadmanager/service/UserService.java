@@ -15,9 +15,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import de.mpg.mpdl.mpadmanager.dto.UserDTO;
+import de.mpg.mpdl.mpadmanager.model.CoordinateTeam;
 import de.mpg.mpdl.mpadmanager.model.LdapUser;
 import de.mpg.mpdl.mpadmanager.model.User;
 import de.mpg.mpdl.mpadmanager.model.VerificationToken;
+import de.mpg.mpdl.mpadmanager.repository.CoordinateTeamRepository;
 import de.mpg.mpdl.mpadmanager.repository.LdapGroupRepository;
 import de.mpg.mpdl.mpadmanager.repository.LdapUserRepository;
 import de.mpg.mpdl.mpadmanager.repository.UserRepository;
@@ -35,6 +37,9 @@ public class UserService implements IUserService {
 
     @Autowired
     private VerificationTokenRepository tokenRepository;
+
+    @Autowired
+    private CoordinateTeamRepository coordinateTeamRepository;
     
     @Autowired
     private LdapUserRepository ldapUserRepository;
@@ -57,7 +62,7 @@ public class UserService implements IUserService {
     @Override
     public User registerNewUserAccount(final UserDTO accountDto) {
         if (emailExist(accountDto.getEmail())) {
-            throw new UserAlreadyExistException("There is an account with that email adress: " + accountDto.getEmail());
+            throw new UserAlreadyExistException("There is an account with that email address: " + accountDto.getEmail());
         }
         final User user = new User();
 
@@ -67,6 +72,25 @@ public class UserService implements IUserService {
         user.setPassword(passwordEncoder.encode(accountDto.getPassword()));
         user.setOrganization(accountDto.getOrganization());
         user.setDepartment(accountDto.getDepartment());
+        user.setTelephone(accountDto.getTelephone());
+        user.setAddress(accountDto.getAddress() + " " + accountDto.getCity() + " " + accountDto.getCountry());
+        user.setZip(accountDto.getZip());
+        user.setMattermost(accountDto.getMattermost());
+
+        if (null != accountDto.getCoordinateTeams() && accountDto.getCoordinateTeams().size() > 0) {
+            List<CoordinateTeam> coordinateTeams = user.getCoordinateTeams();
+            for (String coordinateTeamName : accountDto.getCoordinateTeams()) {
+                CoordinateTeam coordinateTeam = coordinateTeamRepository.findByName(coordinateTeamName);
+                if (coordinateTeam != null) {
+                    coordinateTeams.add(coordinateTeam);
+                    coordinateTeam.getUsers().add(user);
+                } else {
+                    CoordinateTeam newTag =createCoordinateTeamIfNotFound(coordinateTeamName);
+                    coordinateTeams.add(newTag);
+                    newTag.getUsers().add(user);
+                }
+            }
+        }
         return userRepository.save(user);
     }
 
@@ -142,11 +166,13 @@ public class UserService implements IUserService {
         userRepository.save(user);
         
         try {
-            LdapUser ldapUser = new LdapUser(user.getFirstName(), user.getLastName(), user.getPassword(), user.getOrganization(), user.getEmail(), "0049-89-38602", "asesome", user.getDepartment());
+            String department = user.getDepartment();
+            LdapUser ldapUser = new LdapUser(user.getFirstName(), user.getLastName(), user.getPassword(), user.getOrganization(), user.getEmail(), user.getTelephone(), "bla", department, user.getZip(), user.getAddress());
             ldapUserRepository.create(ldapUser);
         } catch (Exception e) {
             if (e instanceof NameAlreadyBoundException) return TOKEN_EXIST;
             else {
+                //TODO: delete from database
                 System.out.print(e);
                 return TOKEN_INVALID;
             }
@@ -191,5 +217,14 @@ public class UserService implements IUserService {
         if (verificationToken != null) {
             tokenRepository.delete(verificationToken);
         }
+    }
+    
+    private final CoordinateTeam createCoordinateTeamIfNotFound(final String name) {
+		CoordinateTeam coordinateTeam = coordinateTeamRepository.findByName(name);
+		if (coordinateTeam == null) {
+			coordinateTeam = new CoordinateTeam(name);
+		}
+		coordinateTeam = coordinateTeamRepository.save(coordinateTeam);
+		return coordinateTeam;
 	}
 }

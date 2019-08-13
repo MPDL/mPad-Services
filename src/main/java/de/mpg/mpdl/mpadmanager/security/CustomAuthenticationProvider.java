@@ -40,4 +40,3 @@ public class CustomAuthenticationProvider extends DaoAuthenticationProvider {
         return authentication.equals(UsernamePasswordAuthenticationToken.class);
     }
 }
-

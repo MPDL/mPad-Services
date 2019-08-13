@@ -24,12 +24,12 @@
 		<java.version>1.8</java.version>
 
 		<javax.servlet.jsp-api.version>2.3.2-b01</javax.servlet.jsp-api.version>
-        <javax.el.version>2.2</javax.el.version>
+    <javax.el.version>2.2</javax.el.version>
 		<jstl.version>1.2</jstl.version>
 		<guava.version>20.0</guava.version>
 		<passay.version>1.0</passay.version>
-        <logstash-logback-encoder.version>4.8</logstash-logback-encoder.version>
-        <aerogear.version>1.0.0</aerogear.version>		
+    <logstash-logback-encoder.version>4.8</logstash-logback-encoder.version>
+    <aerogear.version>1.0.0</aerogear.version>		
 	</properties>
 
 	<dependencies>
@@ -76,7 +76,6 @@
 			<version>${guava.version}</version>
 		</dependency>
 		
-		
 		<!-- 2fa -->
 		<dependency>
 			<groupId>org.jboss.aerogear</groupId>
@@ -90,26 +89,27 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
-        <dependency>
-            <groupId>org.thymeleaf.extras</groupId>
-            <artifactId>thymeleaf-extras-springsecurity4</artifactId>
-        </dependency>
+
+		<dependency>
+				<groupId>org.thymeleaf.extras</groupId>
+				<artifactId>thymeleaf-extras-springsecurity4</artifactId>
+		</dependency>
       
-      	<!-- Servlet -->
+    <!-- Servlet -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
+		<dependency>
+				<groupId>javax.el</groupId>
+				<artifactId>el-api</artifactId>
+				<version>${javax.el.version}</version>
+		</dependency>
         
-        <dependency>
-            <groupId>javax.el</groupId>
-            <artifactId>el-api</artifactId>
-            <version>${javax.el.version}</version>
-        </dependency>
-        
-        <!-- LDAP -->
-        <dependency>
+    <!-- LDAP -->
+    <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-ldap</artifactId>
 		</dependency>
@@ -121,22 +121,22 @@
 		
 	</dependencies>
 
-	<build>
+	<build>       
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-	            <configuration>
-	                <executable>true</executable>
-	            </configuration>				
+						<configuration>
+								<executable>true</executable>
+						</configuration>				
 			</plugin>
 			<plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+							<source>1.8</source>
+							<target>1.8</target>
+					</configuration>
+      </plugin>
 		</plugins>
 	</build>
 

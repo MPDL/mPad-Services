@@ -1,11 +1,17 @@
 package de.mpg.mpdl.mpadmanager.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
 
 import org.jboss.aerogear.security.otp.api.Base32;
 
@@ -36,6 +42,24 @@ public class User {
     
     @Column()
     private String department;
+    
+    @Column(nullable = false)
+    private String telephone;
+    
+    @ManyToMany
+    @JoinTable(name = "user_coordinates",
+        joinColumns = { @JoinColumn(name = "user_id") },
+        inverseJoinColumns = { @JoinColumn(name = "coordinate_team_id") })
+    private List<CoordinateTeam> coordinateTeams = new ArrayList<>();
+
+    @Column()
+    private String zip;
+    
+    @Column()
+    private String address;
+
+    @Column()
+    private boolean mattermost;
     
     private boolean enabled;
     private String secret;
@@ -95,6 +119,38 @@ public class User {
         this.department = department;
     }
 
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    public List<CoordinateTeam> getCoordinateTeams() {
+        return coordinateTeams;
+    }
+
+    public void setCoordinateTeams(List<CoordinateTeam> coordinateTeams) {
+        this.coordinateTeams = coordinateTeams;
+    }
+
+    public String getZip() {
+        return zip;
+    }
+
+    public void setZip(String zip) {
+        this.zip = zip;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public boolean isEnabled() {
         return enabled;
     }
@@ -117,6 +173,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean getMattermost() {
+        return mattermost;
+    }
+
+    public void setMattermost(boolean mattermost) {
+        this.mattermost = mattermost;
     }
     
     @Override
