@@ -9,6 +9,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.JoinColumn;
@@ -46,6 +49,7 @@ public class User {
     @Column(nullable = false)
     private String telephone;
     
+    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "user_coordinates",
         joinColumns = { @JoinColumn(name = "user_id") },

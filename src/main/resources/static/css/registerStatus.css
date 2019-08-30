@@ -15,7 +15,13 @@
 .info-box {
   border: 2px solid #BBBBBB;
   border-radius: 8px 8px 8px 8px;
-  padding: 42px 97px 48px 85px; 
+  padding: 32px 97px 48px 85px; 
+}
+
+.info-box-reset-password {
+  border: 2px solid #BBBBBB;
+  border-radius: 8px 8px 8px 8px;
+  padding: 32px 97px 28px 85px; 
 }
 
 .status-bar {
@@ -32,4 +38,21 @@
 .info-box {
   display: flex;
   flex-direction: column;
+}
+
+/* reset password */
+#reset-password {
+  margin-top: 10px;
+  min-width: 450px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+#password-update {
+  min-width: 300px;
+}
+
+#password-confirm {
+  min-width: 300px;
 }

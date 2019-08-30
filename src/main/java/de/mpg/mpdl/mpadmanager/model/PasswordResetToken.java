@@ -3,11 +3,17 @@ package de.mpg.mpdl.mpadmanager.model;
 import java.util.Calendar;
 import java.util.Date;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
 @Entity
-public class VerificationToken {
-    
+public class PasswordResetToken {
+
     private static final int EXPIRATION = 60 * 24;
 
     @Id
@@ -15,34 +21,33 @@ public class VerificationToken {
     private Long id;
 
     private String token;
-    
-    private boolean expiredOnce;
 
-    @Column(name = "user_email")
-    private String userEmail;
+    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
+    @JoinColumn(nullable = false, name = "user_id")
+    private User user;
 
     private Date expiryDate;
 
-    public VerificationToken() {
+    public PasswordResetToken() {
         super();
     }
 
-    public VerificationToken(final String token) {
+    public PasswordResetToken(final String token) {
         super();
 
         this.token = token;
         this.expiryDate = calculateExpiryDate(EXPIRATION);
     }
 
-    public VerificationToken(final String token, final String userEmail) {
+    public PasswordResetToken(final String token, final User user) {
         super();
 
         this.token = token;
-        this.userEmail = userEmail;
+        this.user = user;
         this.expiryDate = calculateExpiryDate(EXPIRATION);
-        this.expiredOnce = false;
     }
 
+    //
     public Long getId() {
         return id;
     }
@@ -55,15 +60,15 @@ public class VerificationToken {
         this.token = token;
     }
 
-	public String getUserEmail() {
-		return userEmail;
-	}
+    public User getUser() {
+        return user;
+    }
 
-	public void setUserEmail(String userEmail) {
-		this.userEmail = userEmail;
-	}
+    public void setUser(final User user) {
+        this.user = user;
+    }
 
-	public Date getExpiryDate() {
+    public Date getExpiryDate() {
         return expiryDate;
     }
 
@@ -71,25 +76,16 @@ public class VerificationToken {
         this.expiryDate = expiryDate;
     }
 
-	public boolean isExpiredOnce() {
-		return expiredOnce;
-	}
-
-	public void setExpiredOnce(boolean expiredOnce) {
-		this.expiredOnce = expiredOnce;
-	}
-
-	private Date calculateExpiryDate(final int expiryTimeInMinutes) {
+    private Date calculateExpiryDate(final int expiryTimeInMinutes) {
         final Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(new Date().getTime());
         cal.add(Calendar.MINUTE, expiryTimeInMinutes);
         return new Date(cal.getTime().getTime());
     }
 
-    public void updateToken(final String token) { // 
+    public void updateToken(final String token) {
         this.token = token;
         this.expiryDate = calculateExpiryDate(EXPIRATION);
-        this.expiredOnce = true;
     }
 
     //
@@ -100,7 +96,7 @@ public class VerificationToken {
         int result = 1;
         result = prime * result + ((expiryDate == null) ? 0 : expiryDate.hashCode());
         result = prime * result + ((token == null) ? 0 : token.hashCode());
-        result = prime * result + ((userEmail == null) ? 0 : userEmail.hashCode());
+        result = prime * result + ((user == null) ? 0 : user.hashCode());
         return result;
     }
 
@@ -115,7 +111,7 @@ public class VerificationToken {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final VerificationToken other = (VerificationToken) obj;
+        final PasswordResetToken other = (PasswordResetToken) obj;
         if (expiryDate == null) {
             if (other.expiryDate != null) {
                 return false;
@@ -130,11 +126,11 @@ public class VerificationToken {
         } else if (!token.equals(other.token)) {
             return false;
         }
-        if (userEmail == null) {
-            if (other.userEmail != null) {
+        if (user == null) {
+            if (other.user != null) {
                 return false;
             }
-        } else if (!userEmail.equals(other.userEmail)) {
+        } else if (!user.equals(other.user)) {
             return false;
         }
         return true;

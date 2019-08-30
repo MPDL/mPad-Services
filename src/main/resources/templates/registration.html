@@ -18,6 +18,10 @@ color:#000;
 
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII"/>
 <title th:text="#{label.form.title}">form</title>
+
+<script type="text/javascript">
+		var timerStart = Date.now();
+</script>
 </head>
 
 <body>
@@ -30,7 +34,7 @@ color:#000;
 			<div class="content">	
 					<div>
 							<form action="/" method="POST" enctype="utf8" >
-							<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+							<input id="csrf" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
 									<div class="info-box" id="basic-info-box" >
 											<div class="form-group row">
@@ -96,13 +100,13 @@ color:#000;
 											</div>
 											
 											<div class="row-container row ">
-												<div class="form-label-group long-label">
-													<input type="text" id="organization" class="form-control input-lg" placeholder="#{label.user.organization}" name="organization" value="" required readonly>
-													<label for="organization" th:text="#{label.user.organization}">organization</label>
-												</div>													
+												<div id="organization-select-container">
+													<select id="organization-select" name="organization">
+													</select>
+												</div>						
 											</div>
 
-											<div class="row">
+											<div class="row" id="organization-select-container">
 												<span id="organizationError" class="form-alert" style="display:none">1</span>
 											</div>
 
@@ -208,6 +212,16 @@ color:#000;
 					</div>
 			</div>
 		</div>
+		
+		<div class='footer_registration'>
+			<div class="info">
+					<a href="https://www.mpdl.mpg.de/terms-of-service-de.html" target="_blank"><u>Privacy Policy</u><a/>
+					<div class="contact">
+							<p><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Email</p>
+							<p><span class="glyphicon glyphicon-earphone" aria-hidden="true"></span> Tel.:123456</p>
+					</div>
+			</div>
+		</div>
 
 <script th:inline="javascript">
 
@@ -217,6 +231,12 @@ $("#research-coordinate-team").select2({
 	dropdownAutoWidth: true
 });
 
+$("#organization-select").select2({
+	placeholder: "organization",
+	dropdownAutoWidth: true,
+	minimumResultsForSearch: -1
+});
+
 var serverContext = [[@{/}]];
 
 var departments = {
@@ -224,7 +244,7 @@ var departments = {
 		"dkrz.de":"Deutsches Klimarechenzentrum",
 		"esi-frankfurt.de":"Ernst Strüngmann Institute (ESI) forNeuroscience in Cooperation with Max-Planck-Society",
 		"caesar.de":"Forschungszentrum caesar (center ofadvanced european studies and research)",
-		"tuebingen.mpg.de":"Friedrich-Miescher-Laboratorium fürbiologische Arbeitsgruppen in der Max-Planck-Gesellschaft",
+		"tuebingen.mpg.de":["Friedrich-Miescher-Laboratorium fürbiologische Arbeitsgruppen in der Max-Planck-Gesellschaft", "Max-Planck-Institut für biologischeKybernetik", "Max-Planck-Institut für Entwicklungsbiologie", "Max-Planck-Institut für Intelligente Systeme,Standort Tübingen"],
 		"fhi-berlin.mpg.de":"Fritz-Haber-Institut der Max-Planck-Gesellschaft",
 		"gv.mpg.de":"Generalverwaltung",
 		"gwdg.de":"GWD Göttingen",
@@ -249,7 +269,6 @@ var departments = {
 		"biochem.mpg.de":"Max-Planck-Institut für Biochemie",
 		"bgc-jena.mpg.de":"Max-Planck-Institut für Biogeochemie",
 		"age.mpg.de":"Max-Planck-Institut für Biologie des Alterns",
-		"tuebingen.mpg.de":"Max-Planck-Institut für biologischeKybernetik",
 		"mpibp-frankfurt.mpg.de":"Max-Planck-Institut für Biophysik",
 		"biophys.mpg.de":"Max-Planck-Institut für Biophysik",
 		"mpibpc.mpg.de":"Max-Planck-Institut für biophysikalischeChemie",
@@ -263,7 +282,6 @@ var departments = {
 		"ds.mpg.de":"Max-Planck-Institut für Dynamik undSelbstorganisation",
 		"mpie.de":"Max-Planck-Institut für Eisenforschung GmbH",
 		"aesthetics.mpg.de":"Max-Planck-Institut für empirische Ästhetik",
-		"tuebingen.mpg.de":"Max-Planck-Institut für Entwicklungsbiologie",
 		"eth.mpg.de":"Max-Planck-Institut für ethnologische Forschung",
 		"mpier.uni-frankfurt.de":"Max-Planck-Institut für europäischeRechtsgeschichte",
 		"rg.mpg.de":"Max-Planck-Institut für europäischeRechtsgeschichte",
@@ -273,8 +291,7 @@ var departments = {
 		"mpe.mpg.de":"Max-Planck-Institut für extraterrestrische Physik",
 		"fkf.mpg.de":"Max-Planck-Institut für Festkörperforschung",
 		"mpifg.de":"Max-Planck-Institut für Gesellschaftsforschung",
-		"aei.mpg.de":"Max-Planck-Institut für Gravitationsphysik",
-		"!!aei.mpg.de":"Max-Planck-Institut für Gravitationsphysik, Teilinstitut Hannover",
+		"aei.mpg.de":["Max-Planck-Institut für Gravitationsphysik", "Max-Planck-Institut für Gravitationsphysik, Teilinstitut Hannover"],
 		"kerckhoff.mpg.de":"Max-Planck-Institut für Herz- undLungenforschung",
 		"mpi-bn.mpg.de":"Max-Planck-Institut für Herz- undLungenforschung",
 		"mpih-frankfurt.mpg.de":"Max-Planck-Institut für Hirnforschung",
@@ -283,10 +300,9 @@ var departments = {
 		"ie-freiburg.mpg.de":"Max-Planck-Institut für Immunbiologie und Epigenetik",
 		"mpiib-berlin.mpg.de":"Max-Planck-Institut für Infektionsbiologie",
 		"mpi-inf.mpg.de":"Max-Planck-Institut für Informatik",
-		"mpi-klsb.mpg.de":"Max-Planck-Institut für Informatik",
+		"mpi-klsb.mpg.de":["Max-Planck-Institut für Informatik", "Max-Planck-Institut für Softwaresysteme, Standort Kaiserslautern", "Max-Planck-Institut für Softwaresysteme, Standort Saarbrücken"],
 		"ip.mpg.de":"Max-Planck-Institut für Innovation undWettbewerb",
 		"is.mpg.de":"Max-Planck-Institut für Intelligente Systeme,Standort Stuttgart",
-		"tuebingen.mpg.de":"Max-Planck-Institut für Intelligente Systeme,Standort Tübingen",
 		"mpi-hd.mpg.de":"Max-Planck-Institut für Kernphysik",
 		"cbs.mpg.de":"Max-Planck-Institut für Kognitions- und Neurowissenschaften",
 		"kofo.mpg.de":"Max-Planck-Institut für Kohlenforschung",
@@ -311,16 +327,14 @@ var departments = {
 		"neuro.mpg.de":"Max-Planck-Institut für Neurobiologie",
 		"nf.mpg.de":"Max-Planck-Institut für neurologische Forschung",
 		"econ.mpg.de":"Max-Planck-Institut für Ökonomik",
-		"orn.mpg.de":"Max-Planck-Institut für Ornithologie",
-		"!!orn.mpg.de":"Max-Planck-Institut für Ornithologie, Teilinstitut Radolfzell",
+		"orn.mpg.de":["Max-Planck-Institut für Ornithologie", "Max-Planck-Institut für Ornithologie, Teilinstitut Radolfzell"],
 		"mpipz.mpg.de":"Max-Planck-Institut für Pflanzenzüchtungsforschung",
 		"mpiz-koeln.mpg.de":"Max-Planck-Institut für Pflanzenzüchtungsforschung",
 		"mppmu.mpg.de":"Max-Planck-Institut für Physik",
 		"mpp.mpg.de":"Max-Planck-Institut für Physik",
 		"pks.mpg.de":"Max-Planck-Institut für Physik komplexer Systeme",
 		"mpipks-dresden.mpg.de":"Max-Planck-Institut für Physik komplexer Systeme",
-		"ipp.mpg.de":"Max-Planck-Institut für Plasmaphysik",
-		"!!ipp.mpg.de":"Max-Planck-Institut für Plasmaphysik, Teilinstitut Greifswald",
+		"ipp.mpg.de":["Max-Planck-Institut für Plasmaphysik", "Max-Planck-Institut für Plasmaphysik, Teilinstitut Greifswald"],
 		"mpip-mainz.mpg.de":"Max-Planck-Institut für Polymerforschung",
 		"mpipsykl.mpg.de":"Max-Planck-Institut für Psychiatrie",
 		"psych.mpg.de":"Max-Planck-Institut für Psychiatrie",
@@ -329,8 +343,6 @@ var departments = {
 		"mpifr.de":"Max-Planck-Institut für Radioastronomie",
 		"mpifr-bonn.mpg.de":"Max-Planck-Institut für Radioastronomie",
 		"mpi-sws.or":"Max-Planck-Institut für Softwaresysteme, Standort Kaiserslautern",
-		"mpi-klsb.mpg.de":"Max-Planck-Institut für Softwaresysteme, Standort Kaiserslautern",
-		"!!mpi-klsb.mpg.de":"Max-Planck-Institut für Softwaresysteme, Standort Saarbrücken",
 		"mps.mpg.de":"Max-Planck-Institut für Sonnensystemforschung",
 		"mpisoc.mpg.de":"Max-Planck-Institut für Sozialrecht und Sozialpolitik",
 		"tax.mpg.de":"Max-Planck-Institut für Steuerrecht und Öffentliche Finanzen",
@@ -375,17 +387,37 @@ $(document).ready(function () {
 	});
 	
 	$("#email").focusout(function(){
+			$('#organization-select').empty().trigger("change");
+
 			var email = $("#email").val();
 			var department_id = email.substring(email.indexOf('@')+1);
 			if (email.trim().indexOf('@') === 0) {
 				$("#emailError").show().html("Invalid email");
 			}
+
 			if (departments[department_id]) {
-				$("#organization").val(departments[department_id]);
+				if (Array.isArray(departments[department_id])) {
+					for (i=0; i < departments[department_id].length; i++) {
+						$('#organization-select').append(new Option(departments[department_id][i], departments[department_id][i], false, false)).trigger('change');
+					}
+				} else {
+						$('#organization-select').append(new Option(departments[department_id], departments[department_id], false, false)).trigger('change');
+				}
 			} else {
 				$("#organizationError").show().html(/*[[#{EmailMatches.org}]]*/);
-				$("#organization").val('');
+				$("#organization-select").val('');
 			}
+
+			var csrf_token = $("#csrf").val();
+			$.post(serverContext + "validEmail",{ _csrf: csrf_token, email: email} ,
+				function(data){
+					if(data.code === 500) {
+						$('#emailError').show().html(data.message);
+					}
+			})
+			.fail(function(data) {
+			});
+
 	});
 
 	$("#telephone").focus(function(){
@@ -399,6 +431,18 @@ $(document).ready(function () {
 	$("#password").focus(function(){
 		$("#passwordError").html("").hide();
 	});
+
+	$("#zip").focus(function(){
+		$("#termsError").html("").hide();
+	});
+
+	$("#address").focus(function(){
+		$("#termsError").html("").hide();
+	});
+
+	$("#city").focus(function(){
+		$("#termsError").html("").hide();
+	});
 });
 
 function continue_register(event) {
@@ -410,7 +454,7 @@ function continue_register(event) {
 			$('#emailError').show().html("Please fill in your email");
 		}else if ($('#telephone').val().length <= 0){
 			$('#telephoneError').show().html("Please fill in your telephone");
-		}	else if ($('#organization').val().length <= 0) {
+		}	else if ($('#organization-select').val().length <= 0) {
 			$("#organizationError").show().html(/*[[#{EmailMatches.org}]]*/);
 		} else if ($('#password').val().length <= 0 || $('#matchPassword').val().length <= 0) {
 			$("#passwordError").show().html("Please fill in your password");
@@ -429,26 +473,24 @@ function continue_register(event) {
 
 function register(event){
 	event.preventDefault();
-	var accepted = $("input:checked").length
+	var accepted = $("input:checked").length;
 	if (!accepted) {
 		$("#termsError").show().html(/*[[#{Checked.terms}]]*/);
 		 return;
 	};
-	
-	$(".alert").html("").hide();
-	$(".error-list").html("");
-	if($("#password").val() != $("#matchPassword").val()){
-		$("#passwordError").show().html(/*[[#{PasswordMatches.user}]]*/);
-		$("#passwordHint").hide();
-		return;
+
+	if ($("#zip").val().length === 0 || $("#city").val().length === 0 || $("#address").val().length === 0) {
+		$("#termsError").show().html(/*[[#{message.address}]]*/);
+		 return;
 	}
-			
+
 	var formData= $('form').serialize();
 	$.post(serverContext + "user/registration",formData ,function(data){
 			if(data.message == "success"){
 					window.location.href = serverContext + "successRegister.html";
+			} else if (!data.message) {
+					window.location.href = serverContext + "invalidSession.html";
 			}
-			
 	})
 	.fail(function(data) {
 			if(data.responseJSON.error.indexOf("MailError") > -1)
@@ -461,22 +503,23 @@ function register(event){
 			else if(data.responseJSON.error.indexOf("InternalError") > -1){
 					window.location.href = serverContext + "login?message=" + data.responseJSON.message;
 			}
+			else if(data.status === 403) {
+				window.location.href = serverContext + "invalidSession.html";
+			}
 			else{
 				var errors = $.parseJSON(data.responseJSON.message);
 					$.each( errors, function( index,item ){
 						console.log(item.defaultMessage);
 						if (item.field){
-							//$("#"+item.field+"Error").show().append(item.defaultMessage+"<br/>");
 							$("#termsError").show().append(item.defaultMessage+"<br/>");
 						}
 						else {
 							$("#termsError").show().append(item.defaultMessage+"<br/>");
 						}
-					});
+				});
 			}
     });
 }
-
 </script>
 </body>
 

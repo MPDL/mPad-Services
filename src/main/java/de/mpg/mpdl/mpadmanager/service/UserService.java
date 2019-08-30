@@ -7,6 +7,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.NameAlreadyBoundException;
@@ -17,11 +19,13 @@ import org.springframework.stereotype.Service;
 import de.mpg.mpdl.mpadmanager.dto.UserDTO;
 import de.mpg.mpdl.mpadmanager.model.CoordinateTeam;
 import de.mpg.mpdl.mpadmanager.model.LdapUser;
+import de.mpg.mpdl.mpadmanager.model.PasswordResetToken;
 import de.mpg.mpdl.mpadmanager.model.User;
 import de.mpg.mpdl.mpadmanager.model.VerificationToken;
 import de.mpg.mpdl.mpadmanager.repository.CoordinateTeamRepository;
 import de.mpg.mpdl.mpadmanager.repository.LdapGroupRepository;
 import de.mpg.mpdl.mpadmanager.repository.LdapUserRepository;
+import de.mpg.mpdl.mpadmanager.repository.PasswordResetTokenRepository;
 import de.mpg.mpdl.mpadmanager.repository.UserRepository;
 import de.mpg.mpdl.mpadmanager.repository.VerificationTokenRepository;
 import de.mpg.mpdl.mpadmanager.web.error.UserAlreadyExistException;
@@ -37,6 +41,9 @@ public class UserService implements IUserService {
 
     @Autowired
     private VerificationTokenRepository tokenRepository;
+
+    @Autowired
+    private PasswordResetTokenRepository passwordResetTokenRepository;
 
     @Autowired
     private CoordinateTeamRepository coordinateTeamRepository;
@@ -56,6 +63,7 @@ public class UserService implements IUserService {
     public static final String TOKEN_EXIST = "userExist";
 
     public static String APP_NAME = "SpringRegistration";
+    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
     // API
 
@@ -76,7 +84,6 @@ public class UserService implements IUserService {
         user.setAddress(accountDto.getAddress() + " " + accountDto.getCity() + " " + accountDto.getCountry());
         user.setZip(accountDto.getZip());
         user.setMattermost(accountDto.getMattermost());
-
         if (null != accountDto.getCoordinateTeams() && accountDto.getCoordinateTeams().size() > 0) {
             List<CoordinateTeam> coordinateTeams = user.getCoordinateTeams();
             for (String coordinateTeamName : accountDto.getCoordinateTeams()) {
@@ -167,13 +174,16 @@ public class UserService implements IUserService {
         
         try {
             String department = user.getDepartment();
-            LdapUser ldapUser = new LdapUser(user.getFirstName(), user.getLastName(), user.getPassword(), user.getOrganization(), user.getEmail(), user.getTelephone(), "bla", department, user.getZip(), user.getAddress());
-            ldapUserRepository.create(ldapUser);
+            LdapUser ldapUser = new LdapUser(user.getFirstName(), user.getLastName(), user.getPassword(), user.getOrganization(), user.getEmail(), user.getTelephone(), "no description yet", department, user.getZip(), user.getAddress());
+            LdapUser ldap = ldapUserRepository.create(ldapUser);
+            
+            LOGGER.info(ldap.toString());
         } catch (Exception e) {
             if (e instanceof NameAlreadyBoundException) return TOKEN_EXIST;
             else {
                 //TODO: delete from database
-                System.out.print(e);
+                userRepository.delete(user);
+                LOGGER.error("other ldap exceptions: " + user.getEmail(), e.toString());
                 return TOKEN_INVALID;
             }
         }
@@ -217,6 +227,29 @@ public class UserService implements IUserService {
         if (verificationToken != null) {
             tokenRepository.delete(verificationToken);
         }
+    }
+
+    @Override
+    public void createPasswordResetTokenForUser(final User user, final String token) {
+        final PasswordResetToken passwordResetToken = new PasswordResetToken(token, user);
+        passwordResetTokenRepository.save(passwordResetToken);
+    }
+
+    @Override
+    public PasswordResetToken getPasswordResetToken(final String token) {
+        return passwordResetTokenRepository.findByToken(token);
+    }
+
+    @Override
+    public User getUserByPasswordResetToken(final String token) {
+        return passwordResetTokenRepository.findByToken(token).getUser();
+    }
+
+    @Override
+    public void changeUserPassword(final User user, final String password) {
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
+        ldapUserRepository.updatePassword(user, passwordEncoder.encode(password));
     }
     
     private final CoordinateTeam createCoordinateTeamIfNotFound(final String name) {

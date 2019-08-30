@@ -4,30 +4,12 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
 <link rel="stylesheet" type="text/css" th:href="@{/css/footer.css}"/>
 <link rel="stylesheet" type="text/css" th:href="@{/css/registerStatus.css}"/>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII"/>
-<title th:text="#{label.pages.home.title}">Title</title>
-<script th:inline="javascript">
-	function validate() {
-        if (document.f.username.value == "" && document.f.password.value == "") {
-            alert(/*[[#{message.username} + #{message.password}]]*/);
-            document.f.username.focus();
-            return false;
-        }
-        if (document.f.username.value == "") {
-            alert(/*[[#{message.username}]]*/);
-            document.f.username.focus();
-            return false;
-        }
-        if (document.f.password.value == "") {
-            alert(/*[[#{message.password}]]*/);
-            document.f.password.focus();
-            return false;
-        }
-    }
-    
-</script>
+<title th:text="#{label.pages.home.title}">home</title>
 </head>
 <body>
+
 <div class="top-banner">
     <img class="logo-white" th:src="@{/img/logo_white.png}"/>
     <h1 class="title-label" th:text="#{label.form.title}">form</h1>
@@ -35,9 +17,11 @@
 
 <div class="content">
 	<div class="info-box" id="basic-info-box">
-        <h4 th:text="#{message.resetPassword}">reset password</h4>
-        <h4 th:if="${param.message != null}" th:text="${param.message[0]}">message</h4>
-        <h4 th:if="${param.error != null}"  th:text="${session[SPRING_SECURITY_LAST_EXCEPTION]}">error</h4>
+        <input id="csrf" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <h5>delete user by email</h5>
+        <input id="email" name="email" type="email" class="form-control" value="" />
+        <div id="reset-password"><button class="btn btn-primary" type="submit" onclick="resetPass()" th:text="#{label.form.submit}">reset</button>
+        </div>
     </div>
 </div>
 
@@ -50,6 +34,22 @@
         </div>
     </div>
 </div>
-</body>
 
+<script th:inline="javascript">
+var serverContext = [[@{/}]];
+function resetPass(){
+    var email = $("#email").val();
+    var csrf_token = $("#csrf").val();
+    $.post(serverContext + "user/delete",{ _csrf: csrf_token, email: email} ,
+      function(data){
+        alert(data.message);
+    })
+    .fail(function(data) {
+        alert(data);
+    });
+}
+ 
+</script>
+
+</body>
 </html>

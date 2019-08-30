@@ -184,3 +184,7 @@ option {
 .select2-selection__rendered {
   color: #fff !important;
 }
+
+#forget-password {
+  color: white;
+}

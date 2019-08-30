@@ -29,6 +29,16 @@
 
 /** footer **/
 
+.footer_registration {
+  height: 60px;
+  width: 100%;
+  display: flex;
+  background: #012846;
+  justify-content: center;
+  align-items: center;
+  margin-top: -60px;
+}
+
 
 .footer {
   position: absolute;

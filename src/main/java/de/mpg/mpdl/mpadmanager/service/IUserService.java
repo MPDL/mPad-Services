@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import de.mpg.mpdl.mpadmanager.dto.UserDTO;
+import de.mpg.mpdl.mpadmanager.model.PasswordResetToken;
 import de.mpg.mpdl.mpadmanager.model.User;
 import de.mpg.mpdl.mpadmanager.model.VerificationToken;
 import de.mpg.mpdl.mpadmanager.web.error.UserAlreadyExistException;
@@ -25,7 +26,15 @@ public interface IUserService {
 
     VerificationToken generateNewVerificationToken(String token);
 
+    void createPasswordResetTokenForUser(User user, String token);
+
     User findUserByEmail(String email);
+
+    PasswordResetToken getPasswordResetToken(String token);
+
+    User getUserByPasswordResetToken(String token);
+
+    void changeUserPassword(User user, String password);
     
     List<User> findAllUsers();
 
