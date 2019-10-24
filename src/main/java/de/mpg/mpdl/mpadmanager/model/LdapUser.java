@@ -14,7 +14,7 @@ import org.springframework.ldap.support.LdapNameBuilder;
 
 @Entry(objectClasses = {"top", "inetOrgPerson"})
 public class LdapUser {
-      
+    
     @Id
     private Name dn;
     
@@ -61,7 +61,7 @@ public class LdapUser {
     public LdapUser(String givenName, String sn, String password, String ou, String email,
             String telephoneNumber, String description, String departmentNumberStr, String zipStr, String addressStr) {
         Name dn = LdapNameBuilder.newInstance()
-                .add("ou", "mpg")
+                .add("ou", "MPG")
                 .add("ou", ou)
                 .add("uid", email)
                 .build();
@@ -209,7 +209,6 @@ public class LdapUser {
     public String toString() {
         return "LdapUser{" +
                 "dn=" + dn +
-                ", uid='" + uid + '\'' +
                 ", fullName='" + fullName + '\'' +
                 ", lastName='" + sn + '\'' +
                 ", email='" + email + '\'' +

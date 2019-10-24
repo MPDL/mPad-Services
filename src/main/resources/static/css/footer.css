@@ -29,7 +29,7 @@
 
 /** footer **/
 
-.footer_registration {
+.footer-sticky-bottom {
   height: 60px;
   width: 100%;
   display: flex;

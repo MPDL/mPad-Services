@@ -3,32 +3,35 @@
 <head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
 <link rel="stylesheet" type="text/css" th:href="@{/css/footer.css}"/>
-<link rel="stylesheet" type="text/css" th:href="@{/css/registerStatus.css}"/>
+<link rel="stylesheet" type="text/css" th:href="@{/css/center-status-info-box.css}"/>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII"/>
 <title th:text="#{label.pages.home.title}">home</title>
 </head>
 <body>
 
-<div class="top-banner">
-    <img class="logo-white" th:src="@{/img/logo_white.png}"/>
-    <h1 class="title-label" th:text="#{label.form.title}">form</h1>
-</div>
+<div class="wrap">
+    <div class="top-banner">
+        <img class="logo-white" th:src="@{/img/logo_white.png}"/>
+        <h1 class="title-label" th:text="#{label.form.title}">form</h1>
+    </div>
 
-<div class="content">
-	<div class="info-box" id="basic-info-box">
-        <h3>Almost done...</h3>
-        <h3>A verification link has been sent to your email account.</h3>
+    <div class="content">
+        <div class="info-box" id="basic-info-box">
+            <h3>Almost done...</h3>
+            <h3>A verification link has been sent to your email account.</h3>
+        </div>
     </div>
 </div>
 
-<div class='footer'>
+<div class='footer-sticky-bottom'>
     <div class="info">
         <a href="https://www.mpdl.mpg.de/terms-of-service-de.html" target="_blank"><u>Privacy Policy</u><a/>
         <div class="contact">
             <p><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Email</p>
-            <p><span class="glyphicon glyphicon-earphone" aria-hidden="true"></span> Tel.:123456</p>
+            <p><span class="glyphicon glyphicon-earphone" aria-hidden="true"></span> Tel.: +4989909311205</p>
         </div>
     </div>
 </div>
+
 </body>
 </html>

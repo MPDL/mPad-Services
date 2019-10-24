@@ -18,13 +18,16 @@ import org.springframework.stereotype.Service;
 
 import de.mpg.mpdl.mpadmanager.dto.UserDTO;
 import de.mpg.mpdl.mpadmanager.model.CoordinateTeam;
+import de.mpg.mpdl.mpadmanager.model.LdapGroup;
 import de.mpg.mpdl.mpadmanager.model.LdapUser;
+import de.mpg.mpdl.mpadmanager.model.Organization;
 import de.mpg.mpdl.mpadmanager.model.PasswordResetToken;
 import de.mpg.mpdl.mpadmanager.model.User;
 import de.mpg.mpdl.mpadmanager.model.VerificationToken;
 import de.mpg.mpdl.mpadmanager.repository.CoordinateTeamRepository;
 import de.mpg.mpdl.mpadmanager.repository.LdapGroupRepository;
 import de.mpg.mpdl.mpadmanager.repository.LdapUserRepository;
+import de.mpg.mpdl.mpadmanager.repository.OrganizationRepository;
 import de.mpg.mpdl.mpadmanager.repository.PasswordResetTokenRepository;
 import de.mpg.mpdl.mpadmanager.repository.UserRepository;
 import de.mpg.mpdl.mpadmanager.repository.VerificationTokenRepository;
@@ -50,6 +53,9 @@ public class UserService implements IUserService {
     
     @Autowired
     private LdapUserRepository ldapUserRepository;
+
+    @Autowired
+    private OrganizationRepository organizationRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -154,6 +160,7 @@ public class UserService implements IUserService {
 
     @Override
     public String validateVerificationToken(String token) {
+        LOGGER.info("validateVerificationToken");
         final VerificationToken verificationToken = tokenRepository.findByToken(token);
         if (verificationToken == null) {
             return TOKEN_INVALID;
@@ -169,21 +176,40 @@ public class UserService implements IUserService {
             return TOKEN_EXPIRED;
         }
         user.setEnabled(true);
-        tokenRepository.delete(verificationToken);
         userRepository.save(user);
         
         try {
-            String department = user.getDepartment();
-            LdapUser ldapUser = new LdapUser(user.getFirstName(), user.getLastName(), user.getPassword(), user.getOrganization(), user.getEmail(), user.getTelephone(), "no description yet", department, user.getZip(), user.getAddress());
+            String organization = user.getOrganization();
+            if (null == organizationRepository.findByName(organization)) {
+                Organization org = new Organization(organization);
+                organizationRepository.save(org);
+                ldapGroupRepository.create(new LdapGroup(organization));
+                LOGGER.info("Create organization: " + organization);
+            }
+        } catch (Exception e) {
+            LOGGER.error(e.toString());
+            if (e instanceof NameAlreadyBoundException) {
+                LOGGER.info("Organization already exists on LDAP");
+            } else {
+                LOGGER.error("Create organization failed");
+                return TOKEN_EXIST;
+            }
+        }
+
+        try {
+            LdapUser ldapUser = new LdapUser(user.getFirstName(), user.getLastName(), user.getPassword(), user.getOrganization(), user.getEmail(), user.getTelephone(), "no description yet", user.getDepartment(), user.getZip(), user.getAddress());
             LdapUser ldap = ldapUserRepository.create(ldapUser);
-            
+            LOGGER.info("User created on LDAP");
             LOGGER.info(ldap.toString());
         } catch (Exception e) {
-            if (e instanceof NameAlreadyBoundException) return TOKEN_EXIST;
+            if (e instanceof NameAlreadyBoundException) {
+                LOGGER.info("User already on LDAP");
+                return TOKEN_EXIST;
+            }
             else {
-                //TODO: delete from database
                 userRepository.delete(user);
                 LOGGER.error("other ldap exceptions: " + user.getEmail(), e.toString());
+                LOGGER.error(e.toString());
                 return TOKEN_INVALID;
             }
         }

@@ -20,7 +20,7 @@
     <div class="branding"><img class="top-left-logo" th:src="@{/img/logo_white.png}"/>Max Planck Digital Library</div>
 
     <div class="custom-select">
-      <select id="language-select" name="states">
+      <select id="js-language-select"  name="states">
         <option value="en">English</option>
         <option value="de">Deutsch</option>
       </select>
@@ -38,18 +38,19 @@
   <div class="root-container">
     <div class="hero">
         <div class="main">
-            <h2 class="slogan">Landing page, the gate to your own mPad.(slogan place holder)</h2>
+            <h2 class="slogan" th:text="#{label.home.slogen}">Landing page, the gate to your own mPad.(slogan place holder)</h2>
             <a th:href="@{/registration.html}" style="text-decoration: none;"><h2 class="register-btn animated bounce delay-1s" th:text="#{label.form.register}">Sign up</h2></a>
-            <a th:href="@{/forgetPassword.html}" style="text-decoration: none;"><h5 class="forget-password">forget password?</h5></a>
+            <a th:href="@{/forgetPassword.html}" style="text-decoration: none;"><h5 class="forget-password" th:text="#{message.forgetPassword}">forget password?</h5></a>
         </div>
-        <div class='footer'>
-          <div class="info">
-              <a href="https://www.mpdl.mpg.de/terms-of-service-de.html" target="_blank"><u>Privacy Policy</u><a/>
-              <div class="contact">
-                  <p><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Email</p>
-                  <p><span class="glyphicon glyphicon-earphone" aria-hidden="true"></span> Tel.:123456</p>
-              </div>
-          </div>
+    </div>
+  </div>
+
+  <div class='footer'>
+    <div class="info">
+        <a href="https://www.mpdl.mpg.de/terms-of-service-de.html" target="_blank"><u>Privacy Policy</u><a/>
+        <div class="contact">
+            <p><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Email</p>
+            <p><span class="glyphicon glyphicon-earphone" aria-hidden="true"></span> Tel.: +4989909311205</p>
         </div>
     </div>
   </div>
@@ -58,11 +59,23 @@
 </body>
 
 <script th:inline="javascript">
+var serverContext = [[@{/}]];
+var $langSelect = $('#js-language-select');
+var url = window.location.href;
+
 $(document).ready(function() {
-    $('#language-select').select2({
+    $langSelect.select2({
     minimumResultsForSearch: -1
     });
+
+    $langSelect.val([[${#locale}]]).trigger('change');
 });
+
+$langSelect.on("select2:select", function (e) { 
+  console.log($langSelect.val());
+  window.location.replace(serverContext + "home.html?lang=" + $langSelect.val())
+});
+
 </script>
 
 </html>

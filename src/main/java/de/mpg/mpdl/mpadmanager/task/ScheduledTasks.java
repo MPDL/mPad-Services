@@ -43,12 +43,8 @@ public class ScheduledTasks {
 	@Scheduled(fixedRate = 60000)
 	public void reportCurrentTime() {
 		Date now = new Date();
-        log.info("The time is now {}", dateFormat.format(now));
-
         List<VerificationToken> tokens = userService.findExpiredTokens(now);
         
-        log.info("token count: " + tokens.size());
-
         for(VerificationToken token: tokens) {
             String userEmail = token.getUserEmail();
             User user = userService. findUserByEmail(userEmail);

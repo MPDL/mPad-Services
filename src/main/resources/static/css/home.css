@@ -65,6 +65,10 @@ body {
   outline:none;
 }
 
+#js-language-select {
+  min-width: 80px;
+}
+
 option {
   background: #012846;
 }

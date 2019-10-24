@@ -25,7 +25,7 @@ public class UserDTO {
 	@Size(min = 1)
 	private String matchingPassword;
 
-	@ValidEmail
+	// @ValidEmail
 	@NotNull
 	@Size(min = 1, message = "{Size.userDTO.email}")
 	private String email;

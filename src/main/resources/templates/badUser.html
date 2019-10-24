@@ -1,46 +1,37 @@
 <html>
+
 <head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
-    <title th:text="#{label.badUser.title}">bad user</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/footer.css}"/>
+<link rel="stylesheet" type="text/css" th:href="@{/css/center-status-info-box.css}"/>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII"/>
+<title th:text="#{label.pages.home.title}">home</title>
 </head>
 <body>
-<div class="container">
-<h1 class="alert alert-danger" th:text="${param.message[0]}">error</h1>
-<br/>
-<a class="btn btn-default" th:href="@{/registration.html}" th:text="#{label.form.loginSignUp}">signup</a>
 
-<div th:if="${param.expired[0]}">
-<br/>
-<h1 th:text="#{label.form.resendRegistrationToken}">resend</h1>
-<button onclick="resendToken()">resend</button>
-
-
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script th:inline="javascript">
-var serverContext = [[@{/}]];
-
-function resendToken(){
-	var token = [[${param.token}]];
-    $.get(serverContext + "user/resendRegistrationToken?token="+token, function(data){
-        window.location.href = serverContext +"login?message=" + data.message;
-    })
-    .fail(function(data) {
-        if(data.responseJSON.error.indexOf("MailError") > -1)
-        {
-            window.location.href = serverContext + "emailError.html";
-        }
-        else{
-            window.location.href = serverContext + "login?message=" + data.responseJSON.message;
-        }
-    });
-}
-
-$(document).ajaxStart(function() {
-    $("title").html("LOADING ...");
-});
-</script>
-
+<div class="top-banner">
+    <img class="logo-white" th:src="@{/img/logo_white.png}"/>
+    <h1 class="title-label" th:text="#{label.form.title}">form</h1>
 </div>
+
+<div class="content">
+	<div class="info-box" id="basic-info-box">
+        <div class="status-bar">
+            <img class="status-icon" th:src="@{/img/frown-regular.svg}"/>
+        </div>
+        <h3 th:text="${param.message[0]}"></h3>
+        <a th:href="@{/registration.html}" style="align-self: center; margin-top:30px;"><button type="button" class="btn btn-primary">Register again</button></a>
+    </div>
+</div>
+
+<div class='footer'>
+    <div class="info">
+        <a href="https://www.mpdl.mpg.de/terms-of-service-de.html" target="_blank"><u>Privacy Policy</u><a/>
+        <div class="contact">
+            <p><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Email</p>
+            <p><span class="glyphicon glyphicon-earphone" aria-hidden="true"></span> Tel.: +4989909311205</p>
+        </div>
+    </div>
 </div>
 </body>
 </html>

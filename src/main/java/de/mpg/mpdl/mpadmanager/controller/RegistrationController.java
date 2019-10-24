@@ -28,7 +28,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -86,23 +85,25 @@ public class RegistrationController {
 	    @RequestMapping(value = "/registrationConfirm", method = RequestMethod.GET)
 	    public String confirmRegistration(final HttpServletRequest request, final Model model, @RequestParam("token") final String token) throws UnsupportedEncodingException {
 	        Locale locale = request.getLocale();
-	        final String result = userService.validateVerificationToken(token);
+					final String result = userService.validateVerificationToken(token);
+					LOGGER.info("token: " + result);
 	        if (result.equals("valid")) {
 	            final User user = userService.getUser(token);
-	            authWithoutPassword(user);
-	            model.addAttribute("message", messages.getMessage("message.accountVerified", null, locale));
-	            userService.deleteVerificationToken(token);
+							//authWithoutPassword(user);
+							mailSender.send(constructShippingInfoEmail(getAppUrl(request), request.getLocale(), user));
+	            model.addAttribute("message", messages.getMessage("message.accountVerified", null, locale));							
+							userService.deleteVerificationToken(token);
+							LOGGER.info("next: redirect:/successActivate.html");
 	            return "redirect:/successActivate.html";
 	        }
 
 	        model.addAttribute("message", messages.getMessage("auth.message." + result, null, locale));
 	        model.addAttribute("expired", "expired".equals(result));
-	        model.addAttribute("token", token);
+					model.addAttribute("token", token);
+					LOGGER.info("next: redirect:/badUser.html");
 	        return "redirect:/badUser.html?lang=" + locale.getLanguage();
-	    }
-
-	    // user activation - verification
-
+			}
+			
 	    @RequestMapping(value = "/user/resendRegistrationToken", method = RequestMethod.GET)
 	    @ResponseBody
 	    public GenericResponse resendRegistrationToken(final HttpServletRequest request, @RequestParam("token") final String existingToken) {
@@ -158,6 +159,11 @@ public class RegistrationController {
 					return constructEmail("Reset Password", message + " \r\n" + url, user);
 			}
 
+			private SimpleMailMessage constructShippingInfoEmail(final String contextPath, final Locale locale, final User user) {
+				final String message = user.getAddress() + " " +user.getZip();
+				return constructEmail("Shipping Info", message, user, "mpadadmin@mpdl.mpg.de");
+			}
+
 	    private SimpleMailMessage constructEmail(String subject, String body, User user) {
 	        final SimpleMailMessage email = new SimpleMailMessage();
 	        email.setSubject(subject);
@@ -167,8 +173,20 @@ public class RegistrationController {
 	        return email;
 	    }
 
+	    private SimpleMailMessage constructEmail(String subject, String body, User user, String receiverEmail) {
+				final SimpleMailMessage email = new SimpleMailMessage();
+				email.setSubject(subject);
+				email.setText(body);
+				email.setTo(receiverEmail);
+				email.setFrom(env.getProperty("support.email"));
+				return email;
+		}
+
 	    private String getAppUrl(HttpServletRequest request) {
-	        return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+					if(request.getServerPort() != 80) {
+						return  "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+					}
+	        return  "http://" + request.getServerName() + request.getContextPath();
 	    }
 
 	    public void authWithHttpServletRequest(HttpServletRequest request, String username, String password) {

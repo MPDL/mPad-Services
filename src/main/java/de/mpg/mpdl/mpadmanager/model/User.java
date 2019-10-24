@@ -67,7 +67,6 @@ public class User {
     
     private boolean enabled;
     private String secret;
-   
 
     public User() {
         super();

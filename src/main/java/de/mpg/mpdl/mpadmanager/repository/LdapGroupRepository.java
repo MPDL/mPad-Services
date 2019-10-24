@@ -20,8 +20,8 @@ public class LdapGroupRepository {
         return group;
     }
 
-    public LdapGroup findBy(String attr, String value) {
-        return ldapTemplate.findOne(query().where(attr).is(value), LdapGroup.class);
+    public List<LdapGroup> findBy(String attr, String value) {
+        return ldapTemplate.find(query().where(attr).is(value), LdapGroup.class);
     }
 
     public void update(LdapGroup group) {

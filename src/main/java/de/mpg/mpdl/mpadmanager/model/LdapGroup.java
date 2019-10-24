@@ -4,44 +4,37 @@ import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.DnAttribute;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
+import org.springframework.ldap.odm.annotations.Transient;
 import org.springframework.ldap.support.LdapNameBuilder;
 
 import javax.naming.Name;
-import java.util.HashSet;
-import java.util.Set;
 
-@Entry(objectClasses = {"top", "groupOfUniqueNames"}, base = "cn=groups")
+@Entry(objectClasses = {"top", "organizationalUnit"})
 public final class LdapGroup {
-
-    private static final String BASE_DN = "dc=mpadmanager,dc=de";
 
     @Id
     private Name dn;
 
-    @Attribute(name="cn")
-    @DnAttribute("cn")
+    @Transient
+    @Attribute(name="ou")
+    @DnAttribute(value="ou")
     private String name;
-
-    @Attribute(name="uniqueMember")
-    private Set<Name> members;
 
     public LdapGroup() {
     }
 
-    public LdapGroup(String name, Set<Name> members) {
-        Name dn = LdapNameBuilder.newInstance(BASE_DN)
-                .add("ou", "groups")
-                .add("cn", name)
+    public LdapGroup(String name) {
+        Name dn = LdapNameBuilder.newInstance()
+                .add("ou", "MPG")
+                .add("ou", name)
                 .build();
         this.dn = dn;
         this.name = name;
-        this.members = members;
     }
 
-    public LdapGroup(Name dn, String name, Set<Name> members) {
+    public LdapGroup(Name dn, String name) {
         this.dn = dn;
         this.name = name;
-        this.members = members;
     }
 
     public Name getDn() {
@@ -52,14 +45,6 @@ public final class LdapGroup {
         this.dn = dn;
     }
 
-    public Set<Name> getMembers() {
-        return members;
-    }
-
-    public void setMembers(Set<Name> members) {
-        this.members = members;
-    }
-
     public String getName() {
         return name;
     }
@@ -68,23 +53,11 @@ public final class LdapGroup {
         this.name = name;
     }
 
-    public void addMember(Name member) {
-        if (this.members == null){
-            this.members = new HashSet<>();
-        }
-        members.add(member);
-    }
-
-    public void removeMember(Name member) {
-        members.remove(member);
-    }
-
     @Override
     public String toString() {
-        return "Group{" +
+        return "LdapGroup{" +
                 "dn=" + dn +
-                ", name='" + name + '\'' +
-                ", members=" + members +
+                ", ou='" + name + '\'' +
                 '}';
     }
 }

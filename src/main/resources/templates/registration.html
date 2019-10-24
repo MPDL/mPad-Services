@@ -25,7 +25,7 @@ color:#000;
 </head>
 
 <body>
-    <div class="preload">
+    <div class="root">
 			<div class="top-banner">
 			    <img class="logo-white" th:src="@{/img/logo_white.png}"/>
 					<h1 class="title-label" th:text="#{label.form.title}">form</h1>
@@ -155,7 +155,8 @@ color:#000;
 											</select>
 										</div>
 
-										<div class="row-container row" style="margin-top: 10px;" >
+										<div class="row right-align-container" style="margin-top: 10px;" >
+											<button id="back-to-basic-info" type="button" class="btn btn-primary" th:text="#{label.form.back}">back</button>
 											<button id="continue-to-address" type="button" class="btn btn-primary" th:text="#{label.form.continue}">continue</button>
 										</div>
 
@@ -199,7 +200,10 @@ color:#000;
 													<label><input type="checkbox" id="termCheckbox" value="">I accept the <a href="https://www.mpdl.mpg.de/terms-of-service-de.html" target="_blank"><u>Terms of Service</u><a/></label>
 												</div>
 											</div>
-											<button id='btn-mpad-register' type="submit" class="btn btn-primary" th:text="#{label.form.register}">submit</button>
+											<div class="row right-align-container" style="margin-top: 10px;" >
+												<button id='back-to-research-info' class="btn btn-primary" th:text="#{label.form.back}">back</button>
+												<button id='btn-mpad-register' type="submit" class="btn btn-primary" th:text="#{label.form.register}">submit</button>
+											</div>
 										</div>
 
 										<div class="form-group row">
@@ -213,12 +217,12 @@ color:#000;
 			</div>
 		</div>
 		
-		<div class='footer_registration'>
+		<div class='footer-sticky-bottom'>
 			<div class="info">
 					<a href="https://www.mpdl.mpg.de/terms-of-service-de.html" target="_blank"><u>Privacy Policy</u><a/>
 					<div class="contact">
 							<p><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Email</p>
-							<p><span class="glyphicon glyphicon-earphone" aria-hidden="true"></span> Tel.:123456</p>
+							<p><span class="glyphicon glyphicon-earphone" aria-hidden="true"></span> Tel.: +4989909311205</p>
 					</div>
 			</div>
 		</div>
@@ -254,6 +258,7 @@ var departments = {
 		"mpcdf.mpg.de":"Max Planck Computing and Data Facility",
 		"rzg.mpg.de":"Max Planck Computing and Data Facility",
 		"mpdl.mpg.de":"Max Planck Digital Library",
+		"gmail.com":"MPI für testing",
 		"maxplanckflorida.org":"Max Planck Florida Institute for Neuroscience",
 		"mpfi.org":"Max Planck Florida Institute for Neuroscience",
 		"mpfpr.de":"Max Planck Foundation for InternationalPeace and the Rule of Law",
@@ -360,13 +365,32 @@ var departments = {
 $(document).ready(function () {
 	$('.info').children().first().hide()  //fix: strange styling link element 
 
+	$(window).keydown(function(event){
+    if(event.keyCode == 13) {
+      event.preventDefault();
+      return false;
+    }
+  });
+
 	$('#sign-up-continue').click(function(event) {
 		continue_register(event);
+	});
+
+	$('#back-to-basic-info').click(function(event) {
+		$('#basic-info-box').show();
+		$('#research-info-box').hide();
+	});
+
+	$('#back-to-research-info').click(function(event) {
+		event.preventDefault();
+		$('#research-info-box').show();
+		$('#address-info-box').hide();
 	});
 
 	$('#continue-to-address').click(function(event) {
 		$('#research-info-box').hide();
 		$('#address-info-box').show();
+		$("#termsError").hide();
 	});
 
 	$('form').submit(function(event) {
@@ -465,6 +489,8 @@ function continue_register(event) {
 		} else if ($('#password').val().length < 6) {
 			$("#passwordError").show().html(/*[[#{error.password.rule}]]*/);
 			$("#passwordHint").hide();
+		} else if ($('#emailError').is(':visible')) {
+			return;
 		} else {
 			$('#basic-info-box').hide();
 			$('#research-info-box').show();

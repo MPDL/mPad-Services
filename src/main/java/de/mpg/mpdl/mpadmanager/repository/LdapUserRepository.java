@@ -52,7 +52,7 @@ public class LdapUserRepository {
 
     private Name buildDn(User user) {
         return LdapNameBuilder.newInstance("")
-                .add("ou", "mpg")
+                .add("ou", "MPG")
                 .add("ou", user.getOrganization())
                 .add("uid", user.getEmail())
                 .build();
