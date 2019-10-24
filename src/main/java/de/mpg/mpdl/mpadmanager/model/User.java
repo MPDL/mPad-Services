@@ -56,6 +56,13 @@ public class User {
         inverseJoinColumns = { @JoinColumn(name = "coordinate_team_id") })
     private List<CoordinateTeam> coordinateTeams = new ArrayList<>();
 
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(name = "research_fields",
+        joinColumns = { @JoinColumn(name = "user_id") },
+        inverseJoinColumns = { @JoinColumn(name = "research_field_id") })
+    private List<ResearchField> researchFields = new ArrayList<>();    
+
     @Column()
     private String zip;
     
@@ -133,6 +140,14 @@ public class User {
 
     public void setCoordinateTeams(List<CoordinateTeam> coordinateTeams) {
         this.coordinateTeams = coordinateTeams;
+    }
+
+    public List<ResearchField> getResearchFields() {
+        return researchFields;
+    }
+
+    public void setResearchFields(List<ResearchField> researchFields) {
+        this.researchFields = researchFields;
     }
 
     public String getZip() {

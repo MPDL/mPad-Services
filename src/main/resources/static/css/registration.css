@@ -80,7 +80,7 @@ html, body {
   height: 42px !important;
 }
 
-.coordinate-row {
+.multi-select-row {
   display: flex;
   margin-top: 5px; 
   padding-left: 5px; 

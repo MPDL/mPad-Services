@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import de.mpg.mpdl.mpadmanager.validation.ValidEmail;
 public class UserDTO {
 
 	@NotNull
@@ -37,6 +38,8 @@ public class UserDTO {
 	private String department;
 
 	private List<String> coordinateTeams; 
+
+	private List<String>  researchFields;
 		
 	private String zip;
 	
@@ -112,6 +115,14 @@ public class UserDTO {
 
 	public void setCoordinateTeams(List<String> coordinateTeams) {
 		this.coordinateTeams = coordinateTeams;
+	}
+
+	public List<String> getResearchField() {
+		return researchFields;
+	}
+
+	public void setResearchField(List<String> researchFields) {
+		this.researchFields = researchFields;
 	}
 
 	public String getZip() {

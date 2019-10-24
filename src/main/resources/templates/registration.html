@@ -129,12 +129,19 @@ color:#000;
 											<p id="shipping-desc" class="col-sm-8" th:text="#{label.form.research.desc}"></p>
 										</div>
 
-										<div class="row-container row ">
-											<div class="form-label-group long-label">
-												<input type="text" id="research-field" class="form-control input-lg" placeholder="#{label.form.research.field}" name="researchField" value="" autocomplete="rutjfkde">
-												<label for="research-field" th:text="#{label.form.research.field}"></label>
-											</div>													
+
+										<div class="row-container row multi-select-row">
+											<select multiple id="research-field" name="researchFields">
+													<option value="Astronomy">Astronomy</option>
+													<option value="Chemistry">Chemistry</option>
+													<option value="Physics">Physics</option>
+													<option value="Psychology">Psychology</option>
+													<option value="Humanities">Humanities</option>
+													<option value="Education">Education</option>
+													<option value="Business">Business</option>
+											</select>
 										</div>
+
 
 										<div class="row-container row ">
 											<div class="form-label-group long-label">
@@ -143,7 +150,7 @@ color:#000;
 											</div>													
 										</div>
 
-										<div class="row-container row coordinate-row">
+										<div class="row-container row multi-select-row">
 											<select multiple id="research-coordinate-team" name="coordinateTeams">
 													<option value="Github">Github</option>
 													<option value="Markdown">Markdown</option>
@@ -227,6 +234,12 @@ color:#000;
 <script th:inline="javascript">
 
 $("#research-coordinate-team").select2({
+	placeholder: /*[[#{label.form.research.coordinate}]]*/,
+	tags: true,
+	dropdownAutoWidth: true
+});
+
+$("#research-field").select2({
 	placeholder: /*[[#{label.form.research.coordinate}]]*/,
 	tags: true,
 	dropdownAutoWidth: true
