@@ -5,9 +5,6 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import de.mpg.mpdl.mpadmanager.validation.ValidEmail;
-
-
 public class UserDTO {
 
 	@NotNull
@@ -48,8 +45,6 @@ public class UserDTO {
 	private String city;
 	
 	private String address;
-
-	private boolean mattermost;
 
 	public UserDTO( ) {
 	}
@@ -165,12 +160,4 @@ public class UserDTO {
 	public void setCity(String city) {
 			this.city = city;
 	}
-
-	public boolean getMattermost() {
-			return mattermost; 
-	}
-
-  public void setMattermost(boolean mattermost) {
-			this.mattermost = mattermost;
-	} 
 }

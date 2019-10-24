@@ -61,9 +61,6 @@ public class User {
     
     @Column()
     private String address;
-
-    @Column()
-    private boolean mattermost;
     
     private boolean enabled;
     private String secret;
@@ -176,14 +173,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public boolean getMattermost() {
-        return mattermost;
-    }
-
-    public void setMattermost(boolean mattermost) {
-        this.mattermost = mattermost;
     }
     
     @Override

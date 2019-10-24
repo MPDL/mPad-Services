@@ -89,7 +89,6 @@ public class UserService implements IUserService {
         user.setTelephone(accountDto.getTelephone());
         user.setAddress(accountDto.getAddress() + " " + accountDto.getCity() + " " + accountDto.getCountry());
         user.setZip(accountDto.getZip());
-        user.setMattermost(accountDto.getMattermost());
         if (null != accountDto.getCoordinateTeams() && accountDto.getCoordinateTeams().size() > 0) {
             List<CoordinateTeam> coordinateTeams = user.getCoordinateTeams();
             for (String coordinateTeamName : accountDto.getCoordinateTeams()) {
