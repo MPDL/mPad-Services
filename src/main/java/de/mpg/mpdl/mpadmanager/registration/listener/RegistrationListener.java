@@ -6,42 +6,49 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 import de.mpg.mpdl.mpadmanager.model.User;
 import de.mpg.mpdl.mpadmanager.registration.OnRegistrationCompleteEvent;
+import de.mpg.mpdl.mpadmanager.service.INotificationService;
 import de.mpg.mpdl.mpadmanager.service.IUserService;
 
 @Component
 public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
-	
-	@Autowired
-	private IUserService service;
-	
-	@Autowired
-	private MessageSource messages;
-	
-	@Autowired
-	private JavaMailSender mailSender;
-	
-	@Autowired
-	private Environment env;
 
-	@Override
-	public void onApplicationEvent(OnRegistrationCompleteEvent event) {
+    @Autowired
+    private IUserService service;
+
+    @Autowired
+    private INotificationService notificationService;
+
+    @Autowired
+    private MessageSource messages;
+
+    @Autowired
+    private Environment env;
+
+    @Override
+    public void onApplicationEvent(OnRegistrationCompleteEvent event) {
         this.confirmRegistration(event);
-	}
-	
-	private void confirmRegistration(final OnRegistrationCompleteEvent event) {
-		final User user = event.getUser();
+    }
+
+    private void confirmRegistration(final OnRegistrationCompleteEvent event) {
+        final User user = event.getUser();
         final String token = UUID.randomUUID().toString();
         service.createVerificationTokenForUser(user.getEmail(), token);
         final SimpleMailMessage email = constructEmailMessage(event, user, token);
-        mailSender.send(email);
+
+        try {
+            notificationService.sendNotification(email);
+        } catch (MailException | InterruptedException e) {
+            // TODO: Email send error handle
+            e.printStackTrace();
+        }
 	}
-	
+    
     private final SimpleMailMessage constructEmailMessage(final OnRegistrationCompleteEvent event, final User user, final String token) {
         final String recipientAddress = user.getEmail();
         final String subject = "Registration Confirmation";
