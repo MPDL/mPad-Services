@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,78 +39,95 @@ import de.mpg.mpdl.mpadmanager.dto.UserDTO;
 import de.mpg.mpdl.mpadmanager.model.User;
 import de.mpg.mpdl.mpadmanager.model.VerificationToken;
 import de.mpg.mpdl.mpadmanager.registration.OnRegistrationCompleteEvent;
+import de.mpg.mpdl.mpadmanager.service.INotificationService;
 import de.mpg.mpdl.mpadmanager.service.ISecurityUserService;
 import de.mpg.mpdl.mpadmanager.service.IUserService;
 import de.mpg.mpdl.mpadmanager.web.util.GenericResponse;
 
 @Controller
 public class RegistrationController {
-	 private final Logger LOGGER = LoggerFactory.getLogger(getClass());
+	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
-	    @Autowired
-			private IUserService userService;
-			
-			@Autowired
-			private ISecurityUserService securityUserService;
+	@Autowired
+	private IUserService userService;
 
-	    @Autowired
-	    private MessageSource messages;
+	@Autowired
+	private ISecurityUserService securityUserService;
 
-	    @Autowired
-	    private JavaMailSender mailSender;
+	@Autowired
+	private MessageSource messages;
 
-	    @Autowired
-	    private ApplicationEventPublisher eventPublisher;
+	// @Autowired
+	// private JavaMailSender mailSender;
 
-	    @Autowired
-	    private Environment env;
+	@Autowired
+	private INotificationService notificationService;
 
-	    @Autowired
-	    private AuthenticationManager authenticationManager;
+	@Autowired
+	private ApplicationEventPublisher eventPublisher;
 
-	    public RegistrationController() {
-	        super();
-	    }
-	    
-	    // Registration
-	    @RequestMapping(value = "/user/registration", method = RequestMethod.POST)
-	    @ResponseBody
-	    public GenericResponse registerUserAccount(@Valid final UserDTO accountDto, final HttpServletRequest request) {
-	        LOGGER.debug("Registering user account with information: {}", accountDto);
+	@Autowired
+	private Environment env;
 
-	        final User registered = userService.registerNewUserAccount(accountDto);
-	        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), getAppUrl(request)));
-	        return new GenericResponse("success");
-	    }
+	@Autowired
+	private AuthenticationManager authenticationManager;
 
-	    @RequestMapping(value = "/registrationConfirm", method = RequestMethod.GET)
-	    public String confirmRegistration(final HttpServletRequest request, final Model model, @RequestParam("token") final String token) throws UnsupportedEncodingException {
-	        Locale locale = request.getLocale();
-					final String result = userService.validateVerificationToken(token);
-					LOGGER.info("token: " + result);
-	        if (result.equals("valid")) {
-	            final User user = userService.getUser(token);
-							//authWithoutPassword(user);
-							mailSender.send(constructShippingInfoEmail(getAppUrl(request), request.getLocale(), user));
-	            model.addAttribute("message", messages.getMessage("message.accountVerified", null, locale));							
-							userService.deleteVerificationToken(token);
-							LOGGER.info("next: redirect:/successActivate.html");
-	            return "redirect:/successActivate.html";
-	        }
+	public RegistrationController() {
+		super();
+	}
 
-	        model.addAttribute("message", messages.getMessage("auth.message." + result, null, locale));
-	        model.addAttribute("expired", "expired".equals(result));
-					model.addAttribute("token", token);
-					LOGGER.info("next: redirect:/badUser.html");
-	        return "redirect:/badUser.html?lang=" + locale.getLanguage();
+	// Registration
+	@RequestMapping(value = "/user/registration", method = RequestMethod.POST)
+	@ResponseBody
+	public GenericResponse registerUserAccount(@Valid final UserDTO accountDto, final HttpServletRequest request) {
+		LOGGER.debug("Registering user account with information: {}", accountDto);
+
+		final User registered = userService.registerNewUserAccount(accountDto);
+		eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), getAppUrl(request)));
+		return new GenericResponse("success");
+	}
+
+	@RequestMapping(value = "/registrationConfirm", method = RequestMethod.GET)
+	public String confirmRegistration(final HttpServletRequest request, final Model model,
+			@RequestParam("token") final String token) throws UnsupportedEncodingException {
+		Locale locale = request.getLocale();
+		final String result = userService.validateVerificationToken(token);
+		LOGGER.info("token: " + result);
+		if (result.equals("valid")) {
+			final User user = userService.getUser(token);
+			// authWithoutPassword(user);
+			try {
+				notificationService.sendNotification(constructShippingInfoEmail(getAppUrl(request), request.getLocale(), user));
+			} catch (MailException | InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			
-	    @RequestMapping(value = "/user/resendRegistrationToken", method = RequestMethod.GET)
-	    @ResponseBody
-	    public GenericResponse resendRegistrationToken(final HttpServletRequest request, @RequestParam("token") final String existingToken) {
-	        final VerificationToken newToken = userService.generateNewVerificationToken(existingToken);
-	        final User user = userService.getUser(newToken.getToken());
-	        mailSender.send(constructResendVerificationTokenEmail(getAppUrl(request), request.getLocale(), newToken, user));
+			model.addAttribute("message", messages.getMessage("message.accountVerified", null, locale));
+			userService.deleteVerificationToken(token);
+			LOGGER.info("next: redirect:/successActivate.html");
+			return "redirect:/successActivate.html";
+		}
+
+		model.addAttribute("message", messages.getMessage("auth.message." + result, null, locale));
+		model.addAttribute("expired", "expired".equals(result));
+		model.addAttribute("token", token);
+		LOGGER.info("next: redirect:/badUser.html");
+		return "redirect:/badUser.html?lang=" + locale.getLanguage();
+	}
+
+	@RequestMapping(value = "/user/resendRegistrationToken", method = RequestMethod.GET)
+	@ResponseBody
+	public GenericResponse resendRegistrationToken(final HttpServletRequest request,
+			@RequestParam("token") final String existingToken) {
+			final VerificationToken newToken = userService.generateNewVerificationToken(existingToken);
+			final User user = userService.getUser(newToken.getToken());
+			try {
+				notificationService.sendNotification(
+						constructResendVerificationTokenEmail(getAppUrl(request), request.getLocale(), newToken, user));
+			} catch (MailException | InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	        return new GenericResponse(messages.getMessage("message.resendToken", null, request.getLocale()));
 	    }
 
@@ -122,7 +140,12 @@ public class RegistrationController {
 					if (user != null) {
 							final String token = UUID.randomUUID().toString();
 							userService.createPasswordResetTokenForUser(user, token);
-							mailSender.send(constructResetTokenEmail(getAppUrl(request), request.getLocale(), token, user));
+							try {
+								notificationService.sendNotification(constructResetTokenEmail(getAppUrl(request), request.getLocale(), token, user));
+							} catch (MailException | InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 							return new GenericResponse(messages.getMessage("message.resetPasswordEmail", null, request.getLocale()));
 					} else return new GenericResponse(messages.getMessage("auth.message.invalidUser", null, request.getLocale()));
 			}
