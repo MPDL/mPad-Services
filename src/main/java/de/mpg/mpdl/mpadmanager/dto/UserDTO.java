@@ -40,6 +40,8 @@ public class UserDTO {
 	private List<String> coordinateTeams; 
 
 	private List<String>  researchFields;
+
+	private List<String>  researchMethods;
 		
 	private String zip;
 	
@@ -117,12 +119,20 @@ public class UserDTO {
 		this.coordinateTeams = coordinateTeams;
 	}
 
-	public List<String> getResearchField() {
+	public List<String> getResearchFields() {
 		return researchFields;
 	}
 
-	public void setResearchField(List<String> researchFields) {
+	public void setResearchFields(List<String> researchFields) {
 		this.researchFields = researchFields;
+	}
+
+	public List<String> getResearchMethods() {
+		return researchMethods;
+	}
+
+	public void setResearchMethods(List<String> researchMethods) {
+		this.researchMethods = researchMethods;
 	}
 
 	public String getZip() {

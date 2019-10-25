@@ -136,18 +136,14 @@ color:#000;
 													<option value="Chemistry">Chemistry</option>
 													<option value="Physics">Physics</option>
 													<option value="Psychology">Psychology</option>
-													<option value="Humanities">Humanities</option>
-													<option value="Education">Education</option>
-													<option value="Business">Business</option>
 											</select>
 										</div>
 
-
-										<div class="row-container row ">
-											<div class="form-label-group long-label">
-												<input type="text" id="research-method" class="form-control input-lg" placeholder="#{label.form.research.method}" name="researchMethod" value="" autocomplete="rutjfkde">
-												<label for="research-method" th:text="#{label.form.research.method}"></label>
-											</div>													
+										<div class="row-container row multi-select-row">
+											<select multiple id="research-method" name="researchMethods">
+													<option value="Method one">Method one</option>
+													<option value="Method two">Method two</option>
+											</select>
 										</div>
 
 										<div class="row-container row multi-select-row">
@@ -240,7 +236,13 @@ $("#research-coordinate-team").select2({
 });
 
 $("#research-field").select2({
-	placeholder: /*[[#{label.form.research.coordinate}]]*/,
+	placeholder: /*[[#{label.form.research.field}]]*/,
+	tags: true,
+	dropdownAutoWidth: true
+});
+
+$("#research-method").select2({
+	placeholder: /*[[#{label.form.research.method}]]*/,
 	tags: true,
 	dropdownAutoWidth: true
 });

@@ -19,7 +19,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -56,9 +55,6 @@ public class RegistrationController {
 
 	@Autowired
 	private MessageSource messages;
-
-	// @Autowired
-	// private JavaMailSender mailSender;
 
 	@Autowired
 	private INotificationService notificationService;

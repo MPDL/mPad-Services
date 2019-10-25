@@ -58,10 +58,17 @@ public class User {
 
     @JsonIgnore
     @ManyToMany
-    @JoinTable(name = "research_fields",
+    @JoinTable(name = "user_research_fields",
         joinColumns = { @JoinColumn(name = "user_id") },
         inverseJoinColumns = { @JoinColumn(name = "research_field_id") })
     private List<ResearchField> researchFields = new ArrayList<>();    
+
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(name = "user_research_methods",
+        joinColumns = { @JoinColumn(name = "user_id") },
+        inverseJoinColumns = { @JoinColumn(name = "research_method_id") })
+    private List<ResearchMethod> researchMethods = new ArrayList<>();    
 
     @Column()
     private String zip;
@@ -148,6 +155,14 @@ public class User {
 
     public void setResearchFields(List<ResearchField> researchFields) {
         this.researchFields = researchFields;
+    }
+
+    public List<ResearchMethod> getResearchMethods() {
+        return researchMethods;
+    }
+
+    public void setResearchMethods(List<ResearchMethod> researchMethods) {
+        this.researchMethods = researchMethods;
     }
 
     public String getZip() {

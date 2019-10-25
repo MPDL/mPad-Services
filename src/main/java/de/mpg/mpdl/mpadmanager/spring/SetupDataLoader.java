@@ -8,8 +8,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import de.mpg.mpdl.mpadmanager.model.CoordinateTeam;
+import de.mpg.mpdl.mpadmanager.model.ResearchField;
+import de.mpg.mpdl.mpadmanager.model.ResearchMethod;
 import de.mpg.mpdl.mpadmanager.model.User;
 import de.mpg.mpdl.mpadmanager.repository.CoordinateTeamRepository;
+import de.mpg.mpdl.mpadmanager.repository.ResearchFieldRepository;
+import de.mpg.mpdl.mpadmanager.repository.ResearchMethodRepository;
 import de.mpg.mpdl.mpadmanager.repository.UserRepository;
 
 @Component
@@ -24,6 +28,12 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 	private CoordinateTeamRepository coordinateTeamRepository;
 	
 	@Autowired
+	private ResearchFieldRepository researchFieldRepository;
+
+	@Autowired
+	private ResearchMethodRepository researchMethodRepository;
+
+	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
 	@Override
@@ -35,13 +45,23 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
 		// == create initial user
 		User testUser = createUserIfNotFound("test@test.com", "fistname", "lastname", "test", "MPDL", "DigitalLabs", "130");
+		
+		// == create init coordinateTeam 
 		CoordinateTeam tag1 = createCoordinateTeamIfNotFound("Mattermost");
-		CoordinateTeam tag2 =createCoordinateTeamIfNotFound("KEEPER");
-		CoordinateTeam tag3 =createCoordinateTeamIfNotFound("Github");
-		CoordinateTeam tag4 =createCoordinateTeamIfNotFound("Markdown");
-		CoordinateTeam tag5 =createCoordinateTeamIfNotFound("Slack");
-		CoordinateTeam tag6 =createCoordinateTeamIfNotFound("WhatsApp");
-		CoordinateTeam tag7 =createCoordinateTeamIfNotFound("Trello");
+		CoordinateTeam tag2 = createCoordinateTeamIfNotFound("KEEPER");
+		CoordinateTeam tag3 = createCoordinateTeamIfNotFound("Github");
+		CoordinateTeam tag4 = createCoordinateTeamIfNotFound("Markdown");
+		CoordinateTeam tag5 = createCoordinateTeamIfNotFound("Slack");
+		CoordinateTeam tag6 = createCoordinateTeamIfNotFound("WhatsApp");
+		CoordinateTeam tag7 = createCoordinateTeamIfNotFound("Trello");
+
+		ResearchField field1 = createResearchFieldIfNotFound("Astronomy"); 
+		ResearchField field2 = createResearchFieldIfNotFound("Chemistry"); 
+		ResearchField field3 = createResearchFieldIfNotFound("Physics"); 
+		ResearchField field4 = createResearchFieldIfNotFound("Psychology"); 
+
+		ResearchMethod method1 = createResearchMethodIfNotFound("Method one");
+		ResearchMethod method2 = createResearchMethodIfNotFound("Method two");
 
 		testUser.getCoordinateTeams().add(tag1);
 		testUser.getCoordinateTeams().add(tag2);
@@ -76,5 +96,23 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 		}
 		coordinateTeam = coordinateTeamRepository.save(coordinateTeam);
 		return coordinateTeam;
+	}
+
+	private final ResearchField createResearchFieldIfNotFound(final String name) {
+		ResearchField researchField = researchFieldRepository.findByName(name);
+		if (researchField == null) {
+			researchField = new ResearchField(name);
+		}
+		researchField = researchFieldRepository.save(researchField);
+		return researchField;
+	}
+
+	private final ResearchMethod createResearchMethodIfNotFound(final String name) {
+		ResearchMethod researchMethod = researchMethodRepository.findByName(name);
+		if (researchMethod == null) {
+			researchMethod = new ResearchMethod(name);
+		}
+		researchMethod = researchMethodRepository.save(researchMethod);
+		return researchMethod;
 	}
 }

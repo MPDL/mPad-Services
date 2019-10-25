@@ -22,6 +22,8 @@ import de.mpg.mpdl.mpadmanager.model.LdapGroup;
 import de.mpg.mpdl.mpadmanager.model.LdapUser;
 import de.mpg.mpdl.mpadmanager.model.Organization;
 import de.mpg.mpdl.mpadmanager.model.PasswordResetToken;
+import de.mpg.mpdl.mpadmanager.model.ResearchField;
+import de.mpg.mpdl.mpadmanager.model.ResearchMethod;
 import de.mpg.mpdl.mpadmanager.model.User;
 import de.mpg.mpdl.mpadmanager.model.VerificationToken;
 import de.mpg.mpdl.mpadmanager.repository.CoordinateTeamRepository;
@@ -29,6 +31,8 @@ import de.mpg.mpdl.mpadmanager.repository.LdapGroupRepository;
 import de.mpg.mpdl.mpadmanager.repository.LdapUserRepository;
 import de.mpg.mpdl.mpadmanager.repository.OrganizationRepository;
 import de.mpg.mpdl.mpadmanager.repository.PasswordResetTokenRepository;
+import de.mpg.mpdl.mpadmanager.repository.ResearchFieldRepository;
+import de.mpg.mpdl.mpadmanager.repository.ResearchMethodRepository;
 import de.mpg.mpdl.mpadmanager.repository.UserRepository;
 import de.mpg.mpdl.mpadmanager.repository.VerificationTokenRepository;
 import de.mpg.mpdl.mpadmanager.web.error.UserAlreadyExistException;
@@ -50,6 +54,12 @@ public class UserService implements IUserService {
 
     @Autowired
     private CoordinateTeamRepository coordinateTeamRepository;
+
+    @Autowired
+    private ResearchFieldRepository researchFieldRepository;
+
+    @Autowired
+    private ResearchMethodRepository researchMethodRepository;
     
     @Autowired
     private LdapUserRepository ldapUserRepository;
@@ -103,6 +113,37 @@ public class UserService implements IUserService {
                 }
             }
         }
+
+        if (null != accountDto.getResearchFields() && accountDto.getResearchFields().size() > 0) {
+            List<ResearchField> researchFields = user.getResearchFields();
+            for (String researchFieldName : accountDto.getResearchFields()) {
+                ResearchField researchField = researchFieldRepository.findByName(researchFieldName);
+                if (researchField != null) {
+                    researchFields.add(researchField);
+                    researchField.getUsers().add(user);
+                } else {
+                    ResearchField newTag = createResearchFieldIfNotFound(researchFieldName);
+                    researchFields.add(newTag);
+                    newTag.getUsers().add(user);
+                }
+            } 
+        }
+
+        if (null != accountDto.getResearchMethods() && accountDto.getResearchMethods().size() > 0) {
+            List<ResearchMethod> researchMethods = user.getResearchMethods();
+            for (String researchMethodName : accountDto.getResearchMethods()) {
+                ResearchMethod researchMethod = researchMethodRepository.findByName(researchMethodName);
+                if (researchMethod != null) {
+                    researchMethods.add(researchMethod);
+                    researchMethod.getUsers().add(user);
+                } else {
+                    ResearchMethod newTag =createResearchMethodIfNotFound(researchMethodName);
+                    researchMethods.add(newTag);
+                    newTag.getUsers().add(user);
+                }
+            }
+        }
+
         return userRepository.save(user);
     }
 
@@ -284,5 +325,23 @@ public class UserService implements IUserService {
 		}
 		coordinateTeam = coordinateTeamRepository.save(coordinateTeam);
 		return coordinateTeam;
+    }
+    
+    private final ResearchField createResearchFieldIfNotFound(final String name) {
+		ResearchField researchField = researchFieldRepository.findByName(name);
+		if (researchField == null) {
+			researchField = new ResearchField(name);
+		}
+		researchField = researchFieldRepository.save(researchField);
+		return researchField;
+    }
+    
+    private final ResearchMethod createResearchMethodIfNotFound(final String name) {
+		ResearchMethod researchMethod = researchMethodRepository.findByName(name);
+		if (researchMethod == null) {
+			researchMethod = new ResearchMethod(name);
+		}
+		researchMethod = researchMethodRepository.save(researchMethod);
+		return researchMethod;
 	}
 }
