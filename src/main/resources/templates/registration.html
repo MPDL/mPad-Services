@@ -106,10 +106,6 @@ color:#000;
 												</div>						
 											</div>
 
-											<div class="row" id="organization-select-container">
-												<span id="organizationError" class="form-alert" style="display:none">1</span>
-											</div>
-
 											<div class="row-container row ">
 												<div class="form-label-group long-label">
 													<input type="text" id="department" class="form-control input-lg" placeholder="#{label.user.department}" name="department" value="">
@@ -419,7 +415,6 @@ $(document).ready(function () {
 
 	$("#email").focus(function(){
 			$("#emailError").html("").hide();
-			$("#organizationError").html("").hide();
 	});
 	
 	$("#email").focusout(function(){
@@ -440,7 +435,8 @@ $(document).ready(function () {
 						$('#organization-select').append(new Option(departments[department_id], departments[department_id], false, false)).trigger('change');
 				}
 			} else {
-				$("#organizationError").show().html(/*[[#{EmailMatches.org}]]*/);
+				$("#emailError").show().html(/*[[#{EmailMatches.org}]]*/);
+				$("#emailError").css("color", "orange");
 				$("#organization-select").val('');
 			}
 
@@ -488,10 +484,11 @@ function continue_register(event) {
 			$('#userNameError').show().html("Please fill in your last name");
 		} else if ($('#email').val().length <= 0){
 			$('#emailError').show().html("Please fill in your email");
+			$('#emailError').css("color", "red");
 		}else if ($('#telephone').val().length <= 0){
 			$('#telephoneError').show().html("Please fill in your telephone");
 		}	else if ($('#organization-select').val().length <= 0) {
-			$("#organizationError").show().html(/*[[#{EmailMatches.org}]]*/);
+			$("#emailError").show().html(/*[[#{EmailMatches.org}]]*/);
 		} else if ($('#password').val().length <= 0 || $('#matchPassword').val().length <= 0) {
 			$("#passwordError").show().html("Please fill in your password");
 			$("#passwordHint").hide();
