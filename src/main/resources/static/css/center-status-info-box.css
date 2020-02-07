@@ -37,11 +37,6 @@ html, body {
   padding: 32px 97px 28px 85px; 
 }
 
-.status-bar {
-  display: flex;
-  flex-direction: row;
-}
-
 .status-icon {
   width: 70px;
   height: 70px;

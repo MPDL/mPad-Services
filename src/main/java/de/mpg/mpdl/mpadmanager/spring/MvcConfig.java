@@ -36,7 +36,7 @@ public class MvcConfig implements WebMvcConfigurer {
     private MessageSource messageSource;
     
     public void addViewControllers(final ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("forward:/home.html");
+        registry.addViewController("/").setViewName("forward:/registration.html");
         registry.addViewController("/login");
         registry.addViewController("/loginRememberMe");
         registry.addViewController("/customLogin");
@@ -48,7 +48,7 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addViewController("/badUser.html");
         registry.addViewController("/emailError.html");
         registry.addViewController("/home");
-        registry.addViewController("/home.html");
+//        registry.addViewController("/home.html");
         registry.addViewController("/invalidSession.html");
         registry.addViewController("/console.html");
         registry.addViewController("/admin.html");

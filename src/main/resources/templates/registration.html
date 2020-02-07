@@ -8,7 +8,7 @@
 color:#000;
 }
 </style>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" th:href="@{/css/floating-labels.css}"/>
 <link rel="stylesheet" type="text/css" th:href="@{/css/registration.css}"/>
 <link rel="stylesheet" type="text/css" th:href="@{/css/footer.css}"/>
@@ -369,9 +369,46 @@ var departments = {
 		"mpis.mpg.de":"Stuttgarter Institute",
 }
 
+function updateInstitute() {
+	var email = $("#email").val();
+		var department_id = email.substring(email.indexOf('@')+1);
+		if (email.trim().indexOf('@') === 0) {
+			$("#emailError").show().html("Invalid email");
+		}
+
+		if (departments[department_id]) {
+			if (Array.isArray(departments[department_id])) {
+				for (i=0; i < departments[department_id].length; i++) {
+					$('#organization-select').append(new Option(departments[department_id][i], departments[department_id][i], false, false)).trigger('change');
+				}
+			} else {
+					$('#organization-select').append(new Option(departments[department_id], departments[department_id], false, false)).trigger('change');
+			}
+		} else {
+			$("#emailError").show().html(/*[[#{EmailMatches.org}]]*/);
+			$("#emailError").css("color", "orange");
+			$("#organization-select").val('');
+		}
+
+		var csrf_token = $("#csrf").val();
+		$.post(serverContext + "validEmail",{ _csrf: csrf_token, email: email} ,
+			function(data){
+				if(data.code === 500) {
+					$('#emailError').show().html(data.message);
+				}
+		})
+		.fail(function(data) {
+		});
+}
 
 $(document).ready(function () {
 	$('.info').children().first().hide()  //fix: strange styling link element 
+	var emailStr = window.location.href.split("?").reverse()[0];
+	if (email = emailStr.includes("email=")) {
+		var email = emailStr.split("email=").reverse()[0];
+		$('#email').val(email);  
+		updateInstitute()
+	} 
 
 	$(window).keydown(function(event){
     if(event.keyCode == 13) {
@@ -419,37 +456,7 @@ $(document).ready(function () {
 	
 	$("#email").focusout(function(){
 			$('#organization-select').empty().trigger("change");
-
-			var email = $("#email").val();
-			var department_id = email.substring(email.indexOf('@')+1);
-			if (email.trim().indexOf('@') === 0) {
-				$("#emailError").show().html("Invalid email");
-			}
-
-			if (departments[department_id]) {
-				if (Array.isArray(departments[department_id])) {
-					for (i=0; i < departments[department_id].length; i++) {
-						$('#organization-select').append(new Option(departments[department_id][i], departments[department_id][i], false, false)).trigger('change');
-					}
-				} else {
-						$('#organization-select').append(new Option(departments[department_id], departments[department_id], false, false)).trigger('change');
-				}
-			} else {
-				$("#emailError").show().html(/*[[#{EmailMatches.org}]]*/);
-				$("#emailError").css("color", "orange");
-				$("#organization-select").val('');
-			}
-
-			var csrf_token = $("#csrf").val();
-			$.post(serverContext + "validEmail",{ _csrf: csrf_token, email: email} ,
-				function(data){
-					if(data.code === 500) {
-						$('#emailError').show().html(data.message);
-					}
-			})
-			.fail(function(data) {
-			});
-
+			updateInstitute();
 	});
 
 	$("#telephone").focus(function(){
