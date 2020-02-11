@@ -43,6 +43,15 @@ color:#000;
 
 											<div class="row-container row">
 												<div class="form-label-group short-label">
+													<input type="text" id="title" class="form-control input-lg" placeholder="#{label.user.title}" name="title" value="">
+													<label for="title" th:text="#{label.user.title}">title</label>
+												</div>
+
+												<div class="form-label-group short-label"></div>
+											</div>
+
+											<div class="row-container row">
+												<div class="form-label-group short-label">
 													<input type="text" id="firstName" class="form-control input-lg" placeholder="#{label.user.firstName}" name="firstName" value="" required>
 													<label for="firstName" th:text="#{label.user.firstName}">first</label>
 												</div>
@@ -111,6 +120,13 @@ color:#000;
 													<input type="text" id="department" class="form-control input-lg" placeholder="#{label.user.department}" name="department" value="">
 													<label for="department" th:text="#{label.user.department}">department</label>
 												</div>
+											</div>
+
+											<div class="row-container row ">
+												<div class="form-label-group long-label">
+													<input type="text" id="role" class="form-control input-lg" placeholder="#{label.user.role}" name="role" value="">
+													<label for="role" th:text="#{label.user.role}">role</label>
+												</div>
 												<button id="sign-up-continue" type="button" class="btn btn-primary" th:text="#{label.form.continue}">continue</button>
 											</div>
 									</div>
@@ -120,11 +136,6 @@ color:#000;
 										<div class="form-group row">
 											<p id="form-title" class="col-sm-12" th:text="#{label.form.research}"></p>
 										</div>
-
-										<div class="form-group row">
-											<p id="shipping-desc" class="col-sm-8" th:text="#{label.form.research.desc}"></p>
-										</div>
-
 
 										<div class="row-container row multi-select-row">
 											<select multiple id="research-field" name="researchFields">
@@ -193,7 +204,11 @@ color:#000;
 										<div id="accept-and-sign-up">
 											<div id="mpad-checkboxes">
 												<div class="checkbox">
-													<label><input type="checkbox" id="termCheckbox" value="">I accept the <a href="https://www.mpdl.mpg.de/terms-of-service-de.html" target="_blank"><u>Terms of Service</u><a/></label>
+													<label><input type="checkbox" name="privacyCheckbox" value="">I agree to the <a href="https://www.mpdl.mpg.de/terms-of-service-de.html" target="_blank"><u>Privacy Policy</u></a></label>
+												</div>
+
+												<div class="checkbox">
+													<label><input type="checkbox" name="termCheckbox" value="">I agree to the <a href="https://www.mpdl.mpg.de/terms-of-service-de.html" target="_blank"><u>Terms of Service</u></a></label>
 												</div>
 											</div>
 											<div class="row right-align-container" style="margin-top: 10px;" >
@@ -515,11 +530,18 @@ function continue_register(event) {
 
 function register(event){
 	event.preventDefault();
-	var accepted = $("input:checked").length;
-	if (!accepted) {
+	var privacyAccepted = $('input[name="privacyCheckbox"]:checked').length > 0 
+	var termsAccepted = $('input[name="termCheckbox"]:checked').length > 0
+	if (!termsAccepted && !privacyAccepted) {
+		$("#termsError").show().html(/*[[#{Checked.termsandprivacy}]]*/);
+			return;
+	} else if (!termsAccepted) {
 		$("#termsError").show().html(/*[[#{Checked.terms}]]*/);
-		 return;
-	};
+			return;
+	} else if (!privacyAccepted){
+		$("#termsError").show().html(/*[[#{Checked.privacy}]]*/);
+			return;
+	}
 
 	if ($("#zip").val().length === 0 || $("#city").val().length === 0 || $("#address").val().length === 0) {
 		$("#termsError").show().html(/*[[#{message.address}]]*/);

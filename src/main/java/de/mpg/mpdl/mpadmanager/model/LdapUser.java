@@ -55,11 +55,17 @@ public class LdapUser {
     @Attribute(name = "postalAddress")
     private List<String> address = new ArrayList<String>(1);
 
+    @Attribute(name = "title")
+    private List<String> title = new ArrayList<String>(1);
+
+    @Attribute(name = "businessCategory")
+    private List<String> role = new ArrayList<String>(1);
+
     public LdapUser() {
     }
 
-    public LdapUser(String givenName, String sn, String password, String ou, String email,
-            String telephoneNumber, String description, String departmentNumberStr, String zipStr, String addressStr) {
+    public LdapUser(String title, String givenName, String sn, String password, String ou, String email,
+            String telephoneNumber, String description, String departmentNumberStr, String role, String zipStr, String addressStr) {
         Name dn = LdapNameBuilder.newInstance()
                 .add("ou", "MPG")
                 .add("ou", ou)
@@ -75,6 +81,8 @@ public class LdapUser {
         this.telephoneNumber = telephoneNumber;
         this.description = description;
         setDepartmentNumber(departmentNumberStr);
+        setTitle(title);
+        setRole(role);
         setZip(zipStr);
         setAddress(addressStr);
     }
@@ -173,7 +181,36 @@ public class LdapUser {
             departmentNumber.add(value);
         }
     }
+
+    public String getTitle() {
+        if (title.size() > 0) {
+            return title.get(0);
+        }
+        return null;
+    }
     
+    public void setTitle(String value) {
+        title.clear();
+        value = ( value == null ) ? "" : value.trim();
+        if (!"".equals(value)) {
+            title.add(value);
+        }
+    }
+
+    public String getRole() {
+        if (role.size() > 0) {
+            return role.get(0);
+        }
+        return null;
+    }
+
+    public void setRole(String value) {
+        role.clear();
+        value = ( value == null ) ? "" : value.trim();
+        if (!"".equals(value)) {
+            role.add(value);
+        }
+    }
     
     public String getZip() {
         if (zip.size() > 0) {

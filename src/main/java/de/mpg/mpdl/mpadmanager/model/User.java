@@ -27,6 +27,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(unique = true, nullable = false)
     private Long id;
+
+    @Column()
+    private String title;
     
     @Column(nullable = false)
     private String firstName;
@@ -48,6 +51,9 @@ public class User {
     
     @Column(nullable = false)
     private String telephone;
+
+    @Column()
+    private String role;
     
     @JsonIgnore
     @ManyToMany
@@ -131,6 +137,22 @@ public class User {
 
     public void setDepartment(String department) {
         this.department = department;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getTelephone() {

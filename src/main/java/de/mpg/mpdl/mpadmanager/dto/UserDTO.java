@@ -37,6 +37,10 @@ public class UserDTO {
 	
 	private String department;
 
+	private String title;
+
+	private String role;
+
 	private List<String> coordinateTeams; 
 
 	private List<String>  researchFields;
@@ -93,6 +97,22 @@ public class UserDTO {
 
 	public void setDepartment(String department) {
 		this.department = department;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	public String getPassword() {

@@ -101,7 +101,7 @@ public class ApplicationTests {
     public void run() {
 
 				UUID uuid = UUID.randomUUID();
-				LdapUser dummy_user = new LdapUser("John", "Snow", "{SSHA}BWKjEHUGRErcZmrEJqBBDeN2ijM0x1rm", "Test Max Planck Digital Library", uuid.toString(), "017637229897", "asesome", "Digital Labs", "80886", "Marienplatz");
+				LdapUser dummy_user = new LdapUser("Mr", "John", "Snow", "{SSHA}BWKjEHUGRErcZmrEJqBBDeN2ijM0x1rm", "Test Max Planck Digital Library", uuid.toString(), "017637229897", "asesome", "Digital Labs", "king", "80886", "Marienplatz");
 				ldapUserRepository.create(dummy_user); 
     }
 	}

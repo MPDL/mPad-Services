@@ -90,12 +90,14 @@ public class UserService implements IUserService {
         }
         final User user = new User();
 
+        user.setTitle(accountDto.getTitle());
         user.setFirstName(accountDto.getFirstName());
         user.setLastName(accountDto.getLastName());
         user.setEmail(accountDto.getEmail());
         user.setPassword(passwordEncoder.encode(accountDto.getPassword()));
         user.setOrganization(accountDto.getOrganization());
         user.setDepartment(accountDto.getDepartment());
+        user.setRole(accountDto.getRole());
         user.setTelephone(accountDto.getTelephone());
         user.setAddress(accountDto.getAddress() + " " + accountDto.getCity() + " " + accountDto.getCountry());
         user.setZip(accountDto.getZip());
@@ -237,7 +239,7 @@ public class UserService implements IUserService {
         }
 
         try {
-            LdapUser ldapUser = new LdapUser(user.getFirstName(), user.getLastName(), user.getPassword(), user.getOrganization(), user.getEmail(), user.getTelephone(), "no description yet", user.getDepartment(), user.getZip(), user.getAddress());
+            LdapUser ldapUser = new LdapUser(user.getTitle(), user.getFirstName(), user.getLastName(), user.getPassword(), user.getOrganization(), user.getEmail(), user.getTelephone(), "no description yet", user.getDepartment(), user.getRole(), user.getZip(), user.getAddress());
             LdapUser ldap = ldapUserRepository.create(ldapUser);
             LOGGER.info("User created on LDAP");
             LOGGER.info(ldap.toString());
