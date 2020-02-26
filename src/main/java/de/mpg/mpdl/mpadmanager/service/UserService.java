@@ -239,7 +239,7 @@ public class UserService implements IUserService {
         }
 
         try {
-            LdapUser ldapUser = new LdapUser(user.getTitle(), user.getFirstName(), user.getLastName(), user.getPassword(), user.getOrganization(), user.getEmail(), user.getTelephone(), "no description yet", user.getDepartment(), user.getRole(), user.getZip(), user.getAddress());
+            LdapUser ldapUser = new LdapUser(user.getTitle(), user.getFirstName(), user.getLastName(), user.getPassword(), user.getOrganization(), user.getEmail(), user.getTelephone(), user.getDepartment(), user.getRole(), user.getZip(), user.getAddress());
             LdapUser ldap = ldapUserRepository.create(ldapUser);
             LOGGER.info("User created on LDAP");
             LOGGER.info(ldap.toString());

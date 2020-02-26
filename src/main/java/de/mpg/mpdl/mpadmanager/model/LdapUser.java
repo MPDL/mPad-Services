@@ -43,9 +43,6 @@ public class LdapUser {
     @Attribute(name = "telephoneNumber")
     private String telephoneNumber;
     
-    @Attribute(name = "description")
-    private String description;
-    
     @Attribute(name = "departmentNumber")
     private List<String> departmentNumber = new ArrayList<String>(1);
     
@@ -65,7 +62,7 @@ public class LdapUser {
     }
 
     public LdapUser(String title, String givenName, String sn, String password, String ou, String email,
-            String telephoneNumber, String description, String departmentNumberStr, String role, String zipStr, String addressStr) {
+            String telephoneNumber, String departmentNumberStr, String role, String zipStr, String addressStr) {
         Name dn = LdapNameBuilder.newInstance()
                 .add("ou", "MPG")
                 .add("ou", ou)
@@ -79,7 +76,6 @@ public class LdapUser {
         this.email = email;
         this.ou = ou;
         this.telephoneNumber = telephoneNumber;
-        this.description = description;
         setDepartmentNumber(departmentNumberStr);
         setTitle(title);
         setRole(role);
@@ -157,14 +153,6 @@ public class LdapUser {
 
     public void setTelephoneNumber(String telephoneNumber) {
         this.telephoneNumber = telephoneNumber;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getDepartmentNumber() {

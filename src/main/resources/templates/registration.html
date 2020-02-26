@@ -38,25 +38,28 @@ color:#000;
 
 									<div class="info-box" id="basic-info-box" >
 											<div class="form-group row">
-												<p id="form-title" class="col-sm-8" th:text="#{label.form.register}">form</p>
+												<p id="form-title" class="col-sm-8" th:text="#{label.form.registration}">form</p>
 											</div>
 
 											<div class="row-container row">
 												<div class="form-label-group short-label">
-													<input type="text" id="title" class="form-control input-lg" placeholder="#{label.user.title}" name="title" value="">
-													<label for="title" th:text="#{label.user.title}">title</label>
+													<select id="title" name="title">
+															<option value="Prof.">Prof.</option>
+															<option value="Dr.">Dr.</option>
+															<option value="Prof. Dr.">Prof. Dr.</option>
+															<option value="Mr.">Mr.</option>
+															<option value="Mrs.">Mrs.</option>
+															<option value="Ms.">Ms.</option>
+													</select>
+
 												</div>
 
-												<div class="form-label-group short-label"></div>
-											</div>
-
-											<div class="row-container row">
-												<div class="form-label-group short-label">
+												<div class="form-label-group long-label">
 													<input type="text" id="firstName" class="form-control input-lg" placeholder="#{label.user.firstName}" name="firstName" value="" required>
 													<label for="firstName" th:text="#{label.user.firstName}">first</label>
 												</div>
 
-												<div class="form-label-group short-label">
+												<div class="form-label-group long-label">
 													<input type="text" id="lastName" class="form-control input-lg" placeholder="#{label.user.lastName}" name="lastName" value="" required>
 													<label for="lastName" th:text="#{label.user.lastName}">Last</label>
 												</div>
@@ -239,6 +242,13 @@ color:#000;
 		</div>
 
 <script th:inline="javascript">
+
+$("#title").select2({
+	placeholder: /*[[#{label.form.title}]]*/,
+	tags: true,
+	dropdownAutoWidth: true,
+	minimumResultsForSearch: -1
+})
 
 $("#research-coordinate-team").select2({
 	placeholder: /*[[#{label.form.research.coordinate}]]*/,
