@@ -43,9 +43,9 @@ public class UserDTO {
 
 	private List<String> coordinateTeams; 
 
-	private List<String>  researchFields;
+	private List<String> researchFields;
 
-	private List<String>  researchMethods;
+	private String researchMethods;
 		
 	private String zip;
 	
@@ -54,6 +54,10 @@ public class UserDTO {
 	private String city;
 	
 	private String address;
+
+	private String shippingOrganization;
+
+	private String shippingDepartment;
 
 	public UserDTO( ) {
 	}
@@ -147,11 +151,11 @@ public class UserDTO {
 		this.researchFields = researchFields;
 	}
 
-	public List<String> getResearchMethods() {
+	public String getResearchMethods() {
 		return researchMethods;
 	}
 
-	public void setResearchMethods(List<String> researchMethods) {
+	public void setResearchMethods(String researchMethods) {
 		this.researchMethods = researchMethods;
 	}
 
@@ -201,4 +205,21 @@ public class UserDTO {
 	public void setCity(String city) {
 			this.city = city;
 	}
+
+	public String getShippingOrganization() {
+			return shippingOrganization;
+	}
+
+	public void setShippingOrganization(String shippingOrganization) {
+			this.shippingOrganization = shippingOrganization;
+	}
+
+	public String getShippingDepartment() {
+			return shippingDepartment;
+	}
+
+	public void setShippingDepartment(String shippingDepartment) {
+			this.shippingDepartment = shippingDepartment;
+	}
+
 }

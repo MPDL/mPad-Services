@@ -54,6 +54,12 @@ public class User {
 
     @Column()
     private String role;
+
+    @Column()
+    private String shippingOrganization;
+
+    @Column()
+	private String shippingDepartment;
     
     @JsonIgnore
     @ManyToMany
@@ -69,12 +75,8 @@ public class User {
         inverseJoinColumns = { @JoinColumn(name = "research_field_id") })
     private List<ResearchField> researchFields = new ArrayList<>();    
 
-    @JsonIgnore
-    @ManyToMany
-    @JoinTable(name = "user_research_methods",
-        joinColumns = { @JoinColumn(name = "user_id") },
-        inverseJoinColumns = { @JoinColumn(name = "research_method_id") })
-    private List<ResearchMethod> researchMethods = new ArrayList<>();    
+    @Column()
+    private String researchMethods;    
 
     @Column()
     private String zip;
@@ -179,11 +181,11 @@ public class User {
         this.researchFields = researchFields;
     }
 
-    public List<ResearchMethod> getResearchMethods() {
+    public String getResearchMethods() {
         return researchMethods;
     }
 
-    public void setResearchMethods(List<ResearchMethod> researchMethods) {
+    public void setResearchMethods(String researchMethods) {
         this.researchMethods = researchMethods;
     }
 
@@ -225,6 +227,22 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getShippingOrganization() {
+        return shippingOrganization;
+    }
+
+    public void setShippingOrganization(String shippingOrganization) {
+            this.shippingOrganization = shippingOrganization;
+    }
+
+    public String getShippingDepartment() {
+        return shippingDepartment;
+    }
+
+    public void setShippingDepartment(String shippingDepartment) {
+            this.shippingDepartment = shippingDepartment;
     }
     
     @Override

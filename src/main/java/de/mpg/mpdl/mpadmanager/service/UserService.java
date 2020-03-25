@@ -99,7 +99,9 @@ public class UserService implements IUserService {
         user.setDepartment(accountDto.getDepartment());
         user.setRole(accountDto.getRole());
         user.setTelephone(accountDto.getTelephone());
-        user.setAddress(accountDto.getAddress() + " " + accountDto.getCity() + " " + accountDto.getCountry());
+        user.setAddress(accountDto.getShippingDepartment() == null ? "" : (accountDto.getShippingDepartment() + " ")
+            + accountDto.getShippingOrganization() == null ? "" : (accountDto.getShippingOrganization() + " ")
+            + accountDto.getAddress() + " " + accountDto.getCity() + " " + accountDto.getCountry());
         user.setZip(accountDto.getZip());
         if (null != accountDto.getCoordinateTeams() && accountDto.getCoordinateTeams().size() > 0) {
             List<CoordinateTeam> coordinateTeams = user.getCoordinateTeams();
@@ -131,20 +133,9 @@ public class UserService implements IUserService {
             } 
         }
 
-        if (null != accountDto.getResearchMethods() && accountDto.getResearchMethods().size() > 0) {
-            List<ResearchMethod> researchMethods = user.getResearchMethods();
-            for (String researchMethodName : accountDto.getResearchMethods()) {
-                ResearchMethod researchMethod = researchMethodRepository.findByName(researchMethodName);
-                if (researchMethod != null) {
-                    researchMethods.add(researchMethod);
-                    researchMethod.getUsers().add(user);
-                } else {
-                    ResearchMethod newTag =createResearchMethodIfNotFound(researchMethodName);
-                    researchMethods.add(newTag);
-                    newTag.getUsers().add(user);
-                }
-            }
-        }
+        user.setResearchMethods(accountDto.getResearchMethods());
+        user.setShippingDepartment(accountDto.getShippingDepartment());
+        user.setShippingOrganization(accountDto.getShippingOrganization());
 
         return userRepository.save(user);
     }

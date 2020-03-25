@@ -44,6 +44,11 @@ html, body {
   color: #000;
 }
 
+.info-pass-container{
+  margin-top: -6px;
+  margin-bottom: 6px;
+}
+
 #sign-up-continue {
   margin-left: 60px;
 }
@@ -68,6 +73,10 @@ html, body {
   display: flex;
 }
 
+#label-fullname {
+  padding-left: 21px;
+}
+
 /******************* select2 *******************/
 
 .select2-selection__rendered {
@@ -85,13 +94,14 @@ html, body {
   margin-top: 5px; 
   padding-left: 5px; 
   padding-right: 5px;
+  margin-bottom: 5px; 
 }
 
 .select2-container {
   flex: 1;
 }
 .select2-search__field {
-  width: 350px !important;
+  width: 400px !important;
   height: 42px !important;
 }
 
@@ -104,7 +114,7 @@ html, body {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  margin-left: 10px;
+  margin-left: 5px;
   margin-right:20px;
 }
 

@@ -43,15 +43,8 @@ color:#000;
 
 											<div class="row-container row">
 												<div class="form-label-group short-label">
-													<select id="title" name="title">
-															<option value="Prof.">Prof.</option>
-															<option value="Dr.">Dr.</option>
-															<option value="Prof. Dr.">Prof. Dr.</option>
-															<option value="Mr.">Mr.</option>
-															<option value="Mrs.">Mrs.</option>
-															<option value="Ms.">Ms.</option>
-													</select>
-
+													<input type="text" id="title" class="form-control input-lg" placeholder="#{label.user.title}" name="title" value="">
+													<label for="title" th:text="#{label.user.title}">first</label>
 												</div>
 
 												<div class="form-label-group long-label">
@@ -103,11 +96,11 @@ color:#000;
 												</div>
 											</div>
 
-											<div class="row">
+											<div class="row info-pass-container">
 												<span id="passwordHint" class="hint-password" th:text="#{error.password.rule}"></span>
 											</div>
 
-											<div class="row">
+											<div class="row info-pass-container">
 												<span id="passwordError" class="form-alert" style="display:none"></span>
 											</div>
 											
@@ -149,11 +142,11 @@ color:#000;
 											</select>
 										</div>
 
-										<div class="row-container row multi-select-row">
-											<select multiple id="research-method" name="researchMethods">
-													<option value="Method one">Method one</option>
-													<option value="Method two">Method two</option>
-											</select>
+										<div class="row-container row">
+											<div class="form-label-group short-label">
+												<input type="text" id="researchMethods" class="form-control input-lg" placeholder="#{label.form.research.method}" name="researchMethods" value="">
+												<label for="researchMethods" th:text="#{label.form.research.method}"></label>
+											</div>
 										</div>
 
 										<div class="row-container row multi-select-row">
@@ -179,6 +172,27 @@ color:#000;
 										<div class="form-group row">
 											<p id="form-title" class="col-sm-8" th:text="#{label.form.shipping}"></p>
 										</div>
+
+										<div class="form-group row">
+											<p id="shipping-desc" class="col-sm-8" th:text="#{label.shipping.desc}"></p>
+										</div>
+
+										<div class="form-group row">
+											<h4 id="label-fullname" class="col-sm-8" ></h4>
+										</div>
+
+										<div class="row-container row">
+												<div class="form-label-group long-label">
+													<input type="text" id="shippingOrganization" class="form-control input-lg" placeholder="#{label.user.shipping.organization}" name="shippingOrganization" value="" autocomplete="rutjfkde">
+													<label for="shippingOrganization" th:text="#{label.user.shipping.organization}">organization shipping</label>
+												</div>
+
+												<div class="form-label-group long-label">
+													<input type="text" id="shippingDepartment" class="form-control input-lg" placeholder="#{label.user.shipping.department}" name="shippingDepartment" value="" autocomplete="rutjfkde">
+													<label for="shippingDepartment" th:text="#{label.user.shipping.department}">department shipping</label>
+												</div>
+										</div>
+
 
 										<div class="row-container row ">
 											<div class="form-label-group long-label">
@@ -243,13 +257,6 @@ color:#000;
 
 <script th:inline="javascript">
 
-$("#title").select2({
-	placeholder: /*[[#{label.form.title}]]*/,
-	tags: true,
-	dropdownAutoWidth: true,
-	minimumResultsForSearch: -1
-})
-
 $("#research-coordinate-team").select2({
 	placeholder: /*[[#{label.form.research.coordinate}]]*/,
 	tags: true,
@@ -258,12 +265,6 @@ $("#research-coordinate-team").select2({
 
 $("#research-field").select2({
 	placeholder: /*[[#{label.form.research.field}]]*/,
-	tags: true,
-	dropdownAutoWidth: true
-});
-
-$("#research-method").select2({
-	placeholder: /*[[#{label.form.research.method}]]*/,
 	tags: true,
 	dropdownAutoWidth: true
 });
@@ -510,6 +511,7 @@ $(document).ready(function () {
 });
 
 function continue_register(event) {
+		$("#label-firstName").text();
 		if ($('#firstName').val().length <= 0) {
 			$('#userNameError').show().html("Please fill in your first name");
 		}	else if ($('#lastName').val().length <= 0) {
@@ -533,8 +535,16 @@ function continue_register(event) {
 		} else if ($('#emailError').is(':visible')) {
 			return;
 		} else {
+			var fullname = $("#title").val() + " " + $("#firstName").val() + " " + $("#lastName").val()
+			var department = $("#department").val()
+			var organization = $('#organization-select').val()
+
 			$('#basic-info-box').hide();
 			$('#research-info-box').show();
+			$('#label-fullname').text(fullname);
+			$('#shippingDepartment').val(department);
+			$('#shippingOrganization').val(organization);
+
 		}
 }
 

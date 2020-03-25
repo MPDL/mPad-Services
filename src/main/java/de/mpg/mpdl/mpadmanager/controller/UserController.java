@@ -24,17 +24,6 @@ public class UserController {
     @Autowired
     private MessageSource messages;
 
-    @RequestMapping(value = "/user/delete", method = {RequestMethod.POST})
-    @ResponseBody
-    public GenericResponse delete(@RequestParam("email") String email) {
-        User user = userService.findUserByEmail(email);
-        if (user != null) {
-            userService.deleteUser(user);
-            return new GenericResponse(email);
-        }
-        return new GenericResponse(email+" not found");
-    }
-
     @RequestMapping(value = "/validEmail", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult emailNotUsed(final Locale locale,  String email) {

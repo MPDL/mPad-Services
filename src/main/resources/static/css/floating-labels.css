@@ -17,7 +17,7 @@
 }
 
 .long-label {
-  flex: 10;
+  flex: 2;
   width: 100%;
   margin: 5px;
 }
@@ -39,7 +39,7 @@
   width: 100%;
   margin-bottom: 0; 
   line-height: 1.5;
-  color: #495057;
+  color: #757575;
   border: 1px solid transparent;
   border-radius: .25rem;
   transition: all .1s ease-in-out;
