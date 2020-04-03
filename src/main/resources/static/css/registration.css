@@ -112,6 +112,7 @@ html, body {
 
 #accept-and-sign-up {
   display: flex;
+  flex-direction: column;
   align-items: flex-end;
   justify-content: space-between;
   margin-left: 5px;
@@ -125,4 +126,10 @@ html, body {
 #back-to-research-info {
   margin-right: 10px;
   padding-bottom: 5px; 
+}
+
+.alert-checkbox {
+  -webkit-box-shadow: 0 0 0 1px #fff, 0 0 0 3px #EE1D1D !important;
+  box-shadow: 0 0 0 1px #fff, 0 0 0 3px  #EE1D1D !important;
+  border-radius: .25rem !important;
 }

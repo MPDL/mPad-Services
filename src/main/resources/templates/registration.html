@@ -221,22 +221,25 @@ color:#000;
 										<div id="accept-and-sign-up">
 											<div id="mpad-checkboxes">
 												<div class="checkbox">
-													<label><input type="checkbox" name="privacyCheckbox" value="">I agree to the <a href="https://www.mpdl.mpg.de/terms-of-service-de.html" target="_blank"><u>Privacy Policy</u></a></label>
+													<label><input type="checkbox" id="privacyCheckbox" name="privacyCheckbox" value="">I agree to the <a href="https://www.mpdl.mpg.de/terms-of-service-de.html" target="_blank"><u>Privacy Policy</u></a></label>
+												</div>
+												<div class="checkbox">
+													<label><input type="checkbox" id="termCheckbox" name="termCheckbox" value="">I agree to the <a href="https://www.mpdl.mpg.de/terms-of-service-de.html" target="_blank"><u>Terms of Service</u></a></label>
+												</div>
+												<div class="checkbox">
+													<label><input type="checkbox" id="betriebsratCheckbox" name="betriebsratCheckbox" value=""><p th:text="#{label.term.betriebsrat}"><p/></label>
 												</div>
 
-												<div class="checkbox">
-													<label><input type="checkbox" name="termCheckbox" value="">I agree to the <a href="https://www.mpdl.mpg.de/terms-of-service-de.html" target="_blank"><u>Terms of Service</u></a></label>
+												<div class="form-group row">
+													<span id="termsError" class="form-alert" style="display:none"></span>
 												</div>
 											</div>
+
 											<div class="row right-align-container" style="margin-top: 10px;" >
 												<button id='back-to-research-info' class="btn btn-primary" th:text="#{label.form.back}">back</button>
 												<button id='btn-mpad-register' type="submit" class="btn btn-primary" th:text="#{label.form.register}">submit</button>
 											</div>
 										</div>
-
-										<div class="form-group row">
-											<span id="termsError" class="form-alert" style="display:none"></span>
-										</div>	
 									</div>
 
 							</form>
@@ -508,6 +511,25 @@ $(document).ready(function () {
 	$("#city").focus(function(){
 		$("#termsError").html("").hide();
 	});
+
+	$('input[name="termCheckbox"]').click(function () {
+		if ($(this).is(":checked")) {
+				//checked
+				$(this).removeClass("alert-checkbox");
+		}
+  });
+	$('input[name="privacyCheckbox"]').click(function () {
+		if ($(this).is(":checked")) {
+				//checked
+				$(this).removeClass("alert-checkbox");
+		}
+  });
+	$('input[name="betriebsratCheckbox"]').click(function () {
+		if ($(this).is(":checked")) {
+				//checked
+				$(this).removeClass("alert-checkbox");
+		}
+  });
 });
 
 function continue_register(event) {
@@ -552,16 +574,20 @@ function register(event){
 	event.preventDefault();
 	var privacyAccepted = $('input[name="privacyCheckbox"]:checked').length > 0 
 	var termsAccepted = $('input[name="termCheckbox"]:checked').length > 0
-	if (!termsAccepted && !privacyAccepted) {
+	var betriebratAccepted = $('input[name="betriebsratCheckbox"]:checked').length > 0
+	if (!termsAccepted || !privacyAccepted || !betriebratAccepted) {
 		$("#termsError").show().html(/*[[#{Checked.termsandprivacy}]]*/);
+		if (!termsAccepted) {
+			$('input[name="termCheckbox"]').addClass('alert-checkbox');
+		}
+		if (!privacyAccepted) {
+			$('input[name="privacyCheckbox"]').addClass('alert-checkbox');
+		}
+		if (!betriebratAccepted) {
+			$('input[name="betriebsratCheckbox"]').addClass('alert-checkbox');
+		}
 			return;
-	} else if (!termsAccepted) {
-		$("#termsError").show().html(/*[[#{Checked.terms}]]*/);
-			return;
-	} else if (!privacyAccepted){
-		$("#termsError").show().html(/*[[#{Checked.privacy}]]*/);
-			return;
-	}
+	} 
 
 	if ($("#zip").val().length === 0 || $("#city").val().length === 0 || $("#address").val().length === 0) {
 		$("#termsError").show().html(/*[[#{message.address}]]*/);
