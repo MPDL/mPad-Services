@@ -22,9 +22,33 @@ html, body {
 }
 
 .content {
-  margin-left: 25%;
-  margin-right: 25%;
+  margin-left: 20px;
+  margin-right: 20px;
   margin-top: 40px;
+}
+
+@media (min-width: 600px) {
+  .content {
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: 40px;
+  }
+}
+
+@media (min-width: 800px) {
+  .content {
+    margin-left: 20%;
+    margin-right: 20%;
+    margin-top: 40px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .content {
+    margin-left: 23%;
+    margin-right: 23%;
+    margin-top: 40px;
+  }
 }
 
 .info-box {
