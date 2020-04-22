@@ -42,7 +42,9 @@ import de.mpg.mpdl.mpadmanager.service.INotificationService;
 import de.mpg.mpdl.mpadmanager.service.ISecurityUserService;
 import de.mpg.mpdl.mpadmanager.service.IUserService;
 import de.mpg.mpdl.mpadmanager.web.util.GenericResponse;
+import springfox.documentation.annotations.ApiIgnore;
 
+@ApiIgnore
 @Controller
 public class RegistrationController {
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());

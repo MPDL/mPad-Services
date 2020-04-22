@@ -14,7 +14,8 @@ import de.mpg.mpdl.mpadmanager.model.User;
 import de.mpg.mpdl.mpadmanager.service.IUserService;
 import de.mpg.mpdl.mpadmanager.web.util.CommonResult;
 import de.mpg.mpdl.mpadmanager.web.util.GenericResponse;
-
+import springfox.documentation.annotations.ApiIgnore;
+@ApiIgnore
 @RestController
 public class UserController {
 
