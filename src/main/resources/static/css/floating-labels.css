@@ -10,10 +10,30 @@
   margin: 0px;
 }
 
+.shipping-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+@media (min-width: 1200px) {
+  .shipping-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 0px;
+  }
+}
+
 .short-label {
   flex: 1;
   width: 100%;
   margin: 5px;
+  min-width: 125px;
 }
 
 .long-label {

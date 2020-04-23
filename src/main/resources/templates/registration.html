@@ -17,6 +17,8 @@ color:#000;
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
 
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII"/>
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+
 <title th:text="#{label.form.title}">form</title>
 
 <script type="text/javascript">
@@ -44,7 +46,7 @@ color:#000;
 											<div class="row-container row">
 												<div class="form-label-group short-label">
 													<input type="text" id="title" class="form-control input-lg" placeholder="#{label.user.title}" name="title" value="">
-													<label for="title" th:text="#{label.user.title}">first</label>
+													<label for="title" th:text="#{label.user.title}">title</label>
 												</div>
 
 												<div class="form-label-group long-label">
@@ -181,7 +183,7 @@ color:#000;
 											<h4 id="label-fullname" class="col-sm-8" ></h4>
 										</div>
 
-										<div class="row-container row">
+										<div class="shipping-container row">
 												<div class="form-label-group long-label">
 													<input type="text" id="shippingOrganization" class="form-control input-lg" placeholder="#{label.user.shipping.organization}" name="shippingOrganization" value="" autocomplete="rutjfkde">
 													<label for="shippingOrganization" th:text="#{label.user.shipping.organization}">organization shipping</label>
