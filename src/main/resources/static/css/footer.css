@@ -1,44 +1,58 @@
-/* top banner */
-.top-banner {
-  width: 100%;
-  height: 300px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  padding-top: 80px;
-  padding-bottom: 20px;
 
-  background:  url("../img/bg_resized.jpg");
-  background-repeat:no-repeat;
-
-}
-
-.logo-white {
-  width: 130px;
-  height: 127px;
-}
-
-.title-label {
-  font-family: Serif;
-  font-weight: 700;
-  font-size: 60px;
-  margin: 0.8rem !important;
-  color: #fff;
+* {
+  font-family: 'Roboto Condensed', sans-serif;
 }
 
 /** footer **/
 
 .footer-sticky-bottom {
-  height: 60px;
+  height: 142px;
   width: 100%;
   display: flex;
-  background: #012846;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
   margin-top: -60px;
+
+  background: #F8F8F8;
+  background-position: center center;
+  background-size: cover;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  font-size: 14px;
+  line-height: 1.571;
+  padding: 20px 0 15px;
+  text-align: center;
 }
 
+.social-links-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.social-links-footer a {
+  border: 1px solid #747474;
+  color: #747474;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  line-height: 2.222;
+  margin: 10px 8px 10px;
+  width: 40px;
+
+  border-radius: 20px;
+  -webkit-transition: all 0.3s linear 0s;
+  -moz-transition: all 0.3s linear 0s;
+  -o-transition: all 0.3s linear 0s;
+  -ms-transition: all 0.3s linear 0s;
+  transition: all 0.3s linear 0s;
+}
+
+.social-links-icon{
+  width: 14px;
+  height: 14px;
+}
 
 .footer {
   position: absolute;
@@ -51,27 +65,20 @@
   align-items: center;
 }
 
-.info {
-  display: flex;
-  width: 80%;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+/**svg**/
+
+svg:not(:root).svg-inline--fa {
+  overflow: visible;
 }
 
-.info u {
-  color: #fff;
+.svg-inline--fa.fa-w-14 {
+  width: .875em;
 }
 
-.contact {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.contact p {
-  color: #fff;
-  margin: 0.8rem;
-  margin-left: 4rem; 
+.svg-inline--fa {
+  display: inline-block;
+  font-size: inherit;
+  height: 1em;
+  overflow: visible;
+  vertical-align: -.125em;
 }

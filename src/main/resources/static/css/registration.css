@@ -1,5 +1,6 @@
 * {
   box-sizing: border-box;
+  font-family: 'Roboto Condensed', sans-serif;
 }
 
 html, body {
@@ -157,3 +158,5 @@ html, body {
   box-shadow: 0 0 0 1px #fff, 0 0 0 3px  #EE1D1D !important;
   border-radius: .25rem !important;
 }
+
+

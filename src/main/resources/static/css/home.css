@@ -5,10 +5,11 @@ body {
   margin: 0;
   padding: 0;
   background: url('../img/mountain.jpg') no-repeat center center fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
+  -webkit-background-size: cover !important;
+  -moz-background-size: cover !important;
+  -o-background-size: cover !important;
+  background-size: cover !important;
+  background-attachment: fixed !important;
 }
 
 .wrap {
@@ -99,7 +100,7 @@ option {
 }
 
 .title-box > h1 {
-  font-family: Serif;
+  font-family: 'Roboto Condensed', sans-serif;
   font-weight: 700;
   font-size: 60px;
   margin: 0.8rem !important;
