@@ -136,13 +136,12 @@ public class RegistrationController {
 	@ResponseBody
 	public GenericResponse resetPassword(final HttpServletRequest request, @RequestParam("email") final String userEmail) {
 			final User user = userService.findUserByEmail(userEmail);
-			if (user != null) {
+			if (user != null & user.isEnabled()) {
 					final String token = UUID.randomUUID().toString();
 					userService.createPasswordResetTokenForUser(user, token);
 					try {
 						notificationService.sendNotification(constructResetTokenEmail(getAppUrl(request), request.getLocale(), token, user));
 					} catch (MailException | InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					return new GenericResponse(messages.getMessage("message.resetPasswordEmail", null, request.getLocale()));
@@ -163,32 +162,47 @@ public class RegistrationController {
 	@ResponseBody
 	public GenericResponse savePassword(final Locale locale, PasswordDTO passwordDto) {
 			final User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			userService.changeUserPassword(user, passwordDto.getNewPassword());
-			return new GenericResponse(messages.getMessage("message.resetPasswordSuc", null, locale));
+			if (user != null) {
+				userService.changeUserPassword(user, passwordDto.getNewPassword());
+				return new GenericResponse(messages.getMessage("message.resetPasswordSuc", null, locale));
+			}
+			return new GenericResponse(messages.getMessage("message.error", null, locale));
+	}
+
+	@RequestMapping(value = "/user/delete", method = RequestMethod.POST)
+	@ResponseBody
+	public GenericResponse deleteUser(final Locale locale, String email) {
+		User user = userService.findUserByEmail(email);
+		userService.deleteUser(user);
+		return new GenericResponse(messages.getMessage("message.resetPasswordSuc", null, locale));
 	}
 
 	// ============== NON-API ============
 
 	private SimpleMailMessage constructResendVerificationTokenEmail(final String contextPath, final Locale locale, final VerificationToken newToken, final User user) {
 			final String confirmationUrl = contextPath + "/registrationConfirm.html?token=" + newToken.getToken();
-			final String message = messages.getMessage("message.resendToken", null, locale);
-			return constructEmail("Resend Registration Token", message + " \r\n" + confirmationUrl, user);
+			final String subject = messages.getMessage("message.resendToken.mail.subject", null, locale);
+			final String message = messages.getMessage("message.resendToken.mail", null, locale);
+			return constructEmail(subject, message + " \r\n" + confirmationUrl, user);
 	}
 
 	private SimpleMailMessage constructResetTokenEmail(final String contextPath, final Locale locale, final String token, final User user) {
 			final String url = contextPath + "/user/changePassword?id=" + user.getId() + "&token=" + token;
-			final String message = messages.getMessage("message.resetPassword", null, locale);
-			return constructEmail("Reset Password", message + " \r\n" + url, user);
+			final String subject = messages.getMessage("message.resetYourPassword", null, locale);
+			final String message = messages.getMessage("message.dear", null, locale) + user.getFirstName() + ",\r\n\n" + messages.getMessage("message.resetPassword.mail_1", null, locale) + " \r\n" + url + messages.getMessage("message.resetPassword.mail_2", null, locale);
+			return constructEmail(subject, message, user);
 	}
 
 	private SimpleMailMessage constructShippingInfoEmail(final String contextPath, final Locale locale, final User user) {
-			final String message = user.getAddress() + " " +user.getZip();
-			return constructEmail("Shipping Info", message, user, "mpadadmin@mpdl.mpg.de");
+		  final String message = user.getAddress() + ", " +user.getZip();
+			final String subject = messages.getMessage("message.ship.mail.subject", null, locale);
+			return constructEmail(subject, message, user, "mpadadmin@mpdl.mpg.de");
 	}
 
 	public SimpleMailMessage constructSucActivateEmail(final String contextPath, final Locale locale, final User user) {
+			final String subject = messages.getMessage("message.padOnTheWay.mail.subject", null, locale);
 			final String message = messages.getMessage("message.dear", null, locale) + user.getFirstName() + ",\r\n\n" +  messages.getMessage("message.padOnTheWay", null, locale);
-			return constructEmail("Your tablet is on the way", message, user);
+			return constructEmail(subject, message, user);
 	}
 
 	private SimpleMailMessage constructEmail(String subject, String body, User user) {

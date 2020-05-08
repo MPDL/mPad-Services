@@ -21,13 +21,18 @@
   color: #BDBDBD;
   margin: 0.8rem;
   font-size: 13px;
+  text-decoration: none;
+}
+
+.contact a:hover {
+  color:#dc143c;
 }
 
 .social-links-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 120px;
+  width: 130px;
 }
 
 /* top banner */
@@ -41,7 +46,7 @@
   padding-top: 80px;
   padding-bottom: 20px;
 
-  background-image: url('../img/mPad_Header_09.png');
+  background-image: url('../img/Registration_Banner01.png');
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -60,4 +65,29 @@
   font-size: 60px;
   margin: 0.8rem !important;
   color: #fff;
+}
+
+.social-links-header a {
+  height: 30px;
+  border-radius: 20px;
+  transition: all 0.3s linear 0s;
+  width: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.social-links-twitter:hover {
+  background-color: #33CCFF;
+  color: #FFF;
+}
+
+.social-links-ins:hover {
+  background-color: #8E6051;
+  color: #FFF;
+}
+
+.social-links-linked-in:hover {
+  background-color: #007BB6;
+  color: #FFF;
 }

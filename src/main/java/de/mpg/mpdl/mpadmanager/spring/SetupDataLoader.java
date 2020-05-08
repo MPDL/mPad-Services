@@ -43,31 +43,31 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 			return;
 		}
 
-		// == create initial user
-		User testUser = createUserIfNotFound("test@test.com", "fistname", "lastname", "test", "MPDL", "DigitalLabs", "130");
+		// // == create initial user
+		// User testUser = createUserIfNotFound("test@test.com", "fistname", "lastname", "test", "MPDL", "DigitalLabs", "130");
 		
-		// == create init coordinateTeam 
-		CoordinateTeam tag1 = createCoordinateTeamIfNotFound("Mattermost");
-		CoordinateTeam tag2 = createCoordinateTeamIfNotFound("KEEPER");
-		CoordinateTeam tag3 = createCoordinateTeamIfNotFound("Github");
-		CoordinateTeam tag4 = createCoordinateTeamIfNotFound("Markdown");
-		CoordinateTeam tag5 = createCoordinateTeamIfNotFound("Slack");
-		CoordinateTeam tag6 = createCoordinateTeamIfNotFound("WhatsApp");
-		CoordinateTeam tag7 = createCoordinateTeamIfNotFound("Trello");
+		// // == create init coordinateTeam 
+		// CoordinateTeam tag1 = createCoordinateTeamIfNotFound("Mattermost");
+		// CoordinateTeam tag2 = createCoordinateTeamIfNotFound("KEEPER");
+		// CoordinateTeam tag3 = createCoordinateTeamIfNotFound("Github");
+		// CoordinateTeam tag4 = createCoordinateTeamIfNotFound("Markdown");
+		// CoordinateTeam tag5 = createCoordinateTeamIfNotFound("Slack");
+		// CoordinateTeam tag6 = createCoordinateTeamIfNotFound("WhatsApp");
+		// CoordinateTeam tag7 = createCoordinateTeamIfNotFound("Trello");
 
-		ResearchField field1 = createResearchFieldIfNotFound("Astronomy"); 
-		ResearchField field2 = createResearchFieldIfNotFound("Chemistry"); 
-		ResearchField field3 = createResearchFieldIfNotFound("Physics"); 
-		ResearchField field4 = createResearchFieldIfNotFound("Psychology"); 
+		// ResearchField field1 = createResearchFieldIfNotFound("Astronomy"); 
+		// ResearchField field2 = createResearchFieldIfNotFound("Chemistry"); 
+		// ResearchField field3 = createResearchFieldIfNotFound("Physics"); 
+		// ResearchField field4 = createResearchFieldIfNotFound("Psychology"); 
 
-		ResearchMethod method1 = createResearchMethodIfNotFound("Method one");
-		ResearchMethod method2 = createResearchMethodIfNotFound("Method two");
+		// ResearchMethod method1 = createResearchMethodIfNotFound("Method one");
+		// ResearchMethod method2 = createResearchMethodIfNotFound("Method two");
 
-		testUser.getCoordinateTeams().add(tag1);
-		testUser.getCoordinateTeams().add(tag2);
+		// testUser.getCoordinateTeams().add(tag1);
+		// testUser.getCoordinateTeams().add(tag2);
 
-		tag1.getUsers().add(testUser);
-		tag2.getUsers().add(testUser);
+		// tag1.getUsers().add(testUser);
+		// tag2.getUsers().add(testUser);
 
 		alreadySetup = true;
 	}

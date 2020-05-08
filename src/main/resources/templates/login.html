@@ -2,8 +2,10 @@
 
 <head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" th:href="@{/css/header.css}"/>
 <link rel="stylesheet" type="text/css" th:href="@{/css/footer.css}"/>
 <link rel="stylesheet" type="text/css" th:href="@{/css/center-status-info-box.css}"/>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap" rel="stylesheet" />
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII"/>
 <title th:text="#{label.pages.home.title}">Title</title>
 <script th:inline="javascript">
@@ -28,22 +30,48 @@
 </script>
 </head>
 <body>
-<div class="top-banner">
-    <img class="logo-white" th:src="@{/img/logo_white.png}"/>
-    <h1 class="title-label" th:text="#{label.form.title}">form</h1>
-</div>
+    <div class="wrap">
+        <div class="mpad-header">
+                <div class="contact">
+                        <a href="tel:+49089909311243"><svg class="svg-inline--fa fa-phone-square fa-w-14" aria-hidden="true" data-prefix="fa" data-icon="phone-square" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M400 32H48C21.49 32 0 53.49 0 80v352c0 26.51 21.49 48 48 48h352c26.51 0 48-21.49 48-48V80c0-26.51-21.49-48-48-48zM94 416c-7.033 0-13.057-4.873-14.616-11.627l-14.998-65a15 15 0 0 1 8.707-17.16l69.998-29.999a15 15 0 0 1 17.518 4.289l30.997 37.885c48.944-22.963 88.297-62.858 110.781-110.78l-37.886-30.997a15.001 15.001 0 0 1-4.289-17.518l30-69.998a15 15 0 0 1 17.16-8.707l65 14.998A14.997 14.997 0 0 1 384 126c0 160.292-129.945 290-290 290z"></path></svg> +49 (0) 89 909311 243</a>
+                        <a href="mailto:mpad@mpdl.mpg.de"><svg class="svg-inline--fa fa-envelope fa-w-16" aria-hidden="true" data-prefix="far" data-icon="envelope" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M464 64H48C21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V112c0-26.51-21.49-48-48-48zm0 48v40.805c-22.422 18.259-58.168 46.651-134.587 106.49-16.841 13.247-50.201 45.072-73.413 44.701-23.208.375-56.579-31.459-73.413-44.701C106.18 199.465 70.425 171.067 48 152.805V112h416zM48 400V214.398c22.914 18.251 55.409 43.862 104.938 82.646 21.857 17.205 60.134 55.186 103.062 54.955 42.717.231 80.509-37.199 103.053-54.947 49.528-38.783 82.032-64.401 104.947-82.653V400H48z"></path></svg> mpad@mpdl.mpg.de</a>
+                </div>
+                <div class="social-links-header">
+                    <a class="social-links-twitter" href="https://twitter.com/MPDL"><img class="social-links-icon" th:src="@{/img/twitter.svg}"/></a>
+                    <a class="social-links-ins" href="https://www.instagram.com/mpdldigitallabs/"><img class="social-links-icon" th:src="@{/img/instagram.svg}"/></a>
+                    <a class="social-links-linked-in" href="https://www.linkedin.com/authwall?trk=bf&trkInfo=AQE0eYwiSjwDxQAAAXFePm5Qgf0Lq_wqTsmO4AJZ_juFECxORp_EvnXmUBf8xHeRMnFVVSSELtUx5QlsMMiDkFLoQOCNyLwZEki6_ohCEtG2lYjv6k53cjeCFpEIKUyItPuPckE=&originalReferer=&sessionRedirect=https%3A%2F%2Fwww.linkedin.com%2Fcompany%2Fmax-planck-digital-library%2Fabout%2F"><img class="social-links-icon" th:src="@{/img/linkedin-in.svg}"/></a>
+                    <a href="https://www.youtube.com/channel/UCockYLckReAzKaoDO-oqicw/"><img class="social-links-icon" th:src="@{/img/youtube.svg}"/></a>
+                </div>
+        </div>
+        <div class="top-banner">
+            <img class="logo-white" th:src="@{/img/logo_white.png}"/>
+            <h1 class="title-label" th:text="#{label.form.title}">form</h1>
+        </div>
 
-<div class="content">
-	<div class="info-box" id="basic-info-box">
-        <h4 th:text="#{message.resetPassword}">reset password</h4>
-        <h4 th:if="${param.message != null}" th:text="${param.message[0]}">message</h4>
-        <h4 th:if="${param.error != null}"  th:text="${session[SPRING_SECURITY_LAST_EXCEPTION]}">error</h4>
+        <div class="content">
+            <div class="info-box" id="basic-info-box">
+                <h3 th:text="#{message.resetPassword}">reset password</h3>
+                <h4 th:if="${param.message != null}" th:text="${param.message[0]}">message</h4>
+                <h4 th:if="${param.error != null}"  th:text="${session[SPRING_SECURITY_LAST_EXCEPTION]}">error</h4>
+            </div>
+        </div>
     </div>
-</div>
 
-<div class='footer'>
+    <div class='footer-sticky-bottom'>
+        <div class="container">
+            <div class="social-links-footer">
+                    <a class="social-links-twitter" href="https://twitter.com/MPDL"><img class="social-links-icon" th:src="@{/img/twitter.svg}"/></a>
+                    <a class="social-links-ins" href="https://www.instagram.com/mpdldigitallabs/"><img class="social-links-icon" th:src="@{/img/instagram.svg}"/></a>
+                    <a class="social-links-linked-in" href="https://www.linkedin.com/authwall?trk=bf&trkInfo=AQE0eYwiSjwDxQAAAXFePm5Qgf0Lq_wqTsmO4AJZ_juFECxORp_EvnXmUBf8xHeRMnFVVSSELtUx5QlsMMiDkFLoQOCNyLwZEki6_ohCEtG2lYjv6k53cjeCFpEIKUyItPuPckE=&originalReferer=&sessionRedirect=https%3A%2F%2Fwww.linkedin.com%2Fcompany%2Fmax-planck-digital-library%2Fabout%2F"><img class="social-links-icon" th:src="@{/img/linkedin-in.svg}"/></a>
+                    <a href="https://www.youtube.com/channel/UCockYLckReAzKaoDO-oqicw/"><img class="social-links-icon" th:src="@{/img/youtube.svg}"/></a>
+            </div><!-- end .social-links -->
+        </div>
+        <div class="copyright">© 2020 			<a title="mPad" target="_blank" href="https://qa-mpad.mpdl.mpg.de/">mPad</a> | 
+                    Designed by: <a title="digital labs" target="_blank" href="">digital labs</a> | 
+                    Powered by: <a title="digital labs" target="_blank" href="/">digital labs</a>
+        </div>
+    </div>
 
-</div>
 </body>
 
 </html>

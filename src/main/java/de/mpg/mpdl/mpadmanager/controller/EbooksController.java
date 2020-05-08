@@ -1,7 +1,5 @@
 package de.mpg.mpdl.mpadmanager.controller;
 
-import org.springframework.http.client.BufferingClientHttpRequestFactory;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,10 +9,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import de.mpg.mpdl.mpadmanager.dto.RecordResponseDTO;
 import de.mpg.mpdl.mpadmanager.dto.SearchItem;
 import de.mpg.mpdl.mpadmanager.dto.SearchResponseDTO;
-import org.springframework.http.client.ClientHttpRequestInterceptor;
 import de.mpg.mpdl.mpadmanager.dto.RecordDTO;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.google.gson.Gson;
@@ -26,7 +22,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import de.mpg.mpdl.mpadmanager.logging.LoggingRequestInterceptor;
 
 @RestController
 public class EbooksController {

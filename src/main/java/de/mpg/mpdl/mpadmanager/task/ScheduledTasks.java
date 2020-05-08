@@ -64,10 +64,10 @@ public class ScheduledTasks {
     private SimpleMailMessage constructResendVerificationTokenEmail(final String contextPath,final VerificationToken newToken, final User user) {
         final String confirmationUrl = contextPath + "/registrationConfirm.html?token=" + newToken.getToken();
 
-        final String subject = "Resend Registration Confirmation";
+        final String subject = messages.getMessage("message.expired.mail.subject", null, new Locale("en"));
         final String recipientAddress = user.getEmail();
-        final String message_1 = messages.getMessage("message.dear", null, new Locale("en")) + user.getFirstName() + ",\r\n\n" + messages.getMessage("message.expired_1", null, new Locale("en"));
-        final String message_2 = messages.getMessage("message.expired_2", null, new Locale("en"));
+        final String message_1 = messages.getMessage("message.dear", null, new Locale("en")) + user.getFirstName() + ",\r\n\n" + messages.getMessage("message.expired.mail_1", null, new Locale("en"));
+        final String message_2 = messages.getMessage("message.expired.mail_2", null, new Locale("en"));
         final SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);
         email.setSubject(subject);

@@ -1,6 +1,5 @@
 package de.mpg.mpdl.mpadmanager.repository;
 
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -9,13 +8,14 @@ import de.mpg.mpdl.mpadmanager.model.PasswordResetToken;
 import de.mpg.mpdl.mpadmanager.model.User;
 
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Stream;
 
 public interface PasswordResetTokenRepository extends JpaRepository<PasswordResetToken, Long> {
 
     PasswordResetToken findByToken(String token);
 
-    PasswordResetToken findByUser(User user);
+    List<PasswordResetToken> findByUser(User user);
 
     Stream<PasswordResetToken> findAllByExpiryDateLessThan(Date now);
 
@@ -24,4 +24,5 @@ public interface PasswordResetTokenRepository extends JpaRepository<PasswordRese
     @Modifying
     @Query("delete from PasswordResetToken t where t.expiryDate <= ?1")
     void deleteAllExpiredSince(Date now);
+
 }

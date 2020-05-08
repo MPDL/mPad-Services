@@ -47,7 +47,7 @@ public class UserService implements IUserService {
     private LdapGroupRepository ldapGroupRepository;
 
     @Autowired
-    private VerificationTokenRepository tokenRepository;
+    private VerificationTokenRepository verificationTokenRepository;
 
     @Autowired
     private PasswordResetTokenRepository passwordResetTokenRepository;
@@ -99,9 +99,9 @@ public class UserService implements IUserService {
         user.setDepartment(accountDto.getDepartment());
         user.setRole(accountDto.getRole());
         user.setTelephone(accountDto.getTelephone());
-        user.setAddress(accountDto.getShippingDepartment() == null ? "" : (accountDto.getShippingDepartment() + " ")
-            + accountDto.getShippingOrganization() == null ? "" : (accountDto.getShippingOrganization() + " ")
-            + accountDto.getAddress() + " " + accountDto.getCity() + " " + accountDto.getCountry());
+        user.setAddress((accountDto.getShippingDepartment() == null ? "" : (accountDto.getShippingDepartment() + ", "))
+            + (accountDto.getShippingOrganization() == null ? "" : (accountDto.getShippingOrganization() + ", "))
+            + accountDto.getAddress() + ", " + accountDto.getCity() + ", " + accountDto.getCountry());
         user.setZip(accountDto.getZip());
         if (null != accountDto.getCoordinateTeams() && accountDto.getCoordinateTeams().size() > 0) {
             List<CoordinateTeam> coordinateTeams = user.getCoordinateTeams();
@@ -142,7 +142,7 @@ public class UserService implements IUserService {
 
     @Override
     public User getUser(final String verificationToken) {
-        final VerificationToken token = tokenRepository.findByToken(verificationToken);
+        final VerificationToken token = verificationTokenRepository.findByToken(verificationToken);
         if (token != null) {
             String email = token.getUserEmail();
             return userRepository.findByEmail(email);
@@ -152,7 +152,7 @@ public class UserService implements IUserService {
 
     @Override
     public VerificationToken getVerificationToken(final String VerificationToken) {
-        return tokenRepository.findByToken(VerificationToken);
+        return verificationTokenRepository.findByToken(VerificationToken);
     }
 
     @Override
@@ -162,27 +162,35 @@ public class UserService implements IUserService {
 
     @Override
     public void deleteUser(final User user) {
-        final VerificationToken verificationToken = tokenRepository.findByUserEmail(user.getEmail());
+        final VerificationToken verificationToken = verificationTokenRepository.findByUserEmail(user.getEmail());
 
         if (verificationToken != null) {
-            tokenRepository.delete(verificationToken);
+            verificationTokenRepository.delete(verificationToken);
         }
         
+        final List<PasswordResetToken> passwordResetTokens = passwordResetTokenRepository.findByUser(user);
+
+        for(int i = 0; i < passwordResetTokens.size(); i ++) {
+            passwordResetTokenRepository.delete(passwordResetTokens.get(i));
+        }
+
+        //todo: delete reserchField and coror
+
         userRepository.delete(user);
     }
 
     @Override
     public void createVerificationTokenForUser(final String email, final String token) {
         final VerificationToken myToken = new VerificationToken(token, email);
-        tokenRepository.save(myToken);
+        verificationTokenRepository.save(myToken);
     }
 
     @Override
     public VerificationToken generateNewVerificationToken(final String existingVerificationToken) {
-        VerificationToken vToken = tokenRepository.findByToken(existingVerificationToken);
+        VerificationToken vToken = verificationTokenRepository.findByToken(existingVerificationToken);
         vToken.updateToken(UUID.randomUUID()
             .toString());
-        vToken = tokenRepository.save(vToken);
+        vToken = verificationTokenRepository.save(vToken);
         return vToken;
     }
 
@@ -194,7 +202,7 @@ public class UserService implements IUserService {
     @Override
     public String validateVerificationToken(String token) {
         LOGGER.info("validateVerificationToken");
-        final VerificationToken verificationToken = tokenRepository.findByToken(token);
+        final VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
         if (verificationToken == null) {
             return TOKEN_INVALID;
         }
@@ -205,11 +213,9 @@ public class UserService implements IUserService {
             .getTime()
             - cal.getTime()
                 .getTime()) <= 0) {
-            tokenRepository.delete(verificationToken);
+            verificationTokenRepository.delete(verificationToken);
             return TOKEN_EXPIRED;
         }
-        user.setEnabled(true);
-        userRepository.save(user);
         
         try {
             String organization = user.getOrganization();
@@ -234,6 +240,9 @@ public class UserService implements IUserService {
             LdapUser ldap = ldapUserRepository.create(ldapUser);
             LOGGER.info("User created on LDAP");
             LOGGER.info(ldap.toString());
+            user.setEnabled(true);
+            userRepository.save(user);
+            LOGGER.info("User is enabled");
         } catch (Exception e) {
             if (e instanceof NameAlreadyBoundException) {
                 LOGGER.info("User already on LDAP");
@@ -276,15 +285,15 @@ public class UserService implements IUserService {
 	
     @Override
     public List<VerificationToken> findExpiredTokens(Date now) {
-    	List<VerificationToken> tokens = tokenRepository.findExpiredTokens(now);
+        List<VerificationToken> tokens = verificationTokenRepository.findExpiredTokens(now);
     	return tokens;
     }
 
 	@Override
 	public void deleteVerificationToken(String token) {
-		VerificationToken verificationToken = tokenRepository.findByToken(token);
+		VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
         if (verificationToken != null) {
-            tokenRepository.delete(verificationToken);
+            verificationTokenRepository.delete(verificationToken);
         }
     }
 
@@ -309,6 +318,12 @@ public class UserService implements IUserService {
         user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
         ldapUserRepository.updatePassword(user, passwordEncoder.encode(password));
+
+        final List<PasswordResetToken> passwordResetTokens = passwordResetTokenRepository.findByUser(user);
+
+        for(int i = 0; i < passwordResetTokens.size(); i ++) {
+            passwordResetTokenRepository.delete(passwordResetTokens.get(i));
+        }
     }
     
     private final CoordinateTeam createCoordinateTeamIfNotFound(final String name) {
