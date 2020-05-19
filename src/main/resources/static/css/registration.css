@@ -153,6 +153,14 @@ html, body {
   padding-bottom: 5px; 
 }
 
+#mpad-checkboxes {
+  width: 100%;
+}
+
+.checkbox-text {
+  margin-bottom: 0px !important;
+}
+
 .alert-checkbox {
   -webkit-box-shadow: 0 0 0 1px #fff, 0 0 0 3px #EE1D1D !important;
   box-shadow: 0 0 0 1px #fff, 0 0 0 3px  #EE1D1D !important;

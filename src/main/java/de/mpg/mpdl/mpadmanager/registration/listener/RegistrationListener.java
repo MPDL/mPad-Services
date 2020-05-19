@@ -1,5 +1,6 @@
 package de.mpg.mpdl.mpadmanager.registration.listener;
 
+import java.util.Locale;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,13 +8,17 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Component;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import de.mpg.mpdl.mpadmanager.model.User;
 import de.mpg.mpdl.mpadmanager.registration.OnRegistrationCompleteEvent;
 import de.mpg.mpdl.mpadmanager.service.INotificationService;
 import de.mpg.mpdl.mpadmanager.service.IUserService;
+import de.mpg.mpdl.mpadmanager.vo.MailVO;
+
+import javax.mail.MessagingException;
 
 @Component
 public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
@@ -30,8 +35,11 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
     @Autowired
     private Environment env;
 
+    @Autowired
+	private TemplateEngine templateEngine;
+
     @Override
-    public void onApplicationEvent(OnRegistrationCompleteEvent event) {
+    public void onApplicationEvent(final OnRegistrationCompleteEvent event) {
         this.confirmRegistration(event);
     }
 
@@ -39,28 +47,32 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
         final User user = event.getUser();
         final String token = UUID.randomUUID().toString();
         service.createVerificationTokenForUser(user.getEmail(), token);
-        final SimpleMailMessage email = constructEmailMessage(event, user, token);
+        final MailVO email = constructRegistrationEmail(event, user, token);
 
         try {
-            notificationService.sendNotification(email);
-        } catch (MailException | InterruptedException e) {
-            // TODO: Email send error handle
+            notificationService.sendMimeNotification(email);
+        } catch (MailException | InterruptedException | MessagingException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 	}
-    
-    private final SimpleMailMessage constructEmailMessage(final OnRegistrationCompleteEvent event, final User user, final String token) {
-        final String recipientAddress = user.getEmail();
-        final String subject = "Please confirm your registration";
+
+    private final MailVO constructRegistrationEmail(final OnRegistrationCompleteEvent event, final User user,  final String token) {
+        final String subject = messages.getMessage("message.registration.mail.subject", null, event.getLocale());
         final String confirmationUrl = event.getAppUrl() + "/registrationConfirm.html?token=" + token;
-        final String message_1 = messages.getMessage("message.dear", null, event.getLocale()) + user.getFirstName() + ",\r\n\n" + messages.getMessage("message.regSucc_1", null, event.getLocale());
-        final String message_2 = messages.getMessage("message.regSucc_2", null, event.getLocale());
-        final SimpleMailMessage email = new SimpleMailMessage();
-        email.setTo(recipientAddress);
-        email.setSubject(subject);
-        email.setText(message_1+ " \r\n" + confirmationUrl + " \r\n\n" + message_2);
-        email.setFrom(env.getProperty("support.email"));
-        return email;
+
+        final String firstName = user.getFirstName();
+        final Context context = new Context();
+        context.setVariable("firstName", firstName);
+        context.setVariable("confirmationUrl", confirmationUrl);
+        final String body = templateEngine.process("mail/registrationLinkEmail", context);
+
+        final MailVO email = new MailVO();
+		email.setSubject(subject);
+		email.setText(body);
+		email.setTo(user.getEmail());
+		email.setFrom(env.getProperty("support.email"));
+		return email;
     }
 	
 }

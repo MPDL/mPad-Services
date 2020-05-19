@@ -243,7 +243,10 @@ color:#000;
 													<label><input type="checkbox" id="termCheckbox" name="termCheckbox" value="">I agree to the <a href="https://qa-mpad.mpdl.mpg.de/terms-of-service/" target="_blank"><u>Terms of Service</u></a></label>
 												</div>
 												<div class="checkbox">
-													<label><input type="checkbox" id="betriebsratCheckbox" name="betriebsratCheckbox" value=""><p th:text="#{label.term.betriebsrat}"><p/></label>
+													<label><input type="checkbox" id="betriebsratCheckbox" name="betriebsratCheckbox" value=""><p class="checkbox-text" th:text="#{label.term.betriebsrat}"></p></label>
+												</div>
+												<div class="checkbox">
+													<label><input type="checkbox" id="testPhaseCheckbox" name="testPhaseCheckbox" value=""><p class="checkbox-text" th:text="#{label.term.testPhase}"></p></label>
 												</div>
 
 												<div class="form-group row">
@@ -550,6 +553,12 @@ $(document).ready(function () {
 				$(this).removeClass("alert-checkbox");
 		}
   });
+	$('input[name="testPhaseCheckbox"]').click(function () {
+		if ($(this).is(":checked")) {
+				//checked
+				$(this).removeClass("alert-checkbox");
+		}
+  });
 });
 
 function continue_register(event) {
@@ -595,7 +604,8 @@ function register(event){
 	var privacyAccepted = $('input[name="privacyCheckbox"]:checked').length > 0 
 	var termsAccepted = $('input[name="termCheckbox"]:checked').length > 0
 	var betriebratAccepted = $('input[name="betriebsratCheckbox"]:checked').length > 0
-	if (!termsAccepted || !privacyAccepted || !betriebratAccepted) {
+	var testPhaseAccepted = $('input[name="testPhaseCheckbox"]:checked').length > 0
+	if (!termsAccepted || !privacyAccepted || !betriebratAccepted || !testPhaseAccepted) {
 		$("#termsError").show().html(/*[[#{Checked.termsandprivacy}]]*/);
 		if (!termsAccepted) {
 			$('input[name="termCheckbox"]').addClass('alert-checkbox');
@@ -605,6 +615,9 @@ function register(event){
 		}
 		if (!betriebratAccepted) {
 			$('input[name="betriebsratCheckbox"]').addClass('alert-checkbox');
+		}
+		if (!testPhaseAccepted) {
+			$('input[name="testPhaseCheckbox"]').addClass('alert-checkbox');
 		}
 			return;
 	} 
@@ -616,6 +629,7 @@ function register(event){
 
 	var formData= $('form').serialize();
 	$("#btn-mpad-register").prop('disabled', true);
+	$("#back-to-research-info").prop('disabled', true);
 	$.post(serverContext + "user/registration",formData ,function(data){
 			if(data.message == "success"){
 					window.location.href = serverContext + "successRegister.html";

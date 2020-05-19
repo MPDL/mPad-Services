@@ -1,12 +1,12 @@
 package de.mpg.mpdl.mpadmanager.controller;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
-import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -41,9 +40,16 @@ import de.mpg.mpdl.mpadmanager.registration.OnRegistrationCompleteEvent;
 import de.mpg.mpdl.mpadmanager.service.INotificationService;
 import de.mpg.mpdl.mpadmanager.service.ISecurityUserService;
 import de.mpg.mpdl.mpadmanager.service.IUserService;
+import de.mpg.mpdl.mpadmanager.vo.MailVO;
 import de.mpg.mpdl.mpadmanager.web.util.GenericResponse;
 import springfox.documentation.annotations.ApiIgnore;
 
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+
+import org.springframework.mail.MailException;
+import java.io.UnsupportedEncodingException;
+import javax.mail.MessagingException;
 @ApiIgnore
 @Controller
 public class RegistrationController {
@@ -70,6 +76,9 @@ public class RegistrationController {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
+	@Autowired
+	private TemplateEngine templateEngine;
+
 	public RegistrationController() {
 		super();
 	}
@@ -88,16 +97,16 @@ public class RegistrationController {
 	@RequestMapping(value = "/registrationConfirm", method = RequestMethod.GET)
 	public String confirmRegistration(final HttpServletRequest request, final Model model,
 			@RequestParam("token") final String token) throws UnsupportedEncodingException {
-		Locale locale = request.getLocale();
+		final Locale locale = request.getLocale();
 		final String result = userService.validateVerificationToken(token);
 		LOGGER.info("token: " + result);
 		if (result.equals("valid")) {
 			final User user = userService.getUser(token);
 			// authWithoutPassword(user);
 			try {
-				notificationService.sendNotification(constructSucActivateEmail(getAppUrl(request), request.getLocale(), user));
+				notificationService.sendMimeNotification(constructSucActivateEmail(getAppUrl(request), request.getLocale(), user));
 				notificationService.sendNotification(constructShippingInfoEmail(getAppUrl(request), request.getLocale(), user));
-			} catch (MailException | InterruptedException e) {
+			} catch (MailException | InterruptedException | MessagingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -114,34 +123,18 @@ public class RegistrationController {
 		return "redirect:/badUser.html?lang=" + locale.getLanguage();
 	}
 
-	@RequestMapping(value = "/user/resendRegistrationToken", method = RequestMethod.GET)
-	@ResponseBody
-	public GenericResponse resendRegistrationToken(final HttpServletRequest request,
-			@RequestParam("token") final String existingToken) {
-			final VerificationToken newToken = userService.generateNewVerificationToken(existingToken);
-			final User user = userService.getUser(newToken.getToken());
-			try {
-				notificationService.sendNotification(
-						constructResendVerificationTokenEmail(getAppUrl(request), request.getLocale(), newToken, user));
-			} catch (MailException | InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	        return new GenericResponse(messages.getMessage("message.resendToken", null, request.getLocale()));
-	}
-
-
 	// Reset password
 	@RequestMapping(value = "/user/resetPassword", method = RequestMethod.POST)
 	@ResponseBody
 	public GenericResponse resetPassword(final HttpServletRequest request, @RequestParam("email") final String userEmail) {
 			final User user = userService.findUserByEmail(userEmail);
-			if (user != null & user.isEnabled()) {
+			if (user != null) {
+					if (!user.isEnabled()) return new GenericResponse(messages.getMessage("auth.message.disabled", null, request.getLocale()));	
 					final String token = UUID.randomUUID().toString();
 					userService.createPasswordResetTokenForUser(user, token);
 					try {
-						notificationService.sendNotification(constructResetTokenEmail(getAppUrl(request), request.getLocale(), token, user));
-					} catch (MailException | InterruptedException e) {
+						notificationService.sendMimeNotification(constructResetTokenEmail(getAppUrl(request), request.getLocale(), token, user));
+					} catch (MailException | InterruptedException | MessagingException e) {
 						e.printStackTrace();
 					}
 					return new GenericResponse(messages.getMessage("message.resetPasswordEmail", null, request.getLocale()));
@@ -160,7 +153,7 @@ public class RegistrationController {
 
 	@RequestMapping(value = "/user/savePassword", method = RequestMethod.POST)
 	@ResponseBody
-	public GenericResponse savePassword(final Locale locale, PasswordDTO passwordDto) {
+	public GenericResponse savePassword(final Locale locale, final PasswordDTO passwordDto) {
 			final User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			if (user != null) {
 				userService.changeUserPassword(user, passwordDto.getNewPassword());
@@ -171,41 +164,44 @@ public class RegistrationController {
 
 	@RequestMapping(value = "/user/delete", method = RequestMethod.POST)
 	@ResponseBody
-	public GenericResponse deleteUser(final Locale locale, String email) {
-		User user = userService.findUserByEmail(email);
+	public GenericResponse deleteUser(final Locale locale, final String email) {
+		final User user = userService.findUserByEmail(email);
 		userService.deleteUser(user);
-		return new GenericResponse(messages.getMessage("message.resetPasswordSuc", null, locale));
+		return new GenericResponse("deleted");
 	}
 
 	// ============== NON-API ============
 
-	private SimpleMailMessage constructResendVerificationTokenEmail(final String contextPath, final Locale locale, final VerificationToken newToken, final User user) {
-			final String confirmationUrl = contextPath + "/registrationConfirm.html?token=" + newToken.getToken();
-			final String subject = messages.getMessage("message.resendToken.mail.subject", null, locale);
-			final String message = messages.getMessage("message.resendToken.mail", null, locale);
-			return constructEmail(subject, message + " \r\n" + confirmationUrl, user);
-	}
-
-	private SimpleMailMessage constructResetTokenEmail(final String contextPath, final Locale locale, final String token, final User user) {
-			final String url = contextPath + "/user/changePassword?id=" + user.getId() + "&token=" + token;
+	private MailVO constructResetTokenEmail(final String contextPath, final Locale locale, final String token, final User user) {
+			final String tokenUrl = contextPath + "/user/changePassword?id=" + user.getId() + "&token=" + token;
 			final String subject = messages.getMessage("message.resetYourPassword", null, locale);
-			final String message = messages.getMessage("message.dear", null, locale) + user.getFirstName() + ",\r\n\n" + messages.getMessage("message.resetPassword.mail_1", null, locale) + " \r\n" + url + messages.getMessage("message.resetPassword.mail_2", null, locale);
-			return constructEmail(subject, message, user);
+			final String firstName = user.getFirstName();
+			final Context context = new Context();
+			context.setVariable("firstName", firstName);
+			context.setVariable("tokenUrl", tokenUrl);
+			String body = templateEngine.process("mail/resetPasswordEmail", context);
+			return constructMimeEmailVO(subject, body, user);
 	}
 
 	private SimpleMailMessage constructShippingInfoEmail(final String contextPath, final Locale locale, final User user) {
-		  final String message = user.getAddress() + ", " +user.getZip();
+			final String message = "Email: " + user.getEmail()
+														+ "\r\nName: " + (user.getTitle()==null ? "": user.getTitle() + " ") + user.getFirstName() + " " + user.getLastName()
+														+ "\r\nAddress: " + user.getAddress() + ", " +user.getZip()
+														+ "\r\nTelephone: " + user.getTelephone();
 			final String subject = messages.getMessage("message.ship.mail.subject", null, locale);
 			return constructEmail(subject, message, user, "mpadadmin@mpdl.mpg.de");
 	}
 
-	public SimpleMailMessage constructSucActivateEmail(final String contextPath, final Locale locale, final User user) {
+	public MailVO constructSucActivateEmail(final String contextPath, final Locale locale, final User user) {
 			final String subject = messages.getMessage("message.padOnTheWay.mail.subject", null, locale);
-			final String message = messages.getMessage("message.dear", null, locale) + user.getFirstName() + ",\r\n\n" +  messages.getMessage("message.padOnTheWay", null, locale);
-			return constructEmail(subject, message, user);
+			final String firstName = user.getFirstName();
+			final Context context = new Context();
+			context.setVariable("firstName", firstName);
+			String body = templateEngine.process("mail/sucActivateEmail", context);
+			return constructMimeEmailVO(subject, body, user);
 	}
 
-	private SimpleMailMessage constructEmail(String subject, String body, User user) {
+	private SimpleMailMessage constructEmail(final String subject, final String body, final User user) {
 			final SimpleMailMessage email = new SimpleMailMessage();
 			email.setSubject(subject);
 			email.setText(body);
@@ -214,7 +210,16 @@ public class RegistrationController {
 			return email;
 	}
 
-	private SimpleMailMessage constructEmail(String subject, String body, User user, String receiverEmail) {
+	private MailVO constructMimeEmailVO(final String subject, final String body, final User user) {
+		final MailVO email = new MailVO();
+		email.setSubject(subject);
+		email.setText(body);
+		email.setTo(user.getEmail());
+		email.setFrom(env.getProperty("support.email"));
+		return email;
+	}
+
+	private SimpleMailMessage constructEmail(final String subject, final String body, final User user, final String receiverEmail) {
 			final SimpleMailMessage email = new SimpleMailMessage();
 			email.setSubject(subject);
 			email.setText(body);
@@ -223,34 +228,34 @@ public class RegistrationController {
 			return email;
 }
 
-	private String getAppUrl(HttpServletRequest request) {
+	private String getAppUrl(final HttpServletRequest request) {
 			if(request.getServerPort() != 80) {
 				return  "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
 			}
 			return  "http://" + request.getServerName() + request.getContextPath();
 	}
 
-	public void authWithHttpServletRequest(HttpServletRequest request, String username, String password) {
+	public void authWithHttpServletRequest(final HttpServletRequest request, final String username, final String password) {
 			try {
 					request.login(username, password);
-			} catch (ServletException e) {
+			} catch (final ServletException e) {
 					LOGGER.error("Error while login ", e);
 			}
 	}
 
-	public void authWithAuthManager(HttpServletRequest request, String username, String password) {
-			UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
+	public void authWithAuthManager(final HttpServletRequest request, final String username, final String password) {
+			final UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
 			authToken.setDetails(new WebAuthenticationDetails(request));
-			Authentication authentication = authenticationManager.authenticate(authToken);
+			final Authentication authentication = authenticationManager.authenticate(authToken);
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			// request.getSession().setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
 	}
 
-	public void authWithoutPassword(User user) {
-			Stream<String> privileges = Stream.of("READ_PRIVILEGE", "CHANGE_PASSWORD_PRIVILEGE");
-			List<GrantedAuthority> authorities = privileges.map(p -> new SimpleGrantedAuthority(p)).collect(Collectors.toList());
+	public void authWithoutPassword(final User user) {
+			final Stream<String> privileges = Stream.of("READ_PRIVILEGE", "CHANGE_PASSWORD_PRIVILEGE");
+			final List<GrantedAuthority> authorities = privileges.map(p -> new SimpleGrantedAuthority(p)).collect(Collectors.toList());
 
-			Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
+			final Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
 
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 	}
