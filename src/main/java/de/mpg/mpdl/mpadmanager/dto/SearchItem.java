@@ -2,8 +2,13 @@ package de.mpg.mpdl.mpadmanager.dto;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class SearchItem {
   private List<String> authorsPrimary;
+  
+  @JsonIgnore
+  private List<String> authorsSecondary;
   private String id;
   private List<String> isbns;
   private String title;
@@ -49,6 +54,14 @@ public class SearchItem {
 
   public void setPublicationDates(List<String> publicationDates) {
     this.publicationDates = publicationDates;
+  }
+
+  public List<String> getAuthorsSecondary() {
+    return this.authorsSecondary;
+  }
+
+  public void setAuthorsSecondary(List<String> authorsSecondary) {
+    this.authorsSecondary = authorsSecondary;
   }
 
   public List<String> getPublishers() {

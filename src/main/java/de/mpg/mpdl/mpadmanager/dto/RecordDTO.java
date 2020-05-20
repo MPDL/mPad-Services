@@ -2,6 +2,7 @@ package de.mpg.mpdl.mpadmanager.dto;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -13,6 +14,9 @@ public class RecordDTO {
   private String abs;
   
   private List<String> authorsPrimary;
+  
+  @JsonIgnore
+  private List<String> authorsSecondary;
   private String id;
   private List<String> isbns;
   private String title;
@@ -37,6 +41,14 @@ public class RecordDTO {
 
   public void setAuthorsPrimary(List<String> authorsPrimary) {
     this.authorsPrimary = authorsPrimary;
+  }
+
+  public List<String> getAuthorsSecondary() {
+    return this.authorsSecondary;
+  }
+
+  public void setAuthorsSecondary(List<String> authorsSecondary) {
+    this.authorsSecondary = authorsSecondary;
   }
 
   public String getId() {

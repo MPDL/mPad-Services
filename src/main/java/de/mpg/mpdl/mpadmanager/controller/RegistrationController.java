@@ -146,6 +146,7 @@ public class RegistrationController {
 			final String result = securityUserService.validatePasswordResetToken(id, token);
 			if (result != null) {
 					model.addAttribute("message", messages.getMessage("auth.message." + result, null, locale));
+					model.addAttribute("title", "Registration");
 					return "redirect:/login?lang=" + locale.getLanguage();
 			}
 			return "redirect:/updatePassword.html?lang=" + locale.getLanguage();
@@ -199,15 +200,6 @@ public class RegistrationController {
 			context.setVariable("firstName", firstName);
 			String body = templateEngine.process("mail/sucActivateEmail", context);
 			return constructMimeEmailVO(subject, body, user);
-	}
-
-	private SimpleMailMessage constructEmail(final String subject, final String body, final User user) {
-			final SimpleMailMessage email = new SimpleMailMessage();
-			email.setSubject(subject);
-			email.setText(body);
-			email.setTo(user.getEmail());
-			email.setFrom(env.getProperty("support.email"));
-			return email;
 	}
 
 	private MailVO constructMimeEmailVO(final String subject, final String body, final User user) {

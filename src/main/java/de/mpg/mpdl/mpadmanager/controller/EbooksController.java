@@ -61,6 +61,9 @@ public class EbooksController {
       if (!searchItem.getIsbns().isEmpty()) {
         searchItem.setThumbnail(thumbnailPrefix + searchItem.getIsbns().get(0));
       }
+      if (searchItem.getAuthorsPrimary() == null) {
+        searchItem.setAuthorsPrimary(searchItem.getAuthorsSecondary());
+      }
     }
     return responseDTO;
   }
@@ -81,16 +84,31 @@ public class EbooksController {
       Gson gson = new GsonBuilder().create();
       RecordResponseDTO responseDTO = gson.fromJson(resp.getBody(), RecordResponseDTO.class);
 
-      String[] urls = new String[] {"https://keeper.mpdl.mpg.de/f/af7817784ee142e08ecd/?dl=1", "https://keeper.mpdl.mpg.de/f/055e7a51f96a4202843e/?dl=1"};
+      String[] urls = new String[] {"https://keeper.mpdl.mpg.de/f/af7817784ee142e08ecd/?dl=1", 
+                                    "https://keeper.mpdl.mpg.de/f/055e7a51f96a4202843e/?dl=1",
+                                    "https://keeper.mpdl.mpg.de/f/935ed38cbeb241b2a93f/?dl=1",
+                                    "https://keeper.mpdl.mpg.de/f/a6f952cd09de4c4fb8ed/?dl=1",
+                                    "https://keeper.mpdl.mpg.de/f/63f97182d45b4032908e/?dl=1",
+                                    "https://keeper.mpdl.mpg.de/f/4b73f6ce285e492dafd5/?dl=1",
+                                    "https://keeper.mpdl.mpg.de/f/a0e5158c36a946f4822b/?dl=1",
+                                    "https://keeper.mpdl.mpg.de/f/56c53bf28af94f979860/?dl=1",
+                                    "https://keeper.mpdl.mpg.de/f/f7dc3ee6b1df4a0ca7f5/?dl=1",
+                                    "https://keeper.mpdl.mpg.de/f/b535c78a2cb24d099851/?dl=1",
+                                    "https://keeper.mpdl.mpg.de/f/be65ca383a80458c8dff/?dl=1",
+                                    "https://keeper.mpdl.mpg.de/f/198aa65a3db549c2a979/?dl=1"};
       
       //todo: remove dummy data
       boolean[] formats = new boolean[] {true, false};
       for (RecordDTO record: responseDTO.getRecords()) {
         int format = record.getTitle().length() % 2; 
+        int index = record.getTitle().length() % 12;
         record.setIsPdf(formats[format]);
-        record.setDownloadUrl(urls[format]);
+        record.setDownloadUrl(urls[index]);
         if (!record.getIsbns().isEmpty()) {
           record.setThumbnail(thumbnailPrefix + record.getIsbns().get(0));
+        }
+        if (record.getAuthorsPrimary() == null) {
+          record.setAuthorsPrimary(record.getAuthorsSecondary());
         }
       }
       return responseDTO;
