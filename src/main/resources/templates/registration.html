@@ -646,7 +646,7 @@ function register(event){
 					$("#termsError").show().html(data.responseJSON.message);
 			}
 			else if(data.responseJSON.error.indexOf("InternalError") > -1){
-					window.location.href = serverContext + "login?message=" + data.responseJSON.message;
+					window.location.href = serverContext + "login?message=" + data.responseJSON.message + "&title=Registration";
 			}
 			else if(data.status === 403) {
 				window.location.href = serverContext + "invalidSession.html";

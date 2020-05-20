@@ -50,7 +50,7 @@
 
         <div class="content">
             <div class="info-box" id="basic-info-box">
-                <h3 th:text="#{message.resetPassword}">reset password</h3>
+                <h3 th:if="${param.title != null}" th:text="${param.title[0]}"></h3>
                 <h4 th:if="${param.message != null}" th:text="${param.message[0]}">message</h4>
                 <h4 th:if="${param.error != null}"  th:text="${session[SPRING_SECURITY_LAST_EXCEPTION]}">error</h4>
             </div>
