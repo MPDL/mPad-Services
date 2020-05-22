@@ -60,6 +60,9 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addViewController("/changePassword.html");
         registry.addViewController("/deleteUser.html");
         registry.addViewController("/users.html");
+        registry.addViewController("/mpgReaderTerms.html");
+        registry.addViewController("/mpgReaderDisclaimer.html");
+        registry.addViewController("/mpgReaderPrivacyPolicy.html");
     }
 
     @Override
@@ -74,12 +77,14 @@ public class MvcConfig implements WebMvcConfigurer {
             //"/webjars/**",
             "/img/**",
             "/css/**",
-            "/js/**")
+            "/js/**",
+            "/favicon.ico")
             .addResourceLocations(
                     //"classpath:/META-INF/resources/webjars/",
                     "classpath:/static/img/",
                     "classpath:/static/css/",
-                    "classpath:/static/js/");
+                    "classpath:/static/js/",
+                    "classpath:/static/");
     }
 
     @Override
