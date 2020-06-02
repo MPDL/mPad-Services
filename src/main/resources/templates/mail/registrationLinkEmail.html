@@ -106,20 +106,12 @@
               <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
                 <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
                   <tr>
-                    <td align="center" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                      <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;border-spacing:0px;">
-                        <tbody>
-                          <tr>
-                            <td style="width:200px;"> <a href="https://qa-mpad.mpdl.mpg.de/" target="_blank">
-          
-      <img
-         alt="" height="auto" th:src="@{#{message.appurl} + '/img/email_banner.png'}" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="200"
-      />
-    
-        </a> </td>
-                          </tr>
-                        </tbody>
-                      </table>
+                    <td align="center" style="font-size:0px;word-break:break-word;">
+                    <a href="https://qa-mpad.mpdl.mpg.de/" target="_blank">
+                    <img
+                      alt="" height="auto"  th:src="@{#{message.appurl} + '/img/email_banner.png'}" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:200px;font-size:13px;" width="200"
+                    />
+                    </a>
                     </td>
                   </tr>
                 </table>
@@ -223,13 +215,13 @@
                   <tr>
                     <td align="left" style="font-size:0px;padding:10px 25px;padding-top:25px;word-break:break-word;">
                       <div style="font-family:Helvetica,Arial,sans-serif;font-size:14px;line-height:120%;text-align:left;color:#000000;">
-                        <p style="font-size:14px; line-height:100%; font-weight:bold; color:#dc143c">Hi <span th:text="${firstName}"></span>!</p>Thanks for signing up for the one and only Minerva Pad. This must mean that you’re ready for the future!<br /><br /> You’ve created you mPad account with this email address. To confirm that it’s really you, please
-                        click the link below. <br /><br /> The link will remain valid for 24 hours. <br /> <a th:href="${confirmationUrl}" th:text="${confirmationUrl}"></a> <br/> <br /> If you did not register for the Minerva Pad, please ignore this email even though we know that everyone wants to get an mPad.<br/>                        <br /> Have an awesome day!</div>
+                        <span style="font-size:14px; line-height:100%; font-weight:bold; color:#dc143c;" th:text="'Hi ' + ${firstName} + '!'"></span>
+                        <br /><br /> Thanks for signing up for the one and only Minerva Pad. This must mean that you’re ready for the future!<br /><br /> You’ve created your mPad account with this email address. To confirm that it’s really you, please click the link below. <br /><br /> The link will remain valid for 24 hours. <br /> <a th:href="${confirmationUrl}" th:text="${confirmationUrl}"></a> <br/> <br /> If you did not register for the Minerva Pad, please ignore this email even though we know that everyone wants to get an mPad.<br/>                        <br /> Have an awesome day!</div>
                     </td>
                   </tr>
                   <tr>
                     <td align="left" style="font-size:0px;padding:10px 25px;padding-bottom:25px;word-break:break-word;">
-                      <div style="font-family:Helvetica,Arial,sans-serif;font-size:14px;font-weight:bold;line-height:120%;text-align:left;color:#dc143c;">Your Minerva Pad Team</div>
+                      <div style="font-family:Helvetica,Arial,sans-serif;font-size:14px;font-weight:bold;line-height:120%;text-align:left;color:#dc143c;">Your mPad Team</div>
                     </td>
                   </tr>
                 </table>
@@ -280,13 +272,13 @@
                   </tr>
                   <tr>
                     <td align="center" style="font-size:0px;padding:10px 15px;word-break:break-word;">
-                      <div><a href="mailto:mpad@mpdl.mpg.de" style="width:80px;display:inline-block;background:#dc143c;color:#ffffff;font-family:Helvetica,Arial,sans-serif;font-size:14px;font-weight:normal;line-height:90%;margin:0;text-decoration:none;text-transform:none;padding:10px 25px;mso-padding-alt:0px;border-radius:25px;"
+                      <div style="width:80px;padding:10px 5px;line-height:90%;display:inline-block;background:#dc143c;border-radius:25px;"><a href="mailto:mpad@mpdl.mpg.de" style="color:#ffffff;font-family:Helvetica,Arial,sans-serif;font-size:14px;font-weight:normal;line-height:90%;margin:0;text-decoration:none;text-transform:none;mso-padding-alt:0px;"
                               target="_blank">Email</a></div>
                     </td>
                   </tr>
                   <tr>
                     <td align="center" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                      <div><a href="tel:+49089909311243" style="width:80px;display:inline-block;background:#dc143c;color:#ffffff;font-family:Helvetica,Arial,sans-serif;font-size:14px;font-weight:normal;line-height:90%;margin:0;text-decoration:none;text-transform:none;padding:10px 25px;mso-padding-alt:0px;border-radius:25px;"
+                      <div style="width:80px;padding:10px 5px;line-height:90%;display:inline-block;background:#dc143c;border-radius:25px;"><a href="tel:+49089909311243" style="color:#ffffff;font-family:Helvetica,Arial,sans-serif;font-size:14px;font-weight:normal;line-height:90%;margin:0;text-decoration:none;text-transform:none;mso-padding-alt:0px;"
                               target="_blank">Phone</a></div>
                     </td>
                   </tr>

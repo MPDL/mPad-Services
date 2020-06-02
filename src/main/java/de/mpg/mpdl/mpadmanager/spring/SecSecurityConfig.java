@@ -56,10 +56,17 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/css/**", "/js/**", "/img/**", "/home*", "/login*", "/login*", "/logout*", "/signin/**", "/signup/**", "/customLogin",
                         "/user/registration*", "/registrationConfirm*", "/expiredAccount*", "/registration*",
                         "/badUser*", "/user/resendRegistrationToken*" ,"/forgetPassword*", "/user/resetPassword*", "/user/delete*", "/validEmail*", "/deleteUser*",
-                        "/user/changePassword*", "/emailError*", "/resources/**","/old/user/registration*","/successRegister*","/successActivate*", "/ldapError*", "/qrcode*", "/swagger-ui.html#/**").permitAll()
+                        "/user/changePassword*", "/emailError*", "/resources/**","/old/user/registration*","/successRegister*","/successActivate*", "/ldapError*", "/qrcode*").permitAll()
                 .antMatchers("/invalidSession*").anonymous()
                 .antMatchers("/user/updatePassword*","/user/savePassword*","/updatePassword*").hasAuthority("CHANGE_PASSWORD_PRIVILEGE")
                 .antMatchers("/favicon.ico").permitAll()
+                .antMatchers("/search*", "/record*").permitAll()
+                .antMatchers("/v2/api-docs",
+                                   "/configuration/ui",
+                                   "/swagger-resources/**",
+                                   "/configuration/security",
+                                   "/swagger-ui.html",
+                                   "/webjars/**").permitAll()
                 .antMatchers("/mpgReaderTerms*", "/mpgReaderDisclaimer*", "/mpgReaderPrivacyPolicy*").permitAll()
                 .anyRequest().hasAuthority("READ_PRIVILEGE")
                 .and()   
