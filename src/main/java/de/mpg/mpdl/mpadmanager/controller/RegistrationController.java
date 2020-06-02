@@ -222,9 +222,9 @@ public class RegistrationController {
 
 	private String getAppUrl(final HttpServletRequest request) {
 			if(request.getServerPort() != 80) {
-				return  "https://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+				return  "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
 			}
-			return  "https://" + request.getServerName() + request.getContextPath();
+			return  "http://" + request.getServerName() + request.getContextPath();
 	}
 
 	public void authWithHttpServletRequest(final HttpServletRequest request, final String username, final String password) {

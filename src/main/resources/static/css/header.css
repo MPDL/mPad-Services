@@ -76,19 +76,24 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  fill: #bdbdbd;
 }
 
-.social-links-twitter:hover {
-  background-color: #33CCFF;
+.social-links-header a:hover {
+  background-color: #dc143c;
   color: #FFF;
+  fill: #FFF;
 }
 
-.social-links-ins:hover {
-  background-color: #8E6051;
+.social-links-footer a {
   color: #FFF;
+  fill: #747474;
 }
 
-.social-links-linked-in:hover {
-  background-color: #007BB6;
+.social-links-footer a:hover {
+  background-color: #dc143c;
   color: #FFF;
+  fill: #FFF;
+  border: none;
 }
+
