@@ -82,3 +82,36 @@ svg:not(:root).svg-inline--fa {
   overflow: visible;
   vertical-align: -.125em;
 }
+
+.copyright {
+  color: #848484;
+  font-size: 13px;
+  line-height: 1.615;
+  padding-top: 15px;
+  text-align: center;
+
+  font-style: normal;
+  font-variant-ligatures: normal;
+  font-variant-caps: normal;
+  font-variant-numeric: normal;
+  font-variant-east-asian: normal;
+  font-weight: 400;
+  font-stretch: normal;
+}
+
+.copyright::selection {
+  background: #dc143c;
+  color: #fff;
+}
+
+.copyright a{
+  font-size: 13px;
+  text-decoration: none;
+  color: #999999;
+}
+
+.copyright a:hover{
+  color: #dc143c;
+}
+
+* {-webkit-font-smoothing: antialiased;}
